@@ -1,3 +1,3 @@
 ﻿
-using var game = new SpellboundSettlement.Game1();
-game.Run();
+using var spellboundSettlement = new SpellboundSettlement.SpellboundSettlement();
+spellboundSettlement.Run();
