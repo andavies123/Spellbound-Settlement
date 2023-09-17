@@ -1,15 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using SpellboundSettlement.Global;
+using SpellboundSettlement.Inputs;
 
 namespace SpellboundSettlement;
 
-public class SpellboundSettlement : Game
+public class MainGame : Game
 {
 	private readonly GraphicsDeviceManager _graphics;
+	private readonly GameplayInputManager _gameplayInput = new();
 	private SpriteBatch _spriteBatch;
 
-	public SpellboundSettlement()
+	public MainGame()
 	{
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -25,6 +27,7 @@ public class SpellboundSettlement : Game
 	{
 		GameServices.AddService(this);
 		GameServices.AddService(_graphics);
+		GameServices.AddService(_gameplayInput);
 
 		base.Initialize();
 	}
@@ -38,8 +41,9 @@ public class SpellboundSettlement : Game
 
 	protected override void Update(GameTime gameTime)
 	{
-		if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-			Exit();
+		_gameplayInput.UpdateInput();
+		// if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+		// 	Exit();
 
 		// TODO: Add your update logic here
 

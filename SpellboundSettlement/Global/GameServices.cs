@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace SpellboundSettlement;
+namespace SpellboundSettlement.Global;
 
 public static class GameServices
 {
