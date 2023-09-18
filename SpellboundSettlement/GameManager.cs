@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Global;
 using SpellboundSettlement.Inputs;
@@ -6,18 +7,21 @@ using SpellboundSettlement.Meshes;
 
 namespace SpellboundSettlement;
 
-public class MainGame : Game
+public class GameManager : Game
 {
 	private readonly GraphicsDeviceManager _graphics;
 	private readonly GameplayInputManager _gameplayInput = new();
+	private readonly Camera _camera;
 	
 	private SpriteBatch _spriteBatch;
-	private Matrix _worldMatrix;
-	private Matrix _viewMatrix;
-	private Matrix _projectionMatrix;
 	private Effect _effect;
+	
+	// Update Times
+	private DateTime _currentTime;
+	private DateTime _previousTime;
+	private TimeSpan _deltaTime;
 
-	public MainGame()
+	public GameManager()
 	{
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -27,18 +31,21 @@ public class MainGame : Game
 		_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 		_graphics.IsFullScreen = false;
 		_graphics.ApplyChanges();
+		
+		_camera = new Camera(GraphicsDevice.Viewport.AspectRatio);
 	}
 
+	private ChunkMesh _chunkMesh;
 	protected override void Initialize()
 	{
 		GameServices.AddService(this);
+		GameServices.AddService(_camera);
 		GameServices.AddService(_graphics);
 		GameServices.AddService(_gameplayInput);
 		
-		_worldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 0));
-		_viewMatrix = Matrix.CreateLookAt(new Vector3(5, 5, 10), Vector3.Zero, Vector3.Up);
-		_projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1f, 100f);
 		_effect = Content.Load<Effect>("TestShader");
+		_previousTime = DateTime.Now;
+		_chunkMesh = new ChunkMesh(new Vector3(5, 5, 5), Vector3.Zero);
 
 		base.Initialize();
 	}
@@ -46,19 +53,25 @@ public class MainGame : Game
 	protected override void LoadContent()
 	{
 		_spriteBatch = new SpriteBatch(GraphicsDevice);
-
-		// TODO: use this.Content to load your game content here
 	}
 
 	protected override void Update(GameTime gameTime)
 	{
+		_currentTime = DateTime.Now;
+		_deltaTime = _currentTime - _previousTime;
+		
 		_gameplayInput.UpdateInput();
-		// if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-		// 	Exit();
 
-		// TODO: Add your update logic here
+		if (_gameplayInput.MoveCameraInput != Vector2.Zero)
+		{
+			Vector2 cameraMovement = _gameplayInput.MoveCameraInput * (float)_deltaTime.TotalSeconds;
+			_camera.CameraPosition = new Vector3(_camera.CameraPosition.X + cameraMovement.X, _camera.CameraPosition.Y, _camera.CameraPosition.Z + cameraMovement.Y);
+			_camera.CameraTarget = new Vector3(_camera.CameraTarget.X + cameraMovement.X, _camera.CameraTarget.Y, _camera.CameraTarget.Z + cameraMovement.Y);
+			_camera.RecalculateViewMatrix();
+		}
 
 		base.Update(gameTime);
+		_previousTime = _currentTime;
 	}
 
 	protected override void Draw(GameTime gameTime)
@@ -67,16 +80,13 @@ public class MainGame : Game
 		
 		DrawSquare();
 
-		// TODO: Add your drawing code here
-
 		base.Draw(gameTime);
 	}
 
 	private void DrawSquare()
 	{
-		CubeMesh cubeMesh = new(Vector3.Zero);
-		VertexPositionColor[] vertices = cubeMesh.Vertices.ToArray();
-		int[] indices = cubeMesh.Indices.ToArray();
+		VertexPositionColor[] vertices = _chunkMesh.Vertices;
+		int[] indices = _chunkMesh.Indices;
 
 		VertexBuffer vertexBuffer = new(GraphicsDevice, typeof(VertexPositionColor), vertices.Length, BufferUsage.None);
 		vertexBuffer.SetData(vertices);
@@ -87,7 +97,7 @@ public class MainGame : Game
 		GraphicsDevice.SetVertexBuffer(vertexBuffer);
 		GraphicsDevice.Indices = indexBuffer;
 		
-		_effect.Parameters["WorldViewProjection"].SetValue(_worldMatrix * _viewMatrix * _projectionMatrix);
+		_effect.Parameters["WorldViewProjection"].SetValue(_camera.WorldViewProjection);
 		_effect.CurrentTechnique.Passes[0].Apply();
 		
 		GraphicsDevice.DrawIndexedPrimitives(

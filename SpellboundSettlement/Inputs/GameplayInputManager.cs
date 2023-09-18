@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using SpellboundSettlement.Global;
 
 namespace SpellboundSettlement.Inputs;
 
@@ -14,17 +15,34 @@ public class GameplayInputManager
 	private const Keys PauseGameKey = Keys.Escape;
 
 	private bool _isMoveCameraActive = false;
+	private int _previousScrollWheelValue = Mouse.GetState().ScrollWheelValue;
 
 	public Vector2 MoveCameraInput { get; private set; }
 	
 	public event Action MoveCameraInputStarted;
 	public event Action MoveCameraInputStopped;
-	public event Action PauseGameInputPressed;
+	public event Action ZoomIn;
+	public event Action ZoomOut;
+	public event Action PauseGame;
 	
 	public void UpdateInput()
 	{
+		CheckForceQuit();
 		CheckPauseGameInput();
 		CheckCameraMoveInput();
+		CheckZoomInput();
+	}
+
+	private void CheckForceQuit()
+	{
+		if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Keyboard.GetState().IsKeyDown(Keys.Escape))
+			GameServices.GetService<GameManager>().Exit();
+	}
+
+	private void CheckPauseGameInput()
+	{
+		if (Keyboard.GetState().IsKeyDown(PauseGameKey))
+			PauseGame?.Invoke();
 	}
 
 	private void CheckCameraMoveInput()
@@ -54,9 +72,14 @@ public class GameplayInputManager
 		}
 	}
 
-	private void CheckPauseGameInput()
+	private void CheckZoomInput()
 	{
-		if (Keyboard.GetState().IsKeyDown(PauseGameKey))
-			PauseGameInputPressed?.Invoke();
+		// Zoom
+		int currentScrollWheelValue = Mouse.GetState().ScrollWheelValue;
+		if (_previousScrollWheelValue - currentScrollWheelValue > 0)
+			ZoomOut?.Invoke();
+		else if (_previousScrollWheelValue - currentScrollWheelValue < 0)
+			ZoomIn?.Invoke();
+		_previousScrollWheelValue = currentScrollWheelValue;
 	}
 }

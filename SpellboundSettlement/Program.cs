@@ -1,3 +1,3 @@
 ﻿
-using SpellboundSettlement.MainGame spellboundSettlement = new();
+using SpellboundSettlement.GameManager spellboundSettlement = new();
 spellboundSettlement.Run();
