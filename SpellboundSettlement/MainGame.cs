@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Global;
 using SpellboundSettlement.Inputs;
+using SpellboundSettlement.Meshes;
 
 namespace SpellboundSettlement;
 
@@ -10,7 +10,12 @@ public class MainGame : Game
 {
 	private readonly GraphicsDeviceManager _graphics;
 	private readonly GameplayInputManager _gameplayInput = new();
+	
 	private SpriteBatch _spriteBatch;
+	private Matrix _worldMatrix;
+	private Matrix _viewMatrix;
+	private Matrix _projectionMatrix;
+	private Effect _effect;
 
 	public MainGame()
 	{
@@ -29,6 +34,11 @@ public class MainGame : Game
 		GameServices.AddService(this);
 		GameServices.AddService(_graphics);
 		GameServices.AddService(_gameplayInput);
+		
+		_worldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+		_viewMatrix = Matrix.CreateLookAt(new Vector3(5, 5, 10), Vector3.Zero, Vector3.Up);
+		_projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1f, 100f);
+		_effect = Content.Load<Effect>("TestShader");
 
 		base.Initialize();
 	}
@@ -64,40 +74,21 @@ public class MainGame : Game
 
 	private void DrawSquare()
 	{
-		Matrix worldMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 0));
-		Matrix viewMatrix = Matrix.CreateLookAt(new Vector3(0, 10, 10), Vector3.Zero, Vector3.Up);
-		Matrix projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1f, 100f);
-		Effect effect = Content.Load<Effect>("TestShader");
-		
-		VertexPositionColor[] vertices =
-		{
-			new(new Vector3(0, 0, 0), Color.Aqua),
-			new(new Vector3(1, 0, 0), Color.Red),
-			new(new Vector3(0, 1, 0), Color.Yellow),
-			new(new Vector3(1, 1, 0), Color.Green),
-		};
-
-		short[] indices =
-		{
-			2, 1, 0,
-			3, 1, 2
-		};
+		CubeMesh cubeMesh = new(Vector3.Zero);
+		VertexPositionColor[] vertices = cubeMesh.Vertices.ToArray();
+		int[] indices = cubeMesh.Indices.ToArray();
 
 		VertexBuffer vertexBuffer = new(GraphicsDevice, typeof(VertexPositionColor), vertices.Length, BufferUsage.None);
 		vertexBuffer.SetData(vertices);
 
-		IndexBuffer indexBuffer = new(GraphicsDevice, IndexElementSize.SixteenBits, indices.Length, BufferUsage.None);
+		IndexBuffer indexBuffer = new(GraphicsDevice, IndexElementSize.ThirtyTwoBits, indices.Length, BufferUsage.None);
 		indexBuffer.SetData(indices);
 		
 		GraphicsDevice.SetVertexBuffer(vertexBuffer);
 		GraphicsDevice.Indices = indexBuffer;
 		
-		// effect.Parameters["World"].SetValue(worldMatrix);
-		// effect.Parameters["View"].SetValue(viewMatrix);
-		// effect.Parameters["Projection"].SetValue(projectionMatrix);
-		effect.Parameters["WorldViewProjection"].SetValue(worldMatrix * viewMatrix * projectionMatrix);
-		
-		effect.CurrentTechnique.Passes[0].Apply();
+		_effect.Parameters["WorldViewProjection"].SetValue(_worldMatrix * _viewMatrix * _projectionMatrix);
+		_effect.CurrentTechnique.Passes[0].Apply();
 		
 		GraphicsDevice.DrawIndexedPrimitives(
 			PrimitiveType.TriangleList,
