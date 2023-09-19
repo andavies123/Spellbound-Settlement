@@ -7,21 +7,16 @@ namespace SpellboundSettlement.Meshes;
 
 public class ChunkMesh : IMesh
 {
-	private readonly int _chunkSizeX;
-	private readonly int _chunkSizeY;
-	private readonly int _chunkSizeZ;
 	private readonly Vector3 _chunkOffset;
 
 	private readonly CubeMesh[,,] _cubeMeshes;
 	
-	public ChunkMesh(Vector3 chunkSize, Vector3 chunkOffset)
+	public ChunkMesh((int x, int y, int z) chunkTileCount, Vector3 chunkOffset)
 	{
-		_chunkSizeX = (int)chunkSize.X;
-		_chunkSizeY = (int)chunkSize.Y;
-		_chunkSizeZ = (int)chunkSize.Z;
+		ChunkTileCount = chunkTileCount;
 		_chunkOffset = chunkOffset;
 
-		_cubeMeshes = new CubeMesh[_chunkSizeX, _chunkSizeY, _chunkSizeZ];
+		_cubeMeshes = new CubeMesh[ChunkTileCount.x, ChunkTileCount.y, ChunkTileCount.z];
 		
 		InitializeCubeMeshes();
 		RecalculateMesh();
@@ -29,7 +24,7 @@ public class ChunkMesh : IMesh
 
 	public VertexPositionColor[] Vertices { get; private set; }
 	public int[] Indices { get; private set; }
-	public (int x, int y, int z) ChunkSize => (_chunkSizeX, _chunkSizeY, _chunkSizeZ);
+	public (int x, int y, int z) ChunkTileCount { get; private set; }
 
 	private void InitializeCubeMeshes()
 	{

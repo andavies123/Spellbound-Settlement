@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Global;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.Meshes;
+using SpellboundSettlement.WorldObjects;
 
 namespace SpellboundSettlement;
 
@@ -15,6 +16,10 @@ public class GameManager : Game
 	
 	private SpriteBatch _spriteBatch;
 	private Effect _effect;
+	
+	// World
+	private readonly World _world = new();
+	private WorldMesh _worldMesh;
 	
 	// Update Times
 	private DateTime _currentTime;
@@ -35,17 +40,19 @@ public class GameManager : Game
 		_camera = new Camera(GraphicsDevice.Viewport.AspectRatio);
 	}
 
-	private ChunkMesh _chunkMesh;
 	protected override void Initialize()
 	{
 		GameServices.AddService(this);
 		GameServices.AddService(_camera);
 		GameServices.AddService(_graphics);
 		GameServices.AddService(_gameplayInput);
+		GameServices.AddService(_world);
 		
 		_effect = Content.Load<Effect>("TestShader");
 		_previousTime = DateTime.Now;
-		_chunkMesh = new ChunkMesh(new Vector3(5, 5, 5), Vector3.Zero);
+
+		_world.GetChunk(Vector2.Zero);
+		_worldMesh = new WorldMesh(_world);
 
 		base.Initialize();
 	}
@@ -78,16 +85,17 @@ public class GameManager : Game
 	{
 		GraphicsDevice.Clear(Color.CornflowerBlue);
 		
-		DrawSquare();
+		foreach (ChunkMesh chunkMesh in _worldMesh.ChunkMeshes.Values)
+			DrawMesh(chunkMesh);
 
 		base.Draw(gameTime);
 	}
 
-	private void DrawSquare()
+	private void DrawMesh(IMesh mesh)
 	{
-		VertexPositionColor[] vertices = _chunkMesh.Vertices;
-		int[] indices = _chunkMesh.Indices;
-
+		VertexPositionColor[] vertices = mesh.Vertices;
+		int[] indices = mesh.Indices;
+		
 		VertexBuffer vertexBuffer = new(GraphicsDevice, typeof(VertexPositionColor), vertices.Length, BufferUsage.None);
 		vertexBuffer.SetData(vertices);
 
