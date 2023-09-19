@@ -8,6 +8,12 @@ namespace SpellboundSettlement.Meshes;
 public interface IMesh
 {
 	/// <summary>
+	/// True if the mesh is visible and should be drawn
+	/// False if the mesh is not visible and should not be drawn
+	/// </summary>
+	bool IsVisible { get; set; }
+	
+	/// <summary>
 	/// Array of vertices that describe the mesh
 	/// </summary>
 	VertexPositionColor[] Vertices { get; }

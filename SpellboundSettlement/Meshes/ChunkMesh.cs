@@ -2,29 +2,30 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpellboundSettlement.WorldObjects;
 
 namespace SpellboundSettlement.Meshes;
 
 public class ChunkMesh : IMesh
 {
+	private readonly Chunk _chunk;
 	private readonly Vector3 _chunkOffset;
-
 	private readonly CubeMesh[,,] _cubeMeshes;
 	
-	public ChunkMesh((int x, int y, int z) chunkTileCount, Vector3 chunkOffset)
+	public ChunkMesh(Chunk chunk, Vector3 chunkOffset)
 	{
-		ChunkTileCount = chunkTileCount;
+		_chunk = chunk;
 		_chunkOffset = chunkOffset;
 
-		_cubeMeshes = new CubeMesh[ChunkTileCount.x, ChunkTileCount.y, ChunkTileCount.z];
+		_cubeMeshes = new CubeMesh[_chunk.TileCount.x, _chunk.TileCount.y, _chunk.TileCount.z];
 		
 		InitializeCubeMeshes();
 		RecalculateMesh();
 	}
 
+	public bool IsVisible { get; set; }
 	public VertexPositionColor[] Vertices { get; private set; }
 	public int[] Indices { get; private set; }
-	public (int x, int y, int z) ChunkTileCount { get; private set; }
 
 	private void InitializeCubeMeshes()
 	{
@@ -35,6 +36,8 @@ public class ChunkMesh : IMesh
 				for (int z = 0; z < _cubeMeshes.GetLength(2); z++)
 				{
 					_cubeMeshes[x, y, z] = new CubeMesh(_chunkOffset + new Vector3(x, y, z), WorldMeshConstants.HeightColors[y]);
+					if (_chunk.Tiles[x, y, z] == 0)
+						_cubeMeshes[x, y, z].IsVisible = false;
 				}
 			}
 		}
@@ -48,6 +51,9 @@ public class ChunkMesh : IMesh
 		
 		foreach (CubeMesh cubeMesh in _cubeMeshes)
 		{
+			if (!cubeMesh.IsVisible)
+				continue;
+			
 			vertices.AddRange(cubeMesh.Vertices);
 			indices.AddRange(cubeMesh.Indices.Select(index => index + triangleOffset));
 			triangleOffset += cubeMesh.Vertices.Length;

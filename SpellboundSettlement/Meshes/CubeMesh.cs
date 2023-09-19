@@ -24,6 +24,7 @@ public class CubeMesh : IMesh
 		RecalculateMesh();
 	}
 
+	public bool IsVisible { get; set; } = true;
 	public VertexPositionColor[] Vertices { get; private set; }
 	public int[] Indices { get; private set; }
 

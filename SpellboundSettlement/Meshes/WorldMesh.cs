@@ -25,7 +25,7 @@ public class WorldMesh
 	private ChunkMesh GenerateChunkMesh(Chunk chunk)
 	{
 		ChunkMesh chunkMesh = new(
-			chunk.TileCount,
+			chunk,
 			new Vector3(chunk.WorldOffset.X, 0, chunk.WorldOffset.Y));
 		return chunkMesh;
 	}

@@ -18,7 +18,7 @@ public class GameManager : Game
 	private Effect _effect;
 	
 	// World
-	private readonly World _world = new();
+	private readonly World _world = new((0, 0), 3);
 	private WorldMesh _worldMesh;
 	
 	// Update Times
@@ -51,8 +51,6 @@ public class GameManager : Game
 		_effect = Content.Load<Effect>("TestShader");
 		_previousTime = DateTime.Now;
 
-		_world.GetChunk(Vector2.Zero);
-		_world.GetChunk(Vector2.One);
 		_worldMesh = new WorldMesh(_world);
 
 		base.Initialize();
