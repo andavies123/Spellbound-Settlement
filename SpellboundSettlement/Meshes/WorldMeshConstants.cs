@@ -41,16 +41,16 @@ public static class WorldMeshConstants
 	// Colors
 	public static readonly Color[] HeightColors =
 	{
-		Color.DarkOliveGreen,
-		Color.DarkGreen,
-		Color.ForestGreen,
-		Color.DarkSeaGreen,
-		Color.MediumSeaGreen,
-		Color.LawnGreen,
-		Color.PaleGreen,
-		Color.SpringGreen,
-		Color.MediumSpringGreen,
-		Color.LightSeaGreen,
+		new(0, 30, 0),
+		new(0, 45, 0),
+		new(0, 60, 0),
+		new(0, 75, 0),
+		new(0, 90, 0),
+		new(0, 105, 0),
+		new(0, 120, 0),
+		new(0, 135, 0),
+		new(0, 150, 0),
+		new(0, 165, 0)
 	};
 
 	public static Vector3[] GetOffsetVertices(IEnumerable<Vector3> vertices, Vector3 offset) => vertices.Select(vertex => vertex + offset).ToArray();
