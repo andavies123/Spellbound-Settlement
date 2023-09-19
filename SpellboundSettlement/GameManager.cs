@@ -52,6 +52,7 @@ public class GameManager : Game
 		_previousTime = DateTime.Now;
 
 		_world.GetChunk(Vector2.Zero);
+		_world.GetChunk(Vector2.One);
 		_worldMesh = new WorldMesh(_world);
 
 		base.Initialize();
@@ -71,7 +72,7 @@ public class GameManager : Game
 
 		if (_gameplayInput.MoveCameraInput != Vector2.Zero)
 		{
-			Vector2 cameraMovement = _gameplayInput.MoveCameraInput * (float)_deltaTime.TotalSeconds;
+			Vector2 cameraMovement = _gameplayInput.MoveCameraInput * (float)_deltaTime.TotalSeconds * 3;
 			_camera.CameraPosition = new Vector3(_camera.CameraPosition.X + cameraMovement.X, _camera.CameraPosition.Y, _camera.CameraPosition.Z + cameraMovement.Y);
 			_camera.CameraTarget = new Vector3(_camera.CameraTarget.X + cameraMovement.X, _camera.CameraTarget.Y, _camera.CameraTarget.Z + cameraMovement.Y);
 			_camera.RecalculateViewMatrix();

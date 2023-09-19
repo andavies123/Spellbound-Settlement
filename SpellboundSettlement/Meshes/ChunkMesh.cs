@@ -34,7 +34,7 @@ public class ChunkMesh : IMesh
 			{
 				for (int z = 0; z < _cubeMeshes.GetLength(2); z++)
 				{
-					_cubeMeshes[x, y, z] = new CubeMesh(_chunkOffset + new Vector3(x, y, z));
+					_cubeMeshes[x, y, z] = new CubeMesh(_chunkOffset + new Vector3(x, y, z), WorldMeshConstants.HeightColors[y]);
 				}
 			}
 		}

@@ -6,8 +6,7 @@ namespace SpellboundSettlement.WorldObjects;
 
 public class World
 {
-	private const int ChunkTilesXAndZ = 10;
-	private const int ChunkTilesY = 20;
+	private const int ChunkTileCount = 10;
 	
 	private readonly ConcurrentDictionary<Vector2, Chunk> _chunks = new();
 
@@ -20,7 +19,7 @@ public class World
 
 	private Chunk GenerateChunk(Vector2 chunkPosition)
 	{
-		Chunk chunk = new(chunkPosition, chunkPosition * ChunkTilesXAndZ, (ChunkTilesXAndZ, ChunkTilesY, ChunkTilesXAndZ));
+		Chunk chunk = new(chunkPosition, chunkPosition * ChunkTileCount, (ChunkTileCount, ChunkTileCount, ChunkTileCount));
 		chunk.SetAllTiles(0);
 		return chunk;
 	}

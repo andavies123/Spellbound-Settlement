@@ -21,7 +21,7 @@ public class Camera
 	public Vector3 WorldPosition { get; set; } = Vector3.Zero;
 	
 	// Camera Matrix Properties
-	public Vector3 CameraPosition { get; set; } = new(0, 10, 20);
+	public Vector3 CameraPosition { get; set; } = new(0, 30, 20);
 	public Vector3 CameraTarget { get; set; } = Vector3.Zero;
 	public Vector3 CameraUp { get; set; } = Vector3.Up;
 	

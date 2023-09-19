@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpellboundSettlement.Global;
-using static SpellboundSettlement.Meshes.ChunkMeshConstants;
+using static SpellboundSettlement.Meshes.WorldMeshConstants;
 
 namespace SpellboundSettlement.Meshes;
 
@@ -11,17 +10,16 @@ public class CubeMesh : IMesh
 {
 	private readonly CubeFaceMesh[] _faceMeshes;
 	
-	public CubeMesh(Vector3 vertexOffset)
+	public CubeMesh(Vector3 vertexOffset, Color color)
 	{
-		Color randomColor = GlobalRandom.GetRandomColor();
 		_faceMeshes = new []
 		{
-			new CubeFaceMesh(GetOffsetVertices(XPosVertices, vertexOffset), randomColor),
-			new CubeFaceMesh(GetOffsetVertices(XNegVertices, vertexOffset), randomColor),
-			new CubeFaceMesh(GetOffsetVertices(YPosVertices, vertexOffset), randomColor),
-			new CubeFaceMesh(GetOffsetVertices(YNegVertices, vertexOffset), randomColor),
-			new CubeFaceMesh(GetOffsetVertices(ZPosVertices, vertexOffset), randomColor),
-			new CubeFaceMesh(GetOffsetVertices(ZNegVertices, vertexOffset), randomColor)
+			new CubeFaceMesh(GetOffsetVertices(XPosVertices, vertexOffset), color),
+			new CubeFaceMesh(GetOffsetVertices(XNegVertices, vertexOffset), color),
+			new CubeFaceMesh(GetOffsetVertices(YPosVertices, vertexOffset), color),
+			new CubeFaceMesh(GetOffsetVertices(YNegVertices, vertexOffset), color),
+			new CubeFaceMesh(GetOffsetVertices(ZPosVertices, vertexOffset), color),
+			new CubeFaceMesh(GetOffsetVertices(ZNegVertices, vertexOffset), color)
 		};
 		RecalculateMesh();
 	}

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace SpellboundSettlement.Meshes;
 
-public static class ChunkMeshConstants
+public static class WorldMeshConstants
 {
 	// Count Constants
 	public const int VerticesPerFace = 4;
@@ -38,13 +38,20 @@ public static class ChunkMeshConstants
 	// Triangle Vertex Indices per face - 2 triangles
 	public static readonly int[] FaceIndices = { 0, 2, 1, 0, 3, 2 };
 
-	// Face colors
-	public static readonly Color XPosFaceColor = Color.Aqua;
-	public static readonly Color XNegFaceColor = Color.MidnightBlue;
-	public static readonly Color YPosFaceColor = Color.White;
-	public static readonly Color YNegFaceColor = Color.Black;
-	public static readonly Color ZPosFaceColor = Color.Red;
-	public static readonly Color ZNegFaceColor = Color.Orange;
+	// Colors
+	public static readonly Color[] HeightColors =
+	{
+		Color.DarkOliveGreen,
+		Color.DarkGreen,
+		Color.ForestGreen,
+		Color.DarkSeaGreen,
+		Color.MediumSeaGreen,
+		Color.LawnGreen,
+		Color.PaleGreen,
+		Color.SpringGreen,
+		Color.MediumSpringGreen,
+		Color.LightSeaGreen,
+	};
 
 	public static Vector3[] GetOffsetVertices(IEnumerable<Vector3> vertices, Vector3 offset) => vertices.Select(vertex => vertex + offset).ToArray();
 	public static int[] GetOffsetIndices(int offset) => FaceIndices.Select(index => index + offset).ToArray();
