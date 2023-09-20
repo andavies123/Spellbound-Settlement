@@ -7,10 +7,16 @@ namespace SpellboundSettlement.CameraObjects;
 
 public class WorldViewCameraController : ICameraController
 {
+	private const int MaxZoomLevels = 9;
+	private const int DefaultZoomLevel = 5;
+	private static readonly float MinFieldOfView = MathHelper.ToRadians(30);
+	private static readonly float MaxFieldOfView = MathHelper.ToRadians(80);
+	
 	private readonly Camera _camera;
 	private readonly GameplayInputManager _input;
-
+	
 	private bool _moveCamera = true;
+	private int _currentZoomLevel = DefaultZoomLevel;
 	
 	public WorldViewCameraController(Camera camera, GameplayInputManager input)
 	{
@@ -19,7 +25,9 @@ public class WorldViewCameraController : ICameraController
 
 		_input.MoveCameraStarted += OnMoveCameraStarted;
 		_input.MoveCameraStopped += OnMoveCameraStopped;
-		_input.RotateCamera += OnRotateCameraInputPressed;
+		_input.RotateCamera += OnRotateCameraInput;
+		_input.ZoomIn += OnZoomInInput;
+		_input.ZoomOut += OnZoomOutInput;
 	}
 
 	public float MovementSpeed { get; set; } = 20;
@@ -35,10 +43,12 @@ public class WorldViewCameraController : ICameraController
 		_camera.Pitch = MathHelper.ToRadians(-60);
 		_camera.Roll = MathHelper.ToRadians(0);
 		
-		_camera.FieldOfView = MathHelper.PiOver4;
+		_camera.FieldOfView = CalculateFieldOfView();
 		_camera.AspectRatio = GameServices.GetService<Game>().GraphicsDevice.Viewport.AspectRatio;
 		_camera.NearClippingPlane = 0.1f;
 		_camera.FarClippingPlane = 1000f;
+		
+		SetZoomLevel(DefaultZoomLevel, recalculateMatrices: false);
 		
 		_camera.RecalculateWorldMatrix(recalculateWvpMatrix: false);
 		_camera.RecalculateViewMatrix(recalculateWvpMatrix: false);
@@ -74,13 +84,25 @@ public class WorldViewCameraController : ICameraController
 		forward.Normalize();
 		_camera.Target = _camera.Position + forward;
 		
-		_camera.RecalculateViewMatrix();
+		_camera.RecalculateViewMatrix(recalculateWvpMatrix: true);
 	}
+
+	private void SetZoomLevel(int newZoomLevel, bool recalculateMatrices = true)
+	{
+		_currentZoomLevel = Math.Clamp(newZoomLevel, 1, MaxZoomLevels);
+		_camera.FieldOfView = CalculateFieldOfView();
+		if (recalculateMatrices)
+			_camera.RecalculateProjectionMatrix(recalculateWvpMatrix: true);
+	}
+
+	private float CalculateFieldOfView() => (MaxFieldOfView - MinFieldOfView) / MaxZoomLevels * _currentZoomLevel;
 
 	private void OnMoveCameraStarted() => _moveCamera = true;
 	private void OnMoveCameraStopped() => _moveCamera = false;
+	private void OnZoomInInput() => SetZoomLevel(_currentZoomLevel - 1);
+	private void OnZoomOutInput() => SetZoomLevel(_currentZoomLevel + 1);
 
-	private void OnRotateCameraInputPressed()
+	private void OnRotateCameraInput()
 	{
 		_camera.Yaw += MathHelper.ToRadians(90);
 		_camera.Yaw %= MathHelper.TwoPi;
@@ -95,23 +117,4 @@ public class WorldViewCameraController : ICameraController
 		_camera.Target = _camera.Position + forward;
 		_camera.RecalculateViewMatrix();
 	}
-}
-
-public interface ICameraController
-{
-	/// <summary>
-	/// How fast the camera moves
-	/// </summary>
-	float MovementSpeed { get; set; }
-
-	/// <summary>
-	/// Resets all the necessary camera properties to defaults
-	/// </summary>
-	void ResetCamera();
-	
-	/// <summary>
-	/// Call this every frame to update the camera's values
-	/// </summary>
-	/// <param name="deltaTime">The time in seconds that has passed since the last frame</param>
-	void UpdateCamera(float deltaTime);
 }
