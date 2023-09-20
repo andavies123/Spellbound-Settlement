@@ -58,9 +58,11 @@ public class WorldViewCameraController : ICameraController
 
 		Vector3 movementVector = cameraForward + cameraHorizontal;
 		
+		// Normalize only if the vector isn't zero as it has trouble normalizing a 0 vector
 		if (movementVector != Vector3.Zero)
 			movementVector.Normalize();
-		
+
+		// Apply delta time and movement speed after normalization or else it would always have length of 1
 		_camera.Position += movementVector * deltaTime * MovementSpeed;
 		
 		Vector3 forward = new(
