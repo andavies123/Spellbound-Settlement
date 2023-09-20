@@ -11,6 +11,7 @@ public class GameplayInputManager
 	private const Keys MoveCameraBackwardsKey = Keys.S;
 	private const Keys MoveCameraLeftKey = Keys.A;
 	private const Keys MoveCameraRightKey = Keys.D;
+	private const Keys RotateCameraKey = Keys.R;
 
 	private const Keys PauseGameKey = Keys.Escape;
 
@@ -19,8 +20,9 @@ public class GameplayInputManager
 
 	public Vector2 MoveCameraInput { get; private set; }
 	
-	public event Action MoveCameraInputStarted;
-	public event Action MoveCameraInputStopped;
+	public event Action MoveCameraStarted;
+	public event Action MoveCameraStopped;
+	public event Action RotateCamera;
 	public event Action ZoomIn;
 	public event Action ZoomOut;
 	public event Action PauseGame;
@@ -29,7 +31,8 @@ public class GameplayInputManager
 	{
 		CheckForceQuit();
 		CheckPauseGameInput();
-		CheckCameraMoveInput();
+		CheckMoveCameraInput();
+		CheckRotateCameraInput();
 		CheckZoomInput();
 	}
 
@@ -45,7 +48,7 @@ public class GameplayInputManager
 			PauseGame?.Invoke();
 	}
 
-	private void CheckCameraMoveInput()
+	private void CheckMoveCameraInput()
 	{
 		float verticalMovement = 0f;
 		float horizontalMovement = 0f;
@@ -55,21 +58,33 @@ public class GameplayInputManager
 		if (Keyboard.GetState().IsKeyDown(MoveCameraBackwardsKey))
 			verticalMovement -= 1f;
 		if (Keyboard.GetState().IsKeyDown(MoveCameraRightKey))
-			horizontalMovement += 1f;
-		if (Keyboard.GetState().IsKeyDown(MoveCameraLeftKey))
 			horizontalMovement -= 1f;
+		if (Keyboard.GetState().IsKeyDown(MoveCameraLeftKey))
+			horizontalMovement += 1f;
 
 		MoveCameraInput = new Vector2(horizontalMovement, verticalMovement);
 		if (!_isMoveCameraActive && MoveCameraInput != Vector2.Zero)
 		{
 			_isMoveCameraActive = true;
-			MoveCameraInputStarted?.Invoke();
+			MoveCameraStarted?.Invoke();
 		}
 		else if (_isMoveCameraActive && MoveCameraInput == Vector2.Zero)
 		{
 			_isMoveCameraActive = false;
-			MoveCameraInputStopped?.Invoke();
+			MoveCameraStopped?.Invoke();
 		}
+	}
+
+	private bool _isRotateCameraKeyPressed = false;
+	private void CheckRotateCameraInput()
+	{
+		if (!_isRotateCameraKeyPressed && Keyboard.GetState().IsKeyDown(RotateCameraKey))
+		{
+			_isRotateCameraKeyPressed = true;
+			RotateCamera?.Invoke();
+		}
+		else if (_isRotateCameraKeyPressed && Keyboard.GetState().IsKeyUp(RotateCameraKey))
+			_isRotateCameraKeyPressed = false;
 	}
 
 	private void CheckZoomInput()

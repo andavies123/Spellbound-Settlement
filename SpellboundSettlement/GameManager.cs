@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Global;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.Meshes;
@@ -12,7 +13,8 @@ public class GameManager : Game
 {
 	private readonly GraphicsDeviceManager _graphics;
 	private readonly GameplayInputManager _gameplayInput = new();
-	private readonly Camera _camera;
+	private readonly Camera _camera = new();
+	private readonly ICameraController _cameraController;
 	
 	private SpriteBatch _spriteBatch;
 	private Effect _effect;
@@ -37,12 +39,13 @@ public class GameManager : Game
 		_graphics.IsFullScreen = false;
 		_graphics.ApplyChanges();
 		
-		_camera = new Camera(GraphicsDevice.Viewport.AspectRatio);
+		_cameraController = new WorldViewCameraController(_camera, _gameplayInput);
 	}
 
 	protected override void Initialize()
 	{
 		GameServices.AddService(this);
+		GameServices.AddService<Game>(this);
 		GameServices.AddService(_camera);
 		GameServices.AddService(_graphics);
 		GameServices.AddService(_gameplayInput);
@@ -51,6 +54,7 @@ public class GameManager : Game
 		_effect = Content.Load<Effect>("TestShader");
 		_previousTime = DateTime.Now;
 
+		_cameraController.ResetCamera();
 		_worldMesh = new WorldMesh(_world);
 
 		base.Initialize();
@@ -67,14 +71,7 @@ public class GameManager : Game
 		_deltaTime = _currentTime - _previousTime;
 		
 		_gameplayInput.UpdateInput();
-
-		if (_gameplayInput.MoveCameraInput != Vector2.Zero)
-		{
-			Vector2 cameraMovement = _gameplayInput.MoveCameraInput * (float)_deltaTime.TotalSeconds * 3;
-			_camera.CameraPosition = new Vector3(_camera.CameraPosition.X + cameraMovement.X, _camera.CameraPosition.Y, _camera.CameraPosition.Z + cameraMovement.Y);
-			_camera.CameraTarget = new Vector3(_camera.CameraTarget.X + cameraMovement.X, _camera.CameraTarget.Y, _camera.CameraTarget.Z + cameraMovement.Y);
-			_camera.RecalculateViewMatrix();
-		}
+		_cameraController.UpdateCamera((float)_deltaTime.TotalSeconds);
 
 		base.Update(gameTime);
 		_previousTime = _currentTime;
@@ -84,6 +81,7 @@ public class GameManager : Game
 	{
 		GraphicsDevice.Clear(Color.CornflowerBlue);
 		
+		// Draw World
 		foreach (ChunkMesh chunkMesh in _worldMesh.ChunkMeshes.Values)
 			DrawMesh(chunkMesh);
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static SpellboundSettlement.Meshes.WorldMeshConstants;
@@ -47,22 +46,4 @@ public class CubeMesh : IMesh
 		Vertices = vertices.ToArray();
 		Indices = indices.ToArray();
 	}
-}
-
-public class CubeFaceMesh
-{
-	public CubeFaceMesh(Vector3[] vertices, Color color)
-	{
-		Color = color;
-
-		if (vertices.Length != VerticesPerFace)
-			throw new ArgumentOutOfRangeException($"{nameof(CubeFaceMesh)} Constructor", $"{nameof(vertices)} should have a length of {VerticesPerFace}");
-
-		for (int vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
-			VertexData[vertexIndex] = new VertexPositionColor(vertices[vertexIndex], Color);
-	}
-
-	public bool IsVisible { get; set; } = true;
-	public Color Color { get; set; }
-	public VertexPositionColor[] VertexData { get; set; } = new VertexPositionColor[VerticesPerFace];
 }

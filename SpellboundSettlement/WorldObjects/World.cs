@@ -41,10 +41,9 @@ public class World
 		{
 			for (int z = 0; z < chunk.TileCount.z; z++)
 			{
-				float noise = GlobalRandom.GetPerlinNoise(100, 25, (
+				float noise = GlobalRandom.GetPerlinNoise(100, .5f, (
 					chunkPosition.X + ((float)x / ChunkTileCount) + float.Epsilon,
 					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
-				Console.WriteLine(noise);
 				int height = GetHeightFromNoise(noise, 0, ChunkTileCount);
 				
 				for (int y = 0; y < chunk.TileCount.y; y++)

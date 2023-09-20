@@ -21,8 +21,7 @@ public static class GlobalRandom
 	{
 		Noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
 		Noise.SetSeed(seed);
-		return Noise.GetNoise(
-			offset.x * scale, 
-			offset.z * scale);
+		Noise.SetFrequency(scale);
+		return Noise.GetNoise(offset.x, offset.z);
 	}
 }

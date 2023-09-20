@@ -1,36 +1,35 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace SpellboundSettlement;
+namespace SpellboundSettlement.CameraObjects;
 
 public class Camera
 {
 	private Matrix _worldMatrix;
 	private Matrix _viewMatrix;
 	private Matrix _projectionMatrix;
-
-	public Camera(float aspectRatio)
-	{
-		AspectRatio = aspectRatio;
-		RecalculateWorldMatrix(recalculateWvpMatrix: false);
-		RecalculateViewMatrix(recalculateWvpMatrix: false);
-		RecalculateProjectionMatrix(recalculateWvpMatrix: false);
-		RecalculateWorldViewProjectionMatrix();
-	}
 	
 	// World Matrix Properties
-	public Vector3 WorldPosition { get; set; } = Vector3.Zero;
+	public Vector3 WorldPosition { get; set; }
 	
 	// Camera Matrix Properties
-	public Vector3 CameraPosition { get; set; } = new(0, 30, 20);
-	public Vector3 CameraTarget { get; set; } = Vector3.Zero;
-	public Vector3 CameraUp { get; set; } = Vector3.Up;
+	public Vector3 Position { get; set; }
+	public Vector3 Target { get; set; }
+	public Vector3 Up { get; set; }
+	
+	// Camera Rotation Matrix
+	public float Yaw { get; set; } // Angle around Y axis in radians | 0° = facing -z | 90° = facing x | -90° = facing -x
+	public float Pitch { get; set; } // Vertical angle in radians | 0° = straight forward | 90° = straight up | -90° = straight down
+	public float Roll { get; set; } // Horizontal tilt in radians | 0° = leveled | 90° = to the right | -90° = to the left
+	public Matrix CameraRotation => Matrix.CreateFromYawPitchRoll(Yaw, Pitch, Roll);
+	public Matrix CameraRotationNoPitch => Matrix.CreateFromYawPitchRoll(Yaw, 0, Roll);
 	
 	// Projection Matrix Properties
-	public float FieldOfView { get; set; } = MathHelper.PiOver4;
+	public float FieldOfView { get; set; }
 	public float AspectRatio { get; set; }
-	public float NearClippingPlane { get; set; } = .01f;
-	public float FarClippingPlane { get; set; } = 100f;
+	public float NearClippingPlane { get; set; }
+	public float FarClippingPlane { get; set; }
 	
+	// Combined Matrix
 	public Matrix WorldViewProjection { get; set; }
 
 	public void RecalculateWorldMatrix(bool recalculateWvpMatrix = true)
@@ -42,7 +41,7 @@ public class Camera
 
 	public void RecalculateViewMatrix(bool recalculateWvpMatrix = true)
 	{
-		_viewMatrix = Matrix.CreateLookAt(CameraPosition, CameraTarget, CameraUp);
+		_viewMatrix = Matrix.CreateLookAt(Position, Target, Up);
 		if (recalculateWvpMatrix) 
 			RecalculateWorldViewProjectionMatrix();
 	}
