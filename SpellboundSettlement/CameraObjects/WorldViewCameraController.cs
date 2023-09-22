@@ -10,7 +10,7 @@ public class WorldViewCameraController : ICameraController
 	private const int MaxZoomLevels = 9;
 	private const int DefaultZoomLevel = 5;
 	private static readonly float MinFieldOfView = MathHelper.ToRadians(30);
-	private static readonly float MaxFieldOfView = MathHelper.ToRadians(80);
+	private static readonly float MaxFieldOfView = MathHelper.ToRadians(110);
 	
 	private readonly Camera _camera;
 	private readonly GameplayInputManager _input;

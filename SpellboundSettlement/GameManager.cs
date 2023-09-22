@@ -20,7 +20,7 @@ public class GameManager : Game
 	private Effect _effect;
 	
 	// World
-	private readonly World _world = new((0, 0), 10);
+	private readonly World _world = new((0, 0), 5);
 	private WorldMesh _worldMesh;
 	
 	// Update Times
