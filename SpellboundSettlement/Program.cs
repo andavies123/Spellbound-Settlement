@@ -31,6 +31,7 @@ public static class Program
 		
 		// Input Managers
 		builder.RegisterType<GameplayInputManager>().As<IInputManager>().AsSelf().SingleInstance();
+		builder.RegisterType<PauseMenuInputManager>().As<IInputManager>().AsSelf().SingleInstance();
 		
 		// Camera Controllers
 		builder.RegisterType<WorldViewCameraController>().As<ICameraController>().AsSelf().SingleInstance();

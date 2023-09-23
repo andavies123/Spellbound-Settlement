@@ -2,7 +2,6 @@
 using Autofac;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SpellboundSettlement.Global;
 
 namespace SpellboundSettlement.Inputs;
 

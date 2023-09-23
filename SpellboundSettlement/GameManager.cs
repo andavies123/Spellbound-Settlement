@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
-using SpellboundSettlement.Global;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.Meshes;
 using SpellboundSettlement.WorldObjects;
@@ -32,6 +31,7 @@ public class GameManager : Game
 		IInputStateMachine inputStateMachine,
 		ICameraController cameraController,
 		GameplayInputManager gameplayInput,
+		PauseMenuInputManager pauseMenuInput,
 		Camera camera)
 	{
 		_inputStateMachine = inputStateMachine ?? throw new ArgumentNullException();
@@ -39,6 +39,10 @@ public class GameManager : Game
 		_camera = camera ?? throw new ArgumentNullException();
 		
 		_inputStateMachine.ChangeInputManager(gameplayInput);
+
+		// Todo: Move this logic to a better location that handles pausing/resuming the game
+		gameplayInput.PauseGame += () => _inputStateMachine.ChangeInputManager(pauseMenuInput);
+		pauseMenuInput.ExitMenu += () => _inputStateMachine.ChangeInputManager(gameplayInput);
 		
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
