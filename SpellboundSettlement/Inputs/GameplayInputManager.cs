@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SpellboundSettlement.Global;
@@ -39,7 +40,7 @@ public class GameplayInputManager : IInputManager
 	private void CheckForceQuit()
 	{
 		if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Keyboard.GetState().IsKeyDown(Keys.Escape))
-			GameServices.GetService<GameManager>().Exit();
+			Program.Container.Resolve<Game>().Exit();
 	}
 
 	private void CheckPauseGameInput()

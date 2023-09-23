@@ -12,9 +12,9 @@ namespace SpellboundSettlement;
 public class GameManager : Game
 {
 	private readonly GraphicsDeviceManager _graphics;
-	private readonly GameplayInputManager _gameplayInput = new();
-	private readonly Camera _camera = new();
+	private readonly IInputStateMachine _inputStateMachine;
 	private readonly ICameraController _cameraController;
+	private readonly Camera _camera;
 	
 	private SpriteBatch _spriteBatch;
 	private Effect _effect;
@@ -28,8 +28,18 @@ public class GameManager : Game
 	private DateTime _previousTime;
 	private TimeSpan _deltaTime;
 
-	public GameManager()
+	public GameManager(
+		IInputStateMachine inputStateMachine,
+		ICameraController cameraController,
+		GameplayInputManager gameplayInput,
+		Camera camera)
 	{
+		_inputStateMachine = inputStateMachine ?? throw new ArgumentNullException();
+		_cameraController = cameraController ?? throw new ArgumentNullException();
+		_camera = camera ?? throw new ArgumentNullException();
+		
+		_inputStateMachine.ChangeInputManager(gameplayInput);
+		
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
 		IsMouseVisible = true;
@@ -38,20 +48,10 @@ public class GameManager : Game
 		_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 		_graphics.IsFullScreen = false;
 		_graphics.ApplyChanges();
-		
-		_cameraController = new WorldViewCameraController(_camera, _gameplayInput);
 	}
 
 	protected override void Initialize()
-	{
-		// Todo: Convert all usages of GameServices to AutoFac
-		GameServices.AddService(this);
-		GameServices.AddService<Game>(this);
-		GameServices.AddService(_camera);
-		GameServices.AddService(_graphics);
-		GameServices.AddService(_gameplayInput);
-		GameServices.AddService(_world);
-		
+	{	
 		_effect = Content.Load<Effect>("TestShader");
 		_previousTime = DateTime.Now;
 
@@ -71,7 +71,8 @@ public class GameManager : Game
 		_currentTime = DateTime.Now;
 		_deltaTime = _currentTime - _previousTime;
 		
-		_gameplayInput.UpdateInput();
+		//_gameplayInput.UpdateInput();
+		_inputStateMachine.Update();
 		_cameraController.UpdateCamera((float)_deltaTime.TotalSeconds);
 
 		base.Update(gameTime);

@@ -1,30 +1,38 @@
 ﻿using Autofac;
+using Microsoft.Xna.Framework;
+using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Inputs;
 
 namespace SpellboundSettlement;
 
 public static class Program
 {
-	private static IContainer Container { get; set; }
+	public static IContainer Container { get; set; }
 	
 	public static void Main(string[] args)
 	{
-		InitializeAutoFac();
+		// Init Autofac
+		ContainerBuilder builder = new();
+		RegisterTypes(builder);
+		Container = builder.Build();
 
 		using ILifetimeScope scope = Container.BeginLifetimeScope();
-		
 		GameManager gameManager = Container.Resolve<GameManager>();
 		gameManager.Run();
 	}
 
-	private static void InitializeAutoFac()
+	private static void RegisterTypes(ContainerBuilder builder)
 	{
-		ContainerBuilder builder = new();
+		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
+		builder.RegisterType<Camera>().AsSelf().SingleInstance();
 		
-		// Register types here
-		builder.RegisterType<GameManager>().AsSelf();
-		builder.RegisterType<GameplayInputManager>().As<IInputManager>().AsSelf();
+		// State Machines
+		builder.RegisterType<InputStateMachine>().As<IInputStateMachine>().AsSelf().SingleInstance();
 		
-		Container = builder.Build();
+		// Input Managers
+		builder.RegisterType<GameplayInputManager>().As<IInputManager>().AsSelf().SingleInstance();
+		
+		// Camera Controllers
+		builder.RegisterType<WorldViewCameraController>().As<ICameraController>().AsSelf().SingleInstance();
 	}
 }
