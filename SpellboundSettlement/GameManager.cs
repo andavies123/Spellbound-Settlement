@@ -44,6 +44,7 @@ public class GameManager : Game
 
 	protected override void Initialize()
 	{
+		// Todo: Convert all usages of GameServices to AutoFac
 		GameServices.AddService(this);
 		GameServices.AddService<Game>(this);
 		GameServices.AddService(_camera);

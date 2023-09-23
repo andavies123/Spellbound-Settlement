@@ -5,7 +5,7 @@ using SpellboundSettlement.Global;
 
 namespace SpellboundSettlement.Inputs;
 
-public class GameplayInputManager
+public class GameplayInputManager : IInputManager
 {
 	private const Keys MoveCameraForwardsKey = Keys.W;
 	private const Keys MoveCameraBackwardsKey = Keys.S;
