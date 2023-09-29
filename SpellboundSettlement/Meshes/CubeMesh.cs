@@ -8,10 +8,10 @@ namespace SpellboundSettlement.Meshes;
 public class CubeMesh : IMesh
 {
 	private readonly CubeFaceMesh[] _faceMeshes;
-	
+
 	public CubeMesh(Vector3 vertexOffset, Color color)
 	{
-		_faceMeshes = new []
+		_faceMeshes = new[]
 		{
 			new CubeFaceMesh(GetOffsetVertices(XPosVertices, vertexOffset), color),
 			new CubeFaceMesh(GetOffsetVertices(XNegVertices, vertexOffset), color),
@@ -23,11 +23,16 @@ public class CubeMesh : IMesh
 		RecalculateMesh();
 	}
 
+	public void SetFaceVisibility(WorldDirection worldDirection, bool visibility) =>
+		_faceMeshes[(int) worldDirection].IsVisible = visibility;
+	
+	#region IMesh Implementation
+	
 	public bool IsVisible { get; set; } = true;
 	public VertexPositionColor[] Vertices { get; private set; }
 	public int[] Indices { get; private set; }
 
-	private void RecalculateMesh()
+	public void RecalculateMesh()
 	{
 		List<VertexPositionColor> vertices = new();
 		List<int> indices = new();
@@ -38,7 +43,7 @@ public class CubeMesh : IMesh
 			if (!faceMesh.IsVisible)
 				continue;
 			
-			vertices.AddRange(faceMesh.VertexData);
+			vertices.AddRange(faceMesh.Vertices);
 			indices.AddRange(GetOffsetIndices(triangleOffset));
 			triangleOffset += VerticesPerFace;
 		}
@@ -46,4 +51,6 @@ public class CubeMesh : IMesh
 		Vertices = vertices.ToArray();
 		Indices = indices.ToArray();
 	}
+	
+	#endregion
 }

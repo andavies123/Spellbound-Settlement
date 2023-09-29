@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
@@ -75,7 +78,6 @@ public class GameManager : Game
 		_currentTime = DateTime.Now;
 		_deltaTime = _currentTime - _previousTime;
 		
-		//_gameplayInput.UpdateInput();
 		_inputStateMachine.Update();
 		_cameraController.UpdateCamera((float)_deltaTime.TotalSeconds);
 
@@ -83,17 +85,45 @@ public class GameManager : Game
 		_previousTime = _currentTime;
 	}
 
+	private readonly Stopwatch _drawStopwatch = new();
+	private readonly Queue<long> _latestDrawTimes = new();
+    
 	protected override void Draw(GameTime gameTime)
 	{
+		#region Draw Timers (Remove when Necessary)
+
+		_drawStopwatch.Restart();
+
+		vertexCount = 0;
+		indexCount = 0;
+
+		#endregion
+		
 		GraphicsDevice.Clear(Color.CornflowerBlue);
 		
 		// Draw World
 		foreach (ChunkMesh chunkMesh in _worldMesh.ChunkMeshes.Values)
 			DrawMesh(chunkMesh);
-
+		
 		base.Draw(gameTime);
+
+		#region Draw Timers (Remove when Necessary)
+
+		_drawStopwatch.Stop();
+		_latestDrawTimes.Enqueue(_drawStopwatch.ElapsedMilliseconds);
+		if (_latestDrawTimes.Count > 240)
+			_latestDrawTimes.Dequeue();
+		Console.WriteLine($"{vertexCount} - {indexCount} - {_latestDrawTimes.Count} - {_latestDrawTimes.Average()}");
+
+		#endregion
 	}
 
+	private int vertexCount = 0;
+	private int indexCount = 0;
+	
+	// Before = 1,074,360 vertices & 1,611,540 indices & avg 26 sec
+	// After = 146,960 vertices & 220,440 indices & avg 4 sec
+	
 	private void DrawMesh(IMesh mesh)
 	{
 		VertexPositionColor[] vertices = mesh.Vertices;
@@ -104,6 +134,9 @@ public class GameManager : Game
 
 		IndexBuffer indexBuffer = new(GraphicsDevice, IndexElementSize.ThirtyTwoBits, indices.Length, BufferUsage.None);
 		indexBuffer.SetData(indices);
+
+		vertexCount += vertices.Length;
+		indexCount += indices.Length;
 		
 		GraphicsDevice.SetVertexBuffer(vertexBuffer);
 		GraphicsDevice.Indices = indexBuffer;

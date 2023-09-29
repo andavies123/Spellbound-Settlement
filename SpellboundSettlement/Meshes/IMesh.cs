@@ -24,4 +24,10 @@ public interface IMesh
 	/// Array should contain a multiple of 3 indices (3 indices per triangle)
 	/// </summary>
 	int[] Indices { get; }
+
+	/// <summary>
+	/// Recalculates all the vertices and indices of this mesh.
+	/// Should not be called every frame as it can contain extensive code
+	/// </summary>
+	void RecalculateMesh();
 }

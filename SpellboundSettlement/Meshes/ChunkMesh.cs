@@ -36,14 +36,36 @@ public class ChunkMesh : IMesh
 				for (int z = 0; z < _cubeMeshes.GetLength(2); z++)
 				{
 					_cubeMeshes[x, y, z] = new CubeMesh(_chunkOffset + new Vector3(x, y, z), WorldMeshConstants.HeightColors[y]);
+					
+					// Check to see if the whole cube is visible
 					if (_chunk.Tiles[x, y, z] == 0)
+					{
 						_cubeMeshes[x, y, z].IsVisible = false;
+						continue;
+					}
+					
+					// Check each cubes individual faces for visibility
+					if (x + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.X) - 1 && _chunk.Tiles[x + 1, y, z] != 0)
+						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.XPositive, false);
+					if (x - 1 >= 0 && _chunk.Tiles[x - 1, y, z] != 0)
+						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.XNegative, false);
+					if (y + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.Y) - 1 && _chunk.Tiles[x, y + 1, z] != 0) 
+						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.YPositive, false);
+					if (y - 1 >= 0 && _chunk.Tiles[x, y - 1, z] != 0) 
+						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.YNegative, false);
+					if (z + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.Z) - 1 && _chunk.Tiles[x, y, z + 1] != 0) 
+						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.ZPositive, false);
+					if (z - 1 >= 0 && _chunk.Tiles[x, y, z - 1] != 0) 
+						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.ZNegative, false);
+					
+					// Recalculate mesh
+					_cubeMeshes[x, y, z].RecalculateMesh();
 				}
 			}
 		}
 	}
 
-	private void RecalculateMesh()
+	public void RecalculateMesh()
 	{
 		List<VertexPositionColor> vertices = new();
 		List<int> indices = new();

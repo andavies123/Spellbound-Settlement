@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SpellboundSettlement.Meshes;
 
-public class CubeFaceMesh
+public class CubeFaceMesh : IMesh
 {
 	public CubeFaceMesh(Vector3[] vertices, Color color)
 	{
@@ -14,10 +14,20 @@ public class CubeFaceMesh
 			throw new ArgumentOutOfRangeException($"{nameof(CubeFaceMesh)} Constructor", $"{nameof(vertices)} should have a length of {WorldMeshConstants.VerticesPerFace}");
 
 		for (int vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
-			VertexData[vertexIndex] = new VertexPositionColor(vertices[vertexIndex], Color);
+			Vertices[vertexIndex] = new VertexPositionColor(vertices[vertexIndex], Color);
 	}
 
-	public bool IsVisible { get; set; } = true;
+
 	public Color Color { get; set; }
-	public VertexPositionColor[] VertexData { get; set; } = new VertexPositionColor[WorldMeshConstants.VerticesPerFace];
+	
+	#region IMesh Implementation
+	
+	public bool IsVisible { get; set; } = true;
+	public int[] Indices => WorldMeshConstants.FaceIndices;
+	public VertexPositionColor[] Vertices { get; } = new VertexPositionColor[WorldMeshConstants.VerticesPerFace];
+	
+	// Unused at the current moment since faces don't move
+	public void RecalculateMesh() { }
+	
+	#endregion
 }
