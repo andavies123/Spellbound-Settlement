@@ -41,8 +41,8 @@ public class GameManager : Game
 		_inputStateMachine.ChangeInputManager(gameplayInput);
 
 		// Todo: Move this logic to a better location that handles pausing/resuming the game
-		gameplayInput.PauseGame += () => _inputStateMachine.ChangeInputManager(pauseMenuInput);
-		pauseMenuInput.ExitMenu += () => _inputStateMachine.ChangeInputManager(gameplayInput);
+		gameplayInput.PauseGame.OnKeyUp += () => _inputStateMachine.ChangeInputManager(pauseMenuInput);
+		pauseMenuInput.ExitMenu.OnKeyUp += () => _inputStateMachine.ChangeInputManager(gameplayInput);
 		
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";

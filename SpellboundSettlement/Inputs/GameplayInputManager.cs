@@ -12,6 +12,8 @@ public class GameplayInputManager : IInputManager
 	private const Keys MoveCameraLeftKey = Keys.A;
 	private const Keys MoveCameraRightKey = Keys.D;
 	private const Keys RotateCameraKey = Keys.R;
+	private const Keys RotateCamera90ClockwiseKey = Keys.Q;
+	private const Keys RotateCamera90CounterClockwiseKey = Keys.E;
 
 	private const Keys PauseGameKey = Keys.Escape;
 
@@ -19,20 +21,24 @@ public class GameplayInputManager : IInputManager
 	private int _previousScrollWheelValue = Mouse.GetState().ScrollWheelValue;
 
 	public Vector2 MoveCameraInput { get; private set; }
+
+	public readonly KeyAction RotateCamera90CW = new(RotateCamera90ClockwiseKey);
+	public readonly KeyAction RotateCamera90CCW = new(RotateCamera90CounterClockwiseKey);
+	public readonly KeyAction PauseGame = new(PauseGameKey);
 	
 	public event Action MoveCameraStarted;
 	public event Action MoveCameraStopped;
-	public event Action RotateCamera;
 	public event Action ZoomIn;
 	public event Action ZoomOut;
-	public event Action PauseGame;
 	
 	public void UpdateInput()
 	{
+		PauseGame.CheckKey();
+		RotateCamera90CW.CheckKey();
+		RotateCamera90CCW.CheckKey();
+		
 		CheckForceQuit();
-		CheckPauseGameInput();
 		CheckMoveCameraInput();
-		CheckRotateCameraInput();
 		CheckZoomInput();
 	}
 
@@ -40,12 +46,6 @@ public class GameplayInputManager : IInputManager
 	{
 		if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Keyboard.GetState().IsKeyDown(Keys.Escape))
 			Program.Container.Resolve<Game>().Exit();
-	}
-
-	private void CheckPauseGameInput()
-	{
-		if (Keyboard.GetState().IsKeyDown(PauseGameKey))
-			PauseGame?.Invoke();
 	}
 
 	private void CheckMoveCameraInput()
@@ -75,18 +75,6 @@ public class GameplayInputManager : IInputManager
 		}
 	}
 
-	private bool _isRotateCameraKeyPressed = false;
-	private void CheckRotateCameraInput()
-	{
-		if (!_isRotateCameraKeyPressed && Keyboard.GetState().IsKeyDown(RotateCameraKey))
-		{
-			_isRotateCameraKeyPressed = true;
-			RotateCamera?.Invoke();
-		}
-		else if (_isRotateCameraKeyPressed && Keyboard.GetState().IsKeyUp(RotateCameraKey))
-			_isRotateCameraKeyPressed = false;
-	}
-
 	private void CheckZoomInput()
 	{
 		// Zoom
@@ -96,5 +84,30 @@ public class GameplayInputManager : IInputManager
 		else if (_previousScrollWheelValue - currentScrollWheelValue < 0)
 			ZoomIn?.Invoke();
 		_previousScrollWheelValue = currentScrollWheelValue;
+	}
+}
+
+public class KeyAction
+{
+	public KeyAction(Keys key) => Key = key;
+
+	public bool IsKeyDown { get; private set; } = false;
+	public Keys Key { get; set; }
+	
+	public event Action OnKeyDown;
+	public event Action OnKeyUp;
+
+	public void CheckKey()
+	{
+		if (!IsKeyDown && Keyboard.GetState().IsKeyDown(Key))
+		{
+			IsKeyDown = true;
+			OnKeyDown?.Invoke();
+		}
+		else if (IsKeyDown && Keyboard.GetState().IsKeyUp(Key))
+		{
+			IsKeyDown = false;
+			OnKeyUp?.Invoke();
+		}
 	}
 }

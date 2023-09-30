@@ -25,7 +25,7 @@ public class WorldViewCameraController : ICameraController
 
 		_input.MoveCameraStarted += OnMoveCameraStarted;
 		_input.MoveCameraStopped += OnMoveCameraStopped;
-		_input.RotateCamera += OnRotateCameraInput;
+		_input.RotateCamera90CW.OnKeyDown += OnRotateCameraInput;
 		_input.ZoomIn += OnZoomInInput;
 		_input.ZoomOut += OnZoomOutInput;
 	}
