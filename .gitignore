@@ -6,6 +6,8 @@
 **/.idea/shelf/*
 **/.idea/dictionaries
 **/.idea/httpRequests/
+# Entire .idea folder
+/.idea/
 
 # Sensitive or high-churn files
 **/.idea/**/dataSources/
