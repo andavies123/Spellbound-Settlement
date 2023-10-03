@@ -1,4 +1,6 @@
-﻿namespace GameUI;
+﻿using Microsoft.Xna.Framework;
+
+namespace GameUI;
 
 public class Button : UIElement
 {
@@ -6,8 +8,9 @@ public class Button : UIElement
 	public event Action MouseExited;
 	public event Action ButtonClicked;
 	
-	public Button((float width, float height) size, (float x, float y) position, string text) : 
-		base(size, position)
+	public Button(Rectangle bounds, LayoutAnchor elementAnchor, 
+		LayoutAnchor screenAnchor, string text)
+		: base(bounds, elementAnchor, screenAnchor)
 	{
 		Text = text;
 	}
