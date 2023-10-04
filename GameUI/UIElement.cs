@@ -7,6 +7,7 @@ namespace GameUI;
 public abstract class UIElement
 {
 	private bool _isMouseInside = false;
+	private bool _isMouseDown = false;
 	
 	protected UIElement(Point position, Point size)
 	{
@@ -23,6 +24,16 @@ public abstract class UIElement
 	/// Raised when the mouse first exists the bounds of this element
 	/// </summary>
 	public event Action? MouseExited;
+
+	/// <summary>
+	/// Raised when the mouse is first pressed inside the bounds of this element
+	/// </summary>
+	public event Action? MousePressed;
+
+	/// <summary>
+	/// Raised when the mouse is first released inside the bounds of this element
+	/// </summary>
+	public event Action? MouseReleased;
 	
 	/// <summary>
 	/// The physical bounds of the UI Element used for drawing.
@@ -63,36 +74,11 @@ public abstract class UIElement
 	/// The color used for the background combined with <see cref="BackgroundTexture"/>
 	/// </summary>
 	public Color BackgroundColor { get; set; } = Color.Transparent;
-
-	/// <summary>
-	/// In charge of drawing the UIElement.
-	/// The given SpriteBatch should have Begin() called before this method is called
-	/// </summary>
-	/// <param name="spriteBatch"></param>
-	public abstract void Draw(SpriteBatch spriteBatch);
-
-	/// <summary>
-	/// Checks the mouse position to raise certain mouse events
-	/// </summary>
-	public virtual void CheckMouseEvents()
-	{
-		Point mousePos = Mouse.GetState().Position;
-
-		switch (_isMouseInside)
-		{
-			// Check for Mouse Entered
-			case false when Bounds.Contains(mousePos):
-				_isMouseInside = true;
-				MouseEntered?.Invoke();
-				break;
-			// Check for Mouse Exited
-			case true when !Bounds.Contains(mousePos):
-				_isMouseInside = false;
-				MouseExited?.Invoke();
-				break;
-		}
-	}
-
+	
+	protected Point CurrentMousePosition => Mouse.GetState().Position;
+	protected bool IsMousePressed => Mouse.GetState().LeftButton == ButtonState.Pressed;
+	protected bool IsMouseReleased => Mouse.GetState().LeftButton == ButtonState.Released;
+	
 	/// <summary>
 	/// Calculates the bounds property using the position/size/anchor and the given screen size
 	/// </summary>
@@ -114,5 +100,61 @@ public abstract class UIElement
 		};
 		
 		Bounds = new Rectangle(position, Size);
+	}
+
+	/// <summary>
+	/// In charge of drawing the UIElement.
+	/// The given SpriteBatch should have Begin() called before this method is called
+	/// </summary>
+	/// <param name="spriteBatch"></param>
+	public abstract void Draw(SpriteBatch spriteBatch);
+
+	/// <summary>
+	/// Checks the mouse position to raise certain mouse events
+	/// </summary>
+	public virtual void CheckMouseEvents()
+	{
+		CheckMouseEntered();
+		CheckMouseExited();
+		CheckMousePressed();
+		CheckMouseReleased();
+	}
+	
+	protected virtual void CheckMouseEntered()
+	{
+		if (!_isMouseInside && Bounds.Contains(CurrentMousePosition))
+		{
+			_isMouseInside = true;
+			MouseEntered?.Invoke();
+		}
+	}
+
+	protected virtual void CheckMouseExited()
+	{
+		if (_isMouseInside && !Bounds.Contains(CurrentMousePosition))
+		{
+			_isMouseInside = false;
+			MouseExited?.Invoke();
+		}
+	}
+
+	protected virtual void CheckMousePressed()
+	{
+		if (!_isMouseDown && IsMousePressed)
+		{
+			_isMouseDown = true;
+			if (Bounds.Contains(CurrentMousePosition))
+				MousePressed?.Invoke();
+		}
+	}
+
+	protected virtual void CheckMouseReleased()
+	{
+		if (_isMouseDown && IsMouseReleased)
+		{
+			_isMouseDown = false;
+			if (Bounds.Contains(CurrentMousePosition))
+				MouseReleased?.Invoke();
+		}
 	}
 }

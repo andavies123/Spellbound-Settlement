@@ -1,13 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace GameUI;
 
 public class Button : UIElement
 {
-	public event Action? ButtonClicked;
-	
 	public Button(Point position, Point size, string text) : base(position, size)
 	{
 		Text = text;
@@ -19,15 +16,6 @@ public class Button : UIElement
 	
 	public bool HasFocus { get; set; } = false;
 	public bool IsClickable { get; set; } = true;
-
-	public override void CheckMouseEvents()
-	{
-		base.CheckMouseEvents();
-		
-		// Check for Mouse Click
-		if (Mouse.GetState().LeftButton == ButtonState.Pressed && Bounds.Contains(Mouse.GetState().Position))
-			ButtonClicked?.Invoke();
-	}
 
 	public override void Draw(SpriteBatch spriteBatch)
 	{
