@@ -1,9 +1,9 @@
-﻿using GameUI.Styles;
+﻿using UI.Styles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace GameUI;
+namespace UI;
 
 public abstract class UIElement
 {

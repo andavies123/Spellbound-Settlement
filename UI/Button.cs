@@ -1,8 +1,8 @@
-﻿using GameUI.Styles;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using UI.Styles;
 
-namespace GameUI;
+namespace UI;
 
 public class Button : UIElement
 {

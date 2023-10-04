@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GameUI.Styles;
+namespace UI.Styles;
 
 public class ButtonStyle : UIElementStyle
 {

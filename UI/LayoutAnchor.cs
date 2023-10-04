@@ -1,4 +1,4 @@
-namespace GameUI;
+namespace UI;
 
 public enum LayoutAnchor
 {

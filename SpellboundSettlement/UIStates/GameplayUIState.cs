@@ -1,5 +1,5 @@
-﻿using GameUI;
-using GameUI.Styles;
+﻿using UI;
+using UI.Styles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,13 +11,12 @@ public class GameplayUIState : IUIState
 	private const LayoutAnchor PauseButtonAnchor = LayoutAnchor.TopRight;
 	private static readonly Point PauseButtonPosition = new(-20, 20);
 	private static readonly Point PauseButtonSize = new(75, 25);
-    
-	private readonly ButtonStyle _buttonStyle;
+	
 	private readonly Button _pauseButton;
 
 	public GameplayUIState()
 	{
-		_buttonStyle = new ButtonStyle
+		ButtonStyle buttonStyle = new()
 		{
 			Font = GameManager.Font,
 			BackgroundColor = Color.LightSlateGray,
@@ -27,7 +26,7 @@ public class GameplayUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		_pauseButton = new Button(PauseButtonPosition, PauseButtonSize, PauseButtonText, _buttonStyle, PauseButtonAnchor);
+		_pauseButton = new Button(PauseButtonPosition, PauseButtonSize, PauseButtonText, buttonStyle, PauseButtonAnchor);
 
 		_pauseButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
 	}

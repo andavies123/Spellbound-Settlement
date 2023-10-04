@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using GameUI;
+using UI;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Inputs;
