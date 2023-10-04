@@ -20,7 +20,7 @@ public class Button : UIElement
 	/// <summary>
 	/// Contains properties to help display the button
 	/// </summary>
-	public override ButtonStyle Style { get; }
+	public ButtonStyle Style { get; }
 	
 	/// <summary>
 	/// True if this button can be clicked by the user

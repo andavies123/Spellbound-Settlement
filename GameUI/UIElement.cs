@@ -60,11 +60,6 @@ public abstract class UIElement
 	public bool IsVisible { get; set; } = true;
 	
 	/// <summary>
-	/// The style properties that define how a UI element will be drawn
-	/// </summary>
-	public abstract UIElementStyle Style { get; }
-	
-	/// <summary>
 	/// The physical bounds of the UI Element used for drawing.
 	/// This value is calculated internally using anchors, position, and size
 	/// </summary>
