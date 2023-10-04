@@ -12,7 +12,9 @@ public class GameplayUIState : IUIState
 	{
 		_pauseButton = new Button(new Point(-20, 20), new Point(75, 25), "PAUSE")
 		{
-			BackgroundColor = Color.DarkSlateGray,
+			BackgroundColor = Color.LightSlateGray,
+			HoverBackgroundColor = Color.SlateGray,
+			MousePressedBackgroundColor = Color.DarkSlateGray,
 			BackgroundTexture = GameManager.Texture,
 			Font = GameManager.Font,
 			LayoutAnchor = LayoutAnchor.TopRight
@@ -23,7 +25,7 @@ public class GameplayUIState : IUIState
 
 	public void Update()
 	{
-		_pauseButton.CheckMouseEvents();
+		_pauseButton.Update();
 	}
     
 	public void Draw(SpriteBatch spriteBatch)

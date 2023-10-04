@@ -6,7 +6,6 @@ namespace GameUI;
 
 public abstract class UIElement
 {
-	private bool _isMouseInside = false;
 	private bool _isMouseDown = false;
 	
 	protected UIElement(Point position, Point size)
@@ -74,6 +73,9 @@ public abstract class UIElement
 	/// The color used for the background combined with <see cref="BackgroundTexture"/>
 	/// </summary>
 	public Color BackgroundColor { get; set; } = Color.Transparent;
+
+	protected bool IsMouseInside { get; set; } = false;
+	protected bool IsElementPressed { get; set; } = false;
 	
 	protected Point CurrentMousePosition => Mouse.GetState().Position;
 	protected bool IsMousePressed => Mouse.GetState().LeftButton == ButtonState.Pressed;
@@ -112,7 +114,7 @@ public abstract class UIElement
 	/// <summary>
 	/// Checks the mouse position to raise certain mouse events
 	/// </summary>
-	public virtual void CheckMouseEvents()
+	public virtual void Update()
 	{
 		CheckMouseEntered();
 		CheckMouseExited();
@@ -122,18 +124,18 @@ public abstract class UIElement
 	
 	protected virtual void CheckMouseEntered()
 	{
-		if (!_isMouseInside && Bounds.Contains(CurrentMousePosition))
+		if (!IsMouseInside && Bounds.Contains(CurrentMousePosition))
 		{
-			_isMouseInside = true;
+			IsMouseInside = true;
 			MouseEntered?.Invoke();
 		}
 	}
 
 	protected virtual void CheckMouseExited()
 	{
-		if (_isMouseInside && !Bounds.Contains(CurrentMousePosition))
+		if (IsMouseInside && !Bounds.Contains(CurrentMousePosition))
 		{
-			_isMouseInside = false;
+			IsMouseInside = false;
 			MouseExited?.Invoke();
 		}
 	}
@@ -144,7 +146,10 @@ public abstract class UIElement
 		{
 			_isMouseDown = true;
 			if (Bounds.Contains(CurrentMousePosition))
+			{
 				MousePressed?.Invoke();
+				IsElementPressed = true;
+			}
 		}
 	}
 
@@ -153,6 +158,7 @@ public abstract class UIElement
 		if (_isMouseDown && IsMouseReleased)
 		{
 			_isMouseDown = false;
+			IsElementPressed = false;
 			if (Bounds.Contains(CurrentMousePosition))
 				MouseReleased?.Invoke();
 		}
