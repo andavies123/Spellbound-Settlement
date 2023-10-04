@@ -1,15 +1,28 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace GameUI;
 
 public abstract class UIElement
 {
+	private bool _isMouseInside = false;
+	
 	protected UIElement(Point position, Point size)
 	{
 		Position = position;
 		Size = size;
 	}
+
+	/// <summary>
+	/// Raised when the mouse first enters the bounds of this element
+	/// </summary>
+	public event Action? MouseEntered;
+	
+	/// <summary>
+	/// Raised when the mouse first exists the bounds of this element
+	/// </summary>
+	public event Action? MouseExited;
 	
 	/// <summary>
 	/// The physical bounds of the UI Element used for drawing.
@@ -57,6 +70,28 @@ public abstract class UIElement
 	/// </summary>
 	/// <param name="spriteBatch"></param>
 	public abstract void Draw(SpriteBatch spriteBatch);
+
+	/// <summary>
+	/// Checks the mouse position to raise certain mouse events
+	/// </summary>
+	public virtual void CheckMouseEvents()
+	{
+		Point mousePos = Mouse.GetState().Position;
+
+		switch (_isMouseInside)
+		{
+			// Check for Mouse Entered
+			case false when Bounds.Contains(mousePos):
+				_isMouseInside = true;
+				MouseEntered?.Invoke();
+				break;
+			// Check for Mouse Exited
+			case true when !Bounds.Contains(mousePos):
+				_isMouseInside = false;
+				MouseExited?.Invoke();
+				break;
+		}
+	}
 
 	/// <summary>
 	/// Calculates the bounds property using the position/size/anchor and the given screen size

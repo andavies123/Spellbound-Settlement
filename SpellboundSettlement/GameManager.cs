@@ -90,6 +90,7 @@ public class GameManager : Game
 		Texture.SetData(data);
 		
 		Font = Content.Load<SpriteFont>("TestFont");
+		// Todo: Move
 		_uiStateMachine.ChangeUIState(new GameplayUIState());
 	}
 
@@ -100,6 +101,7 @@ public class GameManager : Game
 		
 		_inputStateMachine.Update();
 		_cameraController.UpdateCamera((float)_deltaTime.TotalSeconds);
+		_uiStateMachine.Update();
 
 		base.Update(gameTime);
 		_previousTime = _currentTime;

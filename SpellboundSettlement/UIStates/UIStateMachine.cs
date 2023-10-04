@@ -7,5 +7,6 @@ public class UIStateMachine : IUIStateMachine
 	private IUIState _currentUIState;
 
 	public void ChangeUIState(IUIState nextUIState) => _currentUIState = nextUIState;
+	public void Update() => _currentUIState.Update();
 	public void Draw(SpriteBatch spriteBatch) => _currentUIState.Draw(spriteBatch);
 }

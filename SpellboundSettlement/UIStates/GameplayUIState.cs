@@ -1,4 +1,6 @@
-﻿using GameUI;
+﻿using System;
+using System.Diagnostics;
+using GameUI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -19,6 +21,15 @@ public class GameplayUIState : IUIState
 		};
 		
 		_pauseButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
+
+		_pauseButton.MouseEntered += () => Console.WriteLine("Mouse Entered");
+		_pauseButton.MouseExited += () => Console.WriteLine("Mouse Exited");
+		_pauseButton.ButtonClicked += () => Console.WriteLine("Button Clicked");
+	}
+
+	public void Update()
+	{
+		_pauseButton.CheckMouseEvents();
 	}
     
 	public void Draw(SpriteBatch spriteBatch)
