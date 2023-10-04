@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameUI.Styles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -33,12 +34,6 @@ public abstract class UIElement
 	/// Raised when the mouse is first released inside the bounds of this element
 	/// </summary>
 	public event Action? MouseReleased;
-	
-	/// <summary>
-	/// The physical bounds of the UI Element used for drawing.
-	/// This value is calculated internally using anchors, position, and size
-	/// </summary>
-	public Rectangle Bounds { get; private set; }
 
 	/// <summary>
 	/// The anchored position of this element on the screen.
@@ -54,9 +49,9 @@ public abstract class UIElement
 	public Point Size { get; set; }
 
 	/// <summary>
-	/// Which part of the UI Element will be used for displaying
+	/// Which part of the screen the UIElement will be anchored to. Affects positioning
 	/// </summary>
-	public LayoutAnchor LayoutAnchor { get; set; }
+	public LayoutAnchor LayoutAnchor { get; set; } = LayoutAnchor.MiddleCenter;
 
 	/// <summary>
 	/// True if the UI element is visible
@@ -65,16 +60,27 @@ public abstract class UIElement
 	public bool IsVisible { get; set; } = true;
 	
 	/// <summary>
-	/// The texture to use for the background combined with <see cref="BackgroundColor"/>
+	/// The style properties that define how a UI element will be drawn
 	/// </summary>
-	public Texture2D? BackgroundTexture { get; set; }
+	public abstract UIElementStyle Style { get; }
+	
+	/// <summary>
+	/// The physical bounds of the UI Element used for drawing.
+	/// This value is calculated internally using anchors, position, and size
+	/// </summary>
+	protected Rectangle Bounds { get; private set; }
 
 	/// <summary>
-	/// The color used for the background combined with <see cref="BackgroundTexture"/>
+	/// True if the mouse is inside the bounds of this element. Also known as hovering.
+	/// False if the mouse is outside the bounds of this element
 	/// </summary>
-	public Color BackgroundColor { get; set; } = Color.Transparent;
-
 	protected bool IsMouseInside { get; set; } = false;
+	
+	/// <summary>
+	/// True if the mouse was pressed inside the bounds of this element. The mouse can leave the bounds and stay pressed
+	/// False if the mouse is released or was not pressed inside the bounds of this element. A mouse press outside then drag
+	/// into the bounds should still result in false
+	/// </summary>
 	protected bool IsElementPressed { get; set; } = false;
 	
 	protected Point CurrentMousePosition => Mouse.GetState().Position;
@@ -122,6 +128,9 @@ public abstract class UIElement
 		CheckMouseReleased();
 	}
 	
+	/// <summary>
+	/// Checks to see if the mouse has entered the bounds of this element whether it is pressed or not
+	/// </summary>
 	protected virtual void CheckMouseEntered()
 	{
 		if (!IsMouseInside && Bounds.Contains(CurrentMousePosition))
@@ -131,6 +140,9 @@ public abstract class UIElement
 		}
 	}
 
+	/// <summary>
+	/// Checks to see if the mouse has exited the bounds of this element whether it is pressed or not
+	/// </summary>
 	protected virtual void CheckMouseExited()
 	{
 		if (IsMouseInside && !Bounds.Contains(CurrentMousePosition))
@@ -140,6 +152,9 @@ public abstract class UIElement
 		}
 	}
 
+	/// <summary>
+	/// Checks to see if the mouse was pressed inside the bounds of this element
+	/// </summary>
 	protected virtual void CheckMousePressed()
 	{
 		if (!_isMouseDown && IsMousePressed)
@@ -153,6 +168,9 @@ public abstract class UIElement
 		}
 	}
 
+	/// <summary>
+	/// Checks to see if the mouse was released
+	/// </summary>
 	protected virtual void CheckMouseReleased()
 	{
 		if (_isMouseDown && IsMouseReleased)
