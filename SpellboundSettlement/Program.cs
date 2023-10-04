@@ -3,7 +3,7 @@ using UI;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Inputs;
-using SpellboundSettlement.UIStates;
+using UI.StateMachines;
 
 namespace SpellboundSettlement;
 

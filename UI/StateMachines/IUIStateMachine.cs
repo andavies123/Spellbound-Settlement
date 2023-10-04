@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace SpellboundSettlement.UIStates;
+namespace UI.StateMachines;
 
 public interface IUIStateMachine
 {
 	void ChangeUIState(IUIState nextUIState);
-	void Update();
+	void Update(float deltaTime);
 	void Draw(SpriteBatch spriteBatch);
 }

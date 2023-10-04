@@ -6,6 +6,7 @@ using SpellboundSettlement.Inputs;
 using SpellboundSettlement.Meshes;
 using SpellboundSettlement.UIStates;
 using SpellboundSettlement.WorldObjects;
+using UI.StateMachines;
 
 namespace SpellboundSettlement;
 
@@ -98,10 +99,12 @@ public class GameManager : Game
 	{
 		_currentTime = DateTime.Now;
 		_deltaTime = _currentTime - _previousTime;
+
+		float deltaTimeSeconds = (float) _deltaTime.TotalSeconds;
 		
 		_inputStateMachine.Update();
-		_cameraController.UpdateCamera((float)_deltaTime.TotalSeconds);
-		_uiStateMachine.Update();
+		_cameraController.UpdateCamera(deltaTimeSeconds);
+		_uiStateMachine.Update(deltaTimeSeconds);
 
 		base.Update(gameTime);
 		_previousTime = _currentTime;

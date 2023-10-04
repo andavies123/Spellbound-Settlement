@@ -1,7 +1,9 @@
-﻿using UI;
-using UI.Styles;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using UI.Enums;
+using UI.StateMachines;
+using UI.Styles;
+using UI.UIElements;
 
 namespace SpellboundSettlement.UIStates;
 

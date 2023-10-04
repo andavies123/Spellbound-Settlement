@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace SpellboundSettlement.UIStates;
+namespace UI.StateMachines;
 
 public interface IUIState
 {

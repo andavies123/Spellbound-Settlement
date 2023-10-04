@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using UI.Enums;
 using UI.Styles;
 
-namespace UI;
+namespace UI.UIElements;
 
 public class Button : UIElement
 {
