@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using GameUI;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Inputs;
+using SpellboundSettlement.UIStates;
 
 namespace SpellboundSettlement;
 
@@ -28,6 +30,7 @@ public static class Program
 		
 		// State Machines
 		builder.RegisterType<InputStateMachine>().As<IInputStateMachine>().AsSelf().SingleInstance();
+		builder.RegisterType<UIStateMachine>().As<IUIStateMachine>().AsSelf().SingleInstance();
 		
 		// Input Managers
 		builder.RegisterType<GameplayInputManager>().As<IInputManager>().AsSelf().SingleInstance();
