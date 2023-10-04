@@ -9,10 +9,11 @@ public abstract class UIElement
 {
 	private bool _isMouseDown = false;
 	
-	protected UIElement(Point position, Point size)
+	protected UIElement(Point position, Point size, LayoutAnchor anchor)
 	{
 		Position = position;
 		Size = size;
+		Anchor = anchor;
 	}
 
 	/// <summary>
@@ -51,7 +52,7 @@ public abstract class UIElement
 	/// <summary>
 	/// Which part of the screen the UIElement will be anchored to. Affects positioning
 	/// </summary>
-	public LayoutAnchor LayoutAnchor { get; set; } = LayoutAnchor.MiddleCenter;
+	public LayoutAnchor Anchor { get; set; } = LayoutAnchor.MiddleCenter;
 
 	/// <summary>
 	/// True if the UI element is visible
@@ -78,9 +79,9 @@ public abstract class UIElement
 	/// </summary>
 	protected bool IsElementPressed { get; set; } = false;
 	
-	protected Point CurrentMousePosition => Mouse.GetState().Position;
-	protected bool IsMousePressed => Mouse.GetState().LeftButton == ButtonState.Pressed;
-	protected bool IsMouseReleased => Mouse.GetState().LeftButton == ButtonState.Released;
+	protected static Point CurrentMousePosition => Mouse.GetState().Position;
+	protected static bool IsMousePressed => Mouse.GetState().LeftButton == ButtonState.Pressed;
+	protected static bool IsMouseReleased => Mouse.GetState().LeftButton == ButtonState.Released;
 	
 	/// <summary>
 	/// Calculates the bounds property using the position/size/anchor and the given screen size
@@ -88,7 +89,7 @@ public abstract class UIElement
 	/// <param name="screenSize">The size of the screen. Used alongside the anchor</param>
 	public void CalculateBounds(Point screenSize)
 	{
-		Point position = LayoutAnchor switch
+		Point position = Anchor switch
 		{
 			LayoutAnchor.TopLeft => Position,
 			LayoutAnchor.TopCenter => new Point(screenSize.X/2 - Size.X/2 + Position.X, Position.Y),

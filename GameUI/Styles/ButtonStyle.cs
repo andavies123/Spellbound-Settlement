@@ -24,4 +24,10 @@ public class ButtonStyle : UIElementStyle
 	/// The background color of the button when the mouse is pressed on the button
 	/// </summary>
 	public Color MousePressedBackgroundColor { get; set; }
+	
+	/// <summary>
+	/// The background color of the button when the button is disabled.
+	/// This takes precedence over other colors when disabled.
+	/// </summary>
+	public Color DisabledBackgroundColor { get; set; }
 }

@@ -8,6 +8,7 @@ namespace SpellboundSettlement.UIStates;
 public class GameplayUIState : IUIState
 {
 	private const string PauseButtonText = "Pause";
+	private const LayoutAnchor PauseButtonAnchor = LayoutAnchor.TopRight;
 	private static readonly Point PauseButtonPosition = new(-20, 20);
 	private static readonly Point PauseButtonSize = new(75, 25);
     
@@ -22,12 +23,12 @@ public class GameplayUIState : IUIState
 			BackgroundColor = Color.LightSlateGray,
 			HoverBackgroundColor = Color.SlateGray,
 			MousePressedBackgroundColor = Color.DarkSlateGray,
+			DisabledBackgroundColor = Color.Red,
 			BackgroundTexture = GameManager.Texture
 		};
 
-		_pauseButton = new Button(PauseButtonPosition, PauseButtonSize, PauseButtonText, _buttonStyle);
-		_pauseButton.LayoutAnchor = LayoutAnchor.TopRight;
-		
+		_pauseButton = new Button(PauseButtonPosition, PauseButtonSize, PauseButtonText, _buttonStyle, PauseButtonAnchor);
+
 		_pauseButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
 	}
 

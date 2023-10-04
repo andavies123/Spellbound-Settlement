@@ -6,7 +6,7 @@ namespace GameUI;
 
 public class Button : UIElement
 {
-	public Button(Point position, Point size, string text, ButtonStyle buttonStyle) : base(position, size)
+	public Button(Point position, Point size, string text, ButtonStyle buttonStyle, LayoutAnchor anchor) : base(position, size, anchor)
 	{
 		Text = text;
 		Style = buttonStyle;
@@ -26,7 +26,7 @@ public class Button : UIElement
 	/// True if this button can be clicked by the user
 	/// False if this button can not be clicked by the user
 	/// </summary>
-	public bool IsClickable { get; set; } = true;
+	public bool IsEnabled { get; set; } = true;
 
 	public override void Draw(SpriteBatch spriteBatch)
 	{
@@ -47,12 +47,16 @@ public class Button : UIElement
 	private Color GetCurrentBackgroundColor()
 	{
 		Color color;
-		if (IsElementPressed)
+		
+		if (!IsEnabled)
+			color = Style.DisabledBackgroundColor;
+		else if (IsElementPressed)
 			color = Style.MousePressedBackgroundColor;
 		else if (IsMouseInside)
 			color = Style.HoverBackgroundColor;
 		else
 			color = Style.BackgroundColor;
+		
 		return color;
 	}
 }
