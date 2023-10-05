@@ -33,7 +33,13 @@ public class GameplayUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		_pauseButton = new Button(PauseButtonPosition, PauseButtonSize, PauseButtonText, buttonStyle, PauseButtonAnchor);
+		_pauseButton = new Button(
+			PauseButtonPosition, 
+			PauseButtonSize, 
+			PauseButtonText, 
+			buttonStyle, 
+			PauseButtonAnchor);
+		
 		_pauseButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
 		_pauseButton.MousePressed += RaisePauseButtonPressed;
 	}
@@ -49,12 +55,4 @@ public class GameplayUIState : IUIState
 	}
 
 	private void RaisePauseButtonPressed() => PauseButtonPressed?.Invoke();
-}
-
-public class PauseMenuUIState : IUIState
-{
-	public void Init() { }
-	public void LateInit() { }
-	public void Update(float deltaTimeSeconds) { }
-	public void Draw(SpriteBatch spriteBatch) { }
 }

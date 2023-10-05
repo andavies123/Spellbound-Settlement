@@ -55,10 +55,8 @@ public class GameManager : Game
 		Content.RootDirectory = "Content";
 		IsMouseVisible = true;
 
-		//_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-		_graphics.PreferredBackBufferWidth = 1920;
-		//_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-		_graphics.PreferredBackBufferHeight = 1080;
+		_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+		_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 		
 		_graphics.IsFullScreen = false;
 		_graphics.ApplyChanges();

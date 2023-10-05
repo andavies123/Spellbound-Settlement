@@ -13,12 +13,20 @@ public class PauseMenuGameState : IGameState
 	public IUIState UIState { get; } = new PauseMenuUIState();
 	public IInputManager InputState { get; } = new PauseMenuInputManager();
 
-	public void Init() { }
-	public void LateInit() { }
+	public void Init()
+	{
+		UIState.Init();
+	}
+
+	public void LateInit()
+	{
+		UIState.LateInit();
+	}
 
 	public void Start()
 	{
 		((PauseMenuInputManager) InputState).ExitMenu.OnKeyUp += RaiseResumeGame;
+		((PauseMenuUIState) UIState).ResumeButtonPressed += RaiseResumeGame;
 	}
 	
 	public void Update(float deltaTimeSeconds)
@@ -35,6 +43,7 @@ public class PauseMenuGameState : IGameState
 	public void End()
 	{
 		((PauseMenuInputManager) InputState).ExitMenu.OnKeyUp -= RaiseResumeGame;
+		((PauseMenuUIState) UIState).ResumeButtonPressed -= RaiseResumeGame;
 	}
 
 	private void RaiseResumeGame()
