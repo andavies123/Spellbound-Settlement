@@ -2,19 +2,18 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
+using SpellboundSettlement.GameStates;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.Meshes;
-using SpellboundSettlement.UIStates;
 using SpellboundSettlement.WorldObjects;
-using UI.StateMachines;
 
 namespace SpellboundSettlement;
 
 public class GameManager : Game
 {
 	private readonly GraphicsDeviceManager _graphics;
-	private readonly IInputStateMachine _inputStateMachine;
-	private readonly IUIStateMachine _uiStateMachine;
+	
+	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
 	private readonly Camera _camera;
 	
@@ -36,24 +35,21 @@ public class GameManager : Game
 	public static Viewport Viewport;
 
 	public GameManager(
-		IInputStateMachine inputStateMachine,
-		IUIStateMachine uiStateMachine,
+		IGameStateManager gameStateManager,
 		ICameraController cameraController,
 		GameplayInputManager gameplayInput,
 		PauseMenuInputManager pauseMenuInput,
 		Camera camera)
 	{
-		_inputStateMachine = inputStateMachine ?? throw new ArgumentNullException();
-		_uiStateMachine = uiStateMachine ?? throw new ArgumentNullException();
+		_gameStateManager = gameStateManager;
+		
 		_cameraController = cameraController ?? throw new ArgumentNullException();
 		_camera = camera ?? throw new ArgumentNullException();
 		
 		// Todo: Move this to a separate location that handles all input/UI states
-		_inputStateMachine.ChangeInputManager(gameplayInput);
+		gameStateManager.SetState(new GameplayGameState());
 
 		// Todo: Move this logic to a better location that handles pausing/resuming the game
-		gameplayInput.PauseGame.OnKeyUp += () => _inputStateMachine.ChangeInputManager(pauseMenuInput);
-		pauseMenuInput.ExitMenu.OnKeyUp += () => _inputStateMachine.ChangeInputManager(gameplayInput);
 		
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -76,6 +72,15 @@ public class GameManager : Game
 
 		_cameraController.ResetCamera();
 		_worldMesh = new WorldMesh(_world);
+		
+		// Set default texture
+		Texture = new Texture2D(GraphicsDevice, 1, 1);
+		Color[] data = new Color[1 * 1];
+		for (int i = 0; i < data.Length; i++)
+			data[i] = Color.White;
+		Texture.SetData(data);
+		
+		_gameStateManager.Init();
 
 		base.Initialize();
 	}
@@ -84,15 +89,9 @@ public class GameManager : Game
 	{
 		_spriteBatch = new SpriteBatch(GraphicsDevice);
 		
-		Texture = new Texture2D(GraphicsDevice, 1, 1);
-		Color[] data = new Color[1 * 1];
-		for (int i = 0; i < data.Length; i++)
-			data[i] = Color.White;
-		Texture.SetData(data);
-		
 		Font = Content.Load<SpriteFont>("TestFont");
-		// Todo: Move
-		_uiStateMachine.ChangeUIState(new GameplayUIState());
+		
+		_gameStateManager.LateInit();
 	}
 
 	protected override void Update(GameTime gameTime)
@@ -102,9 +101,8 @@ public class GameManager : Game
 
 		float deltaTimeSeconds = (float) _deltaTime.TotalSeconds;
 		
-		_inputStateMachine.Update();
+		_gameStateManager.Update(deltaTimeSeconds);
 		_cameraController.UpdateCamera(deltaTimeSeconds);
-		_uiStateMachine.Update(deltaTimeSeconds);
 
 		base.Update(gameTime);
 		_previousTime = _currentTime;
@@ -122,7 +120,7 @@ public class GameManager : Game
 		GraphicsDevice.DepthStencilState = DepthStencilState.None;
 		_spriteBatch.Begin();
 		
-		_uiStateMachine.Draw(_spriteBatch);
+		_gameStateManager.Draw(_spriteBatch);
 		
 		_spriteBatch.End();
 		GraphicsDevice.DepthStencilState = DepthStencilState.Default;

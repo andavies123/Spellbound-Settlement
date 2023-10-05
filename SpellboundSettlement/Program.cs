@@ -2,6 +2,7 @@
 using UI;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
+using SpellboundSettlement.GameStates;
 using SpellboundSettlement.Inputs;
 using UI.StateMachines;
 
@@ -27,6 +28,9 @@ public static class Program
 	{
 		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
+
+		// Game State
+		builder.RegisterType<GameStateManager>().As<IGameStateManager>().SingleInstance();
 		
 		// State Machines
 		builder.RegisterType<InputStateMachine>().As<IInputStateMachine>().AsSelf().SingleInstance();
