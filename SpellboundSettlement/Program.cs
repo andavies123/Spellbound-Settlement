@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.GameStates;
 using SpellboundSettlement.Inputs;
+using SpellboundSettlement.UIStates;
 using UI.StateMachines;
 
 namespace SpellboundSettlement;
@@ -29,8 +30,10 @@ public static class Program
 		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
 
-		// Game State
+		// Game States
 		builder.RegisterType<GameStateManager>().As<IGameStateManager>().SingleInstance();
+		builder.RegisterType<GameplayGameState>().As<IGameState>().AsSelf().SingleInstance();
+		builder.RegisterType<PauseMenuGameState>().As<IGameState>().AsSelf().SingleInstance();
 		
 		// State Machines
 		builder.RegisterType<InputStateMachine>().As<IInputStateMachine>().AsSelf().SingleInstance();
@@ -39,6 +42,10 @@ public static class Program
 		// Input Managers
 		builder.RegisterType<GameplayInputManager>().As<IInputManager>().AsSelf().SingleInstance();
 		builder.RegisterType<PauseMenuInputManager>().As<IInputManager>().AsSelf().SingleInstance();
+		
+		// UI States
+		builder.RegisterType<GameplayUIState>().As<IUIState>().AsSelf().SingleInstance();
+		builder.RegisterType<PauseMenuUIState>().As<IUIState>().AsSelf().SingleInstance();
 		
 		// Camera Controllers
 		builder.RegisterType<WorldViewCameraController>().As<ICameraController>().AsSelf().SingleInstance();

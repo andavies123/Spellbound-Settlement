@@ -4,8 +4,16 @@ namespace SpellboundSettlement.GameStates;
 
 public class GameStateManager : IGameStateManager
 {
-	private readonly IGameState _gameplayGameState = new GameplayGameState();
-	private readonly IGameState _pauseMenuGameState = new PauseMenuGameState();
+	private readonly GameplayGameState _gameplayGameState;
+	private readonly PauseMenuGameState _pauseMenuGameState;
+
+	public GameStateManager(
+		GameplayGameState gameplayGameState,
+		PauseMenuGameState pauseMenuGameState)
+	{
+		_gameplayGameState = gameplayGameState;
+		_pauseMenuGameState = pauseMenuGameState;
+	}
 	
 	public IGameState CurrentGameState { get; private set; }
 	
@@ -17,8 +25,8 @@ public class GameStateManager : IGameStateManager
 		// Set initial state
 		SetState(_gameplayGameState);
 
-		((GameplayGameState) _gameplayGameState).PauseGame += OnPauseGame;
-		((PauseMenuGameState) _pauseMenuGameState).ResumeGame += OnResumeGame;
+		_gameplayGameState.PauseGame += OnPauseGame;
+		_pauseMenuGameState.ResumeGame += OnResumeGame;
 	}
 
 	public void LateInit()

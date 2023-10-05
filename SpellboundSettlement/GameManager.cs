@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.GameStates;
-using SpellboundSettlement.Inputs;
 using SpellboundSettlement.Meshes;
 using SpellboundSettlement.WorldObjects;
 
@@ -37,17 +36,15 @@ public class GameManager : Game
 	public GameManager(
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
+		GameplayGameState startingGameState,
 		Camera camera)
 	{
 		_gameStateManager = gameStateManager;
-		
-		_cameraController = cameraController ?? throw new ArgumentNullException();
-		_camera = camera ?? throw new ArgumentNullException();
+		_cameraController = cameraController;
+		_camera = camera;
 		
 		// Todo: Move this to a separate location that handles all input/UI states
-		gameStateManager.SetState(new GameplayGameState());
-
-		// Todo: Move this logic to a better location that handles pausing/resuming the game
+		gameStateManager.SetState(startingGameState);
 		
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -63,7 +60,6 @@ public class GameManager : Game
 
 	protected override void Initialize()
 	{	
-		_effect = Content.Load<Effect>("TestShader");
 		_previousTime = DateTime.Now;
 
 		_cameraController.ResetCamera();
@@ -85,6 +81,7 @@ public class GameManager : Game
 	{
 		_spriteBatch = new SpriteBatch(GraphicsDevice);
 		
+		_effect = Content.Load<Effect>("TestShader");
 		Font = Content.Load<SpriteFont>("TestFont");
 		
 		_gameStateManager.LateInit();
