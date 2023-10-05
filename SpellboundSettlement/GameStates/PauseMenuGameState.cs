@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates;
 using UI.StateMachines;
@@ -10,7 +11,7 @@ public class PauseMenuGameState : GameState
 	public event Action ResumeGame;
 	
 	public override IUIState UIState { get; } = new PauseMenuUIState();
-	public override IInputManager InputState { get; } = new PauseMenuInputManager();
+	public override IInputManager InputState { get; } = Program.Container.Resolve<PauseMenuInputManager>();
 
 	public override void Start()
 	{

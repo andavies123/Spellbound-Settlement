@@ -37,8 +37,6 @@ public class GameManager : Game
 	public GameManager(
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
-		GameplayInputManager gameplayInput,
-		PauseMenuInputManager pauseMenuInput,
 		Camera camera)
 	{
 		_gameStateManager = gameStateManager;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates;
 using UI.StateMachines;
@@ -10,7 +11,7 @@ public class GameplayGameState : GameState
 	public event Action PauseGame;
 	
 	public override IUIState UIState { get; } = new GameplayUIState();
-	public override IInputManager InputState { get; } = new GameplayInputManager();
+	public override IInputManager InputState { get; } = Program.Container.Resolve<GameplayInputManager>();
 
 	public override void Start()
 	{
