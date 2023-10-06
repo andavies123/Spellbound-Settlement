@@ -25,6 +25,8 @@ public class PauseMenuUIState : IUIState
 	private Button _quitButton;
 
 	public event Action ResumeButtonPressed;
+	public event Action SettingsButtonPressed;
+	public event Action QuitButtonPressed;
 	
 	public void Init() { }
 
@@ -91,11 +93,11 @@ public class PauseMenuUIState : IUIState
 
 	private void OnSettingsButtonPressed()
 	{
-		Console.WriteLine("Settings Button Pressed");
+		SettingsButtonPressed?.Invoke();
 	}
 
 	private void OnQuitButtonPressed()
 	{
-		Console.WriteLine("Quit Button Pressed");
+		QuitButtonPressed?.Invoke();
 	}
 }

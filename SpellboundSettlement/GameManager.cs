@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac.Core.Activators;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
@@ -10,6 +11,7 @@ namespace SpellboundSettlement;
 
 public class GameManager : Game
 {
+	private static GameManager Instance;
 	private readonly GraphicsDeviceManager _graphics;
 	
 	private readonly IGameStateManager _gameStateManager;
@@ -39,6 +41,8 @@ public class GameManager : Game
 		GameplayGameState startingGameState,
 		Camera camera)
 	{
+		Instance = this;
+		
 		_gameStateManager = gameStateManager;
 		_cameraController = cameraController;
 		_camera = camera;
@@ -57,6 +61,8 @@ public class GameManager : Game
 		_graphics.ApplyChanges();
 		Viewport = GraphicsDevice.Viewport;
 	}
+
+	public static void QuitGame() => Instance.Exit();
 
 	protected override void Initialize()
 	{	

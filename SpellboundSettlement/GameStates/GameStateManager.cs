@@ -27,6 +27,7 @@ public class GameStateManager : IGameStateManager
 
 		_gameplayGameState.PauseGame += OnPauseGame;
 		_pauseMenuGameState.ResumeGame += OnResumeGame;
+		_pauseMenuGameState.QuitGame += OnQuitGame;
 	}
 
 	public void LateInit()
@@ -60,5 +61,10 @@ public class GameStateManager : IGameStateManager
 	private void OnResumeGame()
 	{
 		SetState(_gameplayGameState);
+	}
+
+	private void OnQuitGame()
+	{
+		GameManager.QuitGame();
 	}
 }

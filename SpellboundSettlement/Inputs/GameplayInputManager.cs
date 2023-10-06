@@ -1,5 +1,4 @@
 ﻿using System;
-using Autofac;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -45,7 +44,7 @@ public class GameplayInputManager : IInputManager
 	private void CheckForceQuit()
 	{
 		if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Keyboard.GetState().IsKeyDown(Keys.Escape))
-			Program.Container.Resolve<Game>().Exit();
+			GameManager.QuitGame();
 	}
 
 	private void CheckMoveCameraInput()
