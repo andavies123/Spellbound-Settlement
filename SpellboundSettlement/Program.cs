@@ -32,6 +32,7 @@ public static class Program
 
 		// Game States
 		builder.RegisterType<GameStateManager>().As<IGameStateManager>().SingleInstance();
+		builder.RegisterType<MainMenuGameState>().As<IGameState>().AsSelf().SingleInstance();
 		builder.RegisterType<GameplayGameState>().As<IGameState>().AsSelf().SingleInstance();
 		builder.RegisterType<PauseMenuGameState>().As<IGameState>().AsSelf().SingleInstance();
 		
@@ -44,6 +45,7 @@ public static class Program
 		builder.RegisterType<PauseMenuInputManager>().As<IInputManager>().AsSelf().SingleInstance();
 		
 		// UI States
+		builder.RegisterType<MainMenuUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<GameplayUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<PauseMenuUIState>().As<IUIState>().AsSelf().SingleInstance();
 		

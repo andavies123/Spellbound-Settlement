@@ -1,5 +1,4 @@
 ﻿using System;
-using Autofac.Core.Activators;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
@@ -38,7 +37,6 @@ public class GameManager : Game
 	public GameManager(
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
-		GameplayGameState startingGameState,
 		Camera camera)
 	{
 		Instance = this;
@@ -46,9 +44,6 @@ public class GameManager : Game
 		_gameStateManager = gameStateManager;
 		_cameraController = cameraController;
 		_camera = camera;
-		
-		// Todo: Move this to a separate location that handles all input/UI states
-		gameStateManager.SetState(startingGameState);
 		
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";

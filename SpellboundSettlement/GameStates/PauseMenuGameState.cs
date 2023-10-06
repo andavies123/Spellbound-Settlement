@@ -7,7 +7,7 @@ namespace SpellboundSettlement.GameStates;
 public class PauseMenuGameState : GameState
 {
 	public event Action ResumeGame;
-	public event Action QuitGame;
+	public event Action MainMenu;
 	
 	public override PauseMenuUIState UIState { get; }
 	public override PauseMenuInputManager InputState { get; }
@@ -20,16 +20,20 @@ public class PauseMenuGameState : GameState
 
 	public override void Start()
 	{
+		base.Start();
+		
 		InputState.ExitMenu.OnKeyUp += RaiseResumeGame;
 		UIState.ResumeButtonPressed += RaiseResumeGame;
-		UIState.QuitButtonPressed += RaiseQuitGame;
+		UIState.MainMenuButtonPressed += RaiseMainMenu;
 	}
 
 	public override void End()
 	{
+		base.End();
+		
 		InputState.ExitMenu.OnKeyUp -= RaiseResumeGame;
 		UIState.ResumeButtonPressed -= RaiseResumeGame;
-		UIState.QuitButtonPressed -= RaiseQuitGame;
+		UIState.MainMenuButtonPressed -= RaiseMainMenu;
 	}
 
 	private void RaiseResumeGame()
@@ -37,8 +41,8 @@ public class PauseMenuGameState : GameState
 		ResumeGame?.Invoke();
 	}
 
-	private void RaiseQuitGame()
+	private void RaiseMainMenu()
 	{
-		QuitGame?.Invoke();
+		MainMenu?.Invoke();
 	}
 }

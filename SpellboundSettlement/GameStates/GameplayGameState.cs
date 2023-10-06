@@ -11,10 +11,10 @@ public class GameplayGameState : GameState
 	public override GameplayUIState UIState { get; }
 	public override GameplayInputManager InputState { get; }
 
-	public GameplayGameState(GameplayUIState gameplayUIState, GameplayInputManager gameplayInputManager)
+	public GameplayGameState(GameplayUIState uiState, GameplayInputManager inputManager)
 	{
-		UIState = gameplayUIState;
-		InputState = gameplayInputManager;
+		UIState = uiState;
+		InputState = inputManager;
 	}
 
 	public override void Start()
@@ -27,6 +27,8 @@ public class GameplayGameState : GameState
 
 	public override void End()
 	{
+		base.End();
+		
 		UIState.PauseButtonPressed -= RaisePauseGame;
 		InputState.PauseGame.OnKeyUp -= RaisePauseGame;
 	}

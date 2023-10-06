@@ -4,13 +4,16 @@ namespace SpellboundSettlement.GameStates;
 
 public class GameStateManager : IGameStateManager
 {
+	private readonly MainMenuGameState _mainMenuGameState;
 	private readonly GameplayGameState _gameplayGameState;
 	private readonly PauseMenuGameState _pauseMenuGameState;
 
 	public GameStateManager(
+		MainMenuGameState mainMenuGameState,
 		GameplayGameState gameplayGameState,
 		PauseMenuGameState pauseMenuGameState)
 	{
+		_mainMenuGameState = mainMenuGameState;
 		_gameplayGameState = gameplayGameState;
 		_pauseMenuGameState = pauseMenuGameState;
 	}
@@ -19,21 +22,26 @@ public class GameStateManager : IGameStateManager
 	
 	public void Init()
 	{
+		_mainMenuGameState.Init();
 		_gameplayGameState.Init();
 		_pauseMenuGameState.Init();
 		
 		// Set initial state
-		SetState(_gameplayGameState);
-
-		_gameplayGameState.PauseGame += OnPauseGame;
-		_pauseMenuGameState.ResumeGame += OnResumeGame;
-		_pauseMenuGameState.QuitGame += OnQuitGame;
+		SetState(_mainMenuGameState);
 	}
 
 	public void LateInit()
 	{
+		_mainMenuGameState.LateInit();
 		_gameplayGameState.LateInit();
 		_pauseMenuGameState.LateInit();
+
+		// Todo: Move these events elsewhere since there will probably be a lot of them
+		_mainMenuGameState.PlayGame += OnPlayGame;
+		_mainMenuGameState.QuitGame += OnQuitGame;
+		_gameplayGameState.PauseGame += OnPauseGame;
+		_pauseMenuGameState.ResumeGame += OnResumeGame;
+		_pauseMenuGameState.MainMenu += OnMainMenu;
 	}
 
 	public void Update(float deltaTimeSeconds)
@@ -63,6 +71,16 @@ public class GameStateManager : IGameStateManager
 		SetState(_gameplayGameState);
 	}
 
+	private void OnMainMenu()
+	{
+		SetState(_mainMenuGameState);
+	}
+
+	private void OnPlayGame()
+	{
+		SetState(_gameplayGameState);
+	}
+	
 	private void OnQuitGame()
 	{
 		GameManager.QuitGame();

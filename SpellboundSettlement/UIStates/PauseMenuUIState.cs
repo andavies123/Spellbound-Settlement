@@ -11,28 +11,28 @@ namespace SpellboundSettlement.UIStates;
 public class PauseMenuUIState : IUIState
 {
 	private const string ResumeButtonText = "Resume";
-	private const string SettingsButtonText = "Settings";
-	private const string QuitButtonText = "Quit";
+	private const string OptionsButtonText = "Options";
+	private const string MainMenuButtonText = "Main Menu";
 	
 	private static readonly Point ResumeButtonPosition = new(0, -100);
-	private static readonly Point SettingsButtonPosition = new(0, 0);
-	private static readonly Point QuitButtonPosition = new(0, 100);
+	private static readonly Point OptionsButtonPosition = new(0, 0);
+	private static readonly Point MainMenuButtonPosition = new(0, 100);
 	
-	private static readonly Point PauseMenuButtonSize = new(125, 75);
+	private static readonly Point ButtonSize = new(125, 75);
 
 	private Button _resumeButton;
-	private Button _settingsButton;
-	private Button _quitButton;
+	private Button _optionsButton;
+	private Button _mainMenuButton;
 
 	public event Action ResumeButtonPressed;
-	public event Action SettingsButtonPressed;
-	public event Action QuitButtonPressed;
+	public event Action OptionsButtonPressed;
+	public event Action MainMenuButtonPressed;
 	
 	public void Init() { }
 
 	public void LateInit()
 	{
-		ButtonStyle pauseMenuButtonStyle = new()
+		ButtonStyle buttonStyle = new()
 		{
 			Font = GameManager.Font,
 			BackgroundColor = Color.LightSlateGray,
@@ -44,46 +44,46 @@ public class PauseMenuUIState : IUIState
 		
 		_resumeButton = new Button(
 			ResumeButtonPosition, 
-			PauseMenuButtonSize, 
+			ButtonSize, 
 			ResumeButtonText,
-			pauseMenuButtonStyle,
+			buttonStyle,
 			LayoutAnchor.MiddleCenter);
 
-		_settingsButton = new Button(
-			SettingsButtonPosition,
-			PauseMenuButtonSize,
-			SettingsButtonText,
-			pauseMenuButtonStyle,
+		_optionsButton = new Button(
+			OptionsButtonPosition,
+			ButtonSize,
+			OptionsButtonText,
+			buttonStyle,
 			LayoutAnchor.MiddleCenter);
 
-		_quitButton = new Button(
-			QuitButtonPosition,
-			PauseMenuButtonSize,
-			QuitButtonText,
-			pauseMenuButtonStyle,
+		_mainMenuButton = new Button(
+			MainMenuButtonPosition,
+			ButtonSize,
+			MainMenuButtonText,
+			buttonStyle,
 			LayoutAnchor.MiddleCenter);
 		
 		_resumeButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
-		_settingsButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
-		_quitButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
+		_optionsButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
+		_mainMenuButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
 		
 		_resumeButton.MouseReleased += OnResumeButtonPressed;
-		_settingsButton.MouseReleased += OnSettingsButtonPressed;
-		_quitButton.MouseReleased += OnQuitButtonPressed;
+		_optionsButton.MouseReleased += OnOptionsButtonPressed;
+		_mainMenuButton.MouseReleased += OnMainMenuButtonPressed;
 	}
 
 	public void Update(float deltaTimeSeconds)
 	{
 		_resumeButton.Update();
-		_settingsButton.Update();
-		_quitButton.Update();
+		_optionsButton.Update();
+		_mainMenuButton.Update();
 	}
 
 	public void Draw(SpriteBatch spriteBatch)
 	{
 		_resumeButton.Draw(spriteBatch);
-		_settingsButton.Draw(spriteBatch);
-		_quitButton.Draw(spriteBatch);
+		_optionsButton.Draw(spriteBatch);
+		_mainMenuButton.Draw(spriteBatch);
 	}
 
 	private void OnResumeButtonPressed()
@@ -91,13 +91,13 @@ public class PauseMenuUIState : IUIState
 		ResumeButtonPressed?.Invoke();
 	}
 
-	private void OnSettingsButtonPressed()
+	private void OnOptionsButtonPressed()
 	{
-		SettingsButtonPressed?.Invoke();
+		OptionsButtonPressed?.Invoke();
 	}
 
-	private void OnQuitButtonPressed()
+	private void OnMainMenuButtonPressed()
 	{
-		QuitButtonPressed?.Invoke();
+		MainMenuButtonPressed?.Invoke();
 	}
 }
