@@ -9,6 +9,7 @@ public interface IGameStateManager
 	void Init();
 	void LateInit();
 	void Update(float deltaTimeSeconds);
-	void Draw(SpriteBatch spriteBatch);
+	void Draw3D(GraphicsDevice graphicsDevice);
+	void DrawUI(SpriteBatch spriteBatch);
 	void SetState(IGameState nextState);
 }

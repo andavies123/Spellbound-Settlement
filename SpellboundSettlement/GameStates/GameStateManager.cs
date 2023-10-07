@@ -49,9 +49,14 @@ public class GameStateManager : IGameStateManager
 		CurrentGameState.Update(deltaTimeSeconds);
 	}
 
-	public void Draw(SpriteBatch spriteBatch)
+	public void Draw3D(GraphicsDevice graphicsDevice)
 	{
-		CurrentGameState.Draw(spriteBatch);
+		CurrentGameState.Draw3D(graphicsDevice);
+	}
+
+	public void DrawUI(SpriteBatch spriteBatch)
+	{
+		CurrentGameState.DrawUI(spriteBatch);
 	}
 
 	public void SetState(IGameState nextState)

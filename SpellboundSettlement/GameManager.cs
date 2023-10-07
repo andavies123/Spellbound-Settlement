@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.GameStates;
-using SpellboundSettlement.Meshes;
-using SpellboundSettlement.WorldObjects;
 
 namespace SpellboundSettlement;
 
@@ -15,14 +13,8 @@ public class GameManager : Game
 	
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
-	private readonly Camera _camera;
 	
 	private SpriteBatch _spriteBatch;
-	private Effect _effect;
-	
-	// World
-	private readonly World _world = new((0, 0), 5);
-	private WorldMesh _worldMesh;
 	
 	// Update Times
 	private DateTime _currentTime;
@@ -32,18 +24,17 @@ public class GameManager : Game
 	// Drawing
 	public static Texture2D Texture;
 	public static SpriteFont Font;
+	public static Effect Effect;
 	public static Viewport Viewport;
 
 	public GameManager(
 		IGameStateManager gameStateManager,
-		ICameraController cameraController,
-		Camera camera)
+		ICameraController cameraController)
 	{
 		Instance = this;
 		
 		_gameStateManager = gameStateManager;
 		_cameraController = cameraController;
-		_camera = camera;
 		
 		_graphics = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -64,7 +55,6 @@ public class GameManager : Game
 		_previousTime = DateTime.Now;
 
 		_cameraController.ResetCamera();
-		_worldMesh = new WorldMesh(_world);
 		
 		// Set default texture
 		Texture = new Texture2D(GraphicsDevice, 1, 1);
@@ -82,7 +72,7 @@ public class GameManager : Game
 	{
 		_spriteBatch = new SpriteBatch(GraphicsDevice);
 		
-		_effect = Content.Load<Effect>("TestShader");
+		Effect = Content.Load<Effect>("TestShader");
 		Font = Content.Load<SpriteFont>("TestFont");
 		
 		_gameStateManager.LateInit();
@@ -106,43 +96,18 @@ public class GameManager : Game
 	{
 		GraphicsDevice.Clear(Color.CornflowerBlue);
 		
-		// Draw World
-		foreach (ChunkMesh chunkMesh in _worldMesh.ChunkMeshes.Values)
-			DrawMesh(chunkMesh);
+		// Draw 3D
+		_gameStateManager.Draw3D(GraphicsDevice);
 		
-		// Draw UI
+		// DrawUI UI
 		GraphicsDevice.DepthStencilState = DepthStencilState.None;
 		_spriteBatch.Begin();
 		
-		_gameStateManager.Draw(_spriteBatch);
+		_gameStateManager.DrawUI(_spriteBatch);
 		
 		_spriteBatch.End();
 		GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		
 		base.Draw(gameTime);
-	}
-	
-	private void DrawMesh(IMesh mesh)
-	{
-		VertexPositionColor[] vertices = mesh.Vertices;
-		int[] indices = mesh.Indices;
-		
-		VertexBuffer vertexBuffer = new(GraphicsDevice, typeof(VertexPositionColor), vertices.Length, BufferUsage.None);
-		vertexBuffer.SetData(vertices);
-
-		IndexBuffer indexBuffer = new(GraphicsDevice, IndexElementSize.ThirtyTwoBits, indices.Length, BufferUsage.None);
-		indexBuffer.SetData(indices);
-		
-		GraphicsDevice.SetVertexBuffer(vertexBuffer);
-		GraphicsDevice.Indices = indexBuffer;
-		
-		_effect.Parameters["WorldViewProjection"].SetValue(_camera.WorldViewProjection);
-		_effect.CurrentTechnique.Passes[0].Apply();
-		
-		GraphicsDevice.DrawIndexedPrimitives(
-			PrimitiveType.TriangleList,
-			0,
-			0,
-			indexBuffer.IndexCount / 3);
 	}
 }

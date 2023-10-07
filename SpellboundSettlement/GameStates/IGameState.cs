@@ -13,6 +13,7 @@ public interface IGameState
 	void LateInit();
 	void Start();
 	void Update(float deltaTimeSeconds);
-	void Draw(SpriteBatch spriteBatch);
+	void Draw3D(GraphicsDevice graphicsDevice);
+	void DrawUI(SpriteBatch spriteBatch);
 	void End();
 }

@@ -46,11 +46,16 @@ public abstract class GameState : IGameState
 		UIState.Update(deltaTimeSeconds);
 	}
 
+	public virtual void Draw3D(GraphicsDevice graphicsDevice)
+	{
+		
+	}
+
 	/// <summary>
 	/// Called once per frame to draw anything that should be displayed on the screen
 	/// </summary>
 	/// <param name="spriteBatch">SpriteBatch object used to draw 2D images</param>
-	public virtual void Draw(SpriteBatch spriteBatch)
+	public virtual void DrawUI(SpriteBatch spriteBatch)
 	{
 		UIState.Draw(spriteBatch);
 	}
