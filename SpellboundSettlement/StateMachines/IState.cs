@@ -2,8 +2,7 @@
 
 public interface IState
 {
-	void Init();
-	void BeginState();
+	void Begin();
 	void Update();
-	void EndState();
+	void End();
 }
