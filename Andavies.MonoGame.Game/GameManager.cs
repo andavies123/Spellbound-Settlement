@@ -3,18 +3,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.GameStates;
+using SpellboundSettlement.Globals;
 
 namespace SpellboundSettlement;
 
 public class GameManager : Game
 {
-	private static GameManager Instance;
-	private readonly GraphicsDeviceManager _graphics;
-	
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
-	
-	private SpriteBatch _spriteBatch;
 	
 	// Update Times
 	private DateTime _currentTime;
@@ -31,27 +27,25 @@ public class GameManager : Game
 		IGameStateManager gameStateManager,
 		ICameraController cameraController)
 	{
-		Instance = this;
+		Global.GameManager = this;
 		
 		_gameStateManager = gameStateManager;
 		_cameraController = cameraController;
 		
-		_graphics = new GraphicsDeviceManager(this);
+		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
 		IsMouseVisible = true;
 
-		_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-		_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+		Global.GraphicsDeviceManager.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+		Global.GraphicsDeviceManager.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 		
-		_graphics.IsFullScreen = false;
-		_graphics.ApplyChanges();
+		Global.GraphicsDeviceManager.IsFullScreen = false;
+		Global.GraphicsDeviceManager.ApplyChanges();
 		Viewport = GraphicsDevice.Viewport;
 	}
 
-	public static void QuitGame() => Instance.Exit();
-
 	protected override void Initialize()
-	{	
+	{
 		_previousTime = DateTime.Now;
 
 		_cameraController.ResetCamera();
@@ -65,17 +59,16 @@ public class GameManager : Game
 		
 		_gameStateManager.Init();
 
-		base.Initialize();
+		base.Initialize(); // Calls LoadContent
+		
+		Global.SpriteBatch = new SpriteBatch(GraphicsDevice);
+		_gameStateManager.LateInit();
 	}
 
 	protected override void LoadContent()
 	{
-		_spriteBatch = new SpriteBatch(GraphicsDevice);
-		
 		Effect = Content.Load<Effect>("TestShader");
 		Font = Content.Load<SpriteFont>("TestFont");
-		
-		_gameStateManager.LateInit();
 	}
 
 	protected override void Update(GameTime gameTime)
@@ -101,11 +94,9 @@ public class GameManager : Game
 		
 		// DrawUI UI
 		GraphicsDevice.DepthStencilState = DepthStencilState.None;
-		_spriteBatch.Begin();
-		
-		_gameStateManager.DrawUI(_spriteBatch);
-		
-		_spriteBatch.End();
+		Global.SpriteBatch.Begin();
+		_gameStateManager.DrawUI(Global.SpriteBatch);
+		Global.SpriteBatch.End();
 		GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		
 		base.Draw(gameTime);

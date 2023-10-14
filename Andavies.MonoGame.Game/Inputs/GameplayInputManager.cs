@@ -1,6 +1,8 @@
 ﻿using System;
+using Andavies.MonoGame.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using SpellboundSettlement.Globals;
 
 namespace SpellboundSettlement.Inputs;
 
@@ -44,7 +46,7 @@ public class GameplayInputManager : IInputManager
 	private void CheckForceQuit()
 	{
 		if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) && Keyboard.GetState().IsKeyDown(Keys.Escape))
-			GameManager.QuitGame();
+			Global.QuitGame();
 	}
 
 	private void CheckMoveCameraInput()
@@ -83,30 +85,5 @@ public class GameplayInputManager : IInputManager
 		else if (_previousScrollWheelValue - currentScrollWheelValue < 0)
 			ZoomIn?.Invoke();
 		_previousScrollWheelValue = currentScrollWheelValue;
-	}
-}
-
-public class KeyAction
-{
-	public KeyAction(Keys key) => Key = key;
-
-	public bool IsKeyDown { get; private set; } = false;
-	public Keys Key { get; set; }
-	
-	public event Action OnKeyDown;
-	public event Action OnKeyUp;
-
-	public void CheckKey()
-	{
-		if (!IsKeyDown && Keyboard.GetState().IsKeyDown(Key))
-		{
-			IsKeyDown = true;
-			OnKeyDown?.Invoke();
-		}
-		else if (IsKeyDown && Keyboard.GetState().IsKeyUp(Key))
-		{
-			IsKeyDown = false;
-			OnKeyUp?.Invoke();
-		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Andavies.MonoGame.Input;
+using Microsoft.Xna.Framework.Input;
 
 namespace SpellboundSettlement.Inputs;
 

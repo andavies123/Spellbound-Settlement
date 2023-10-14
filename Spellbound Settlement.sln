@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andavies.MonoGame.Game", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.UI", "Andavies.MonoGame.UI\Andavies.MonoGame.UI.csproj", "{F33C267E-3E88-484D-96CD-9D05B044F6FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Input", "Andavies.MonoGame.Input\Andavies.MonoGame.Input.csproj", "{481054D3-8524-43B6-B829-FAB26A919FBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F33C267E-3E88-484D-96CD-9D05B044F6FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F33C267E-3E88-484D-96CD-9D05B044F6FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F33C267E-3E88-484D-96CD-9D05B044F6FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{481054D3-8524-43B6-B829-FAB26A919FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{481054D3-8524-43B6-B829-FAB26A919FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{481054D3-8524-43B6-B829-FAB26A919FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{481054D3-8524-43B6-B829-FAB26A919FBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

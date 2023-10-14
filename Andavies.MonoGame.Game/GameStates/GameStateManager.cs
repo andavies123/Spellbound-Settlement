@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using SpellboundSettlement.Globals;
 
 namespace SpellboundSettlement.GameStates;
 
@@ -88,6 +89,6 @@ public class GameStateManager : IGameStateManager
 	
 	private void OnQuitGame()
 	{
-		GameManager.QuitGame();
+		Global.QuitGame();
 	}
 }

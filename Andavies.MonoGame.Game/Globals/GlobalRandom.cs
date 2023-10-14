@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.Noise;
 
-namespace SpellboundSettlement.Global;
+namespace SpellboundSettlement.Globals;
 
 public static class GlobalRandom
 {
