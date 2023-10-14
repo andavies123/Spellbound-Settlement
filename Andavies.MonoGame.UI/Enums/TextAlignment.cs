@@ -1,4 +1,4 @@
-﻿namespace UI.Enums;
+﻿namespace Andavies.MonoGame.UI.Enums;
 
 public enum TextAlignment
 {

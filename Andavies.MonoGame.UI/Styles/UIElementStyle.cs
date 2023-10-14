@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace UI.Styles;
+namespace Andavies.MonoGame.UI.Styles;
 
 public abstract class UIElementStyle
 {

@@ -1,11 +1,11 @@
 ﻿using Autofac;
-using UI;
+using Andavies.MonoGame.UI;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.GameStates;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates;
-using UI.StateMachines;
+using Andavies.MonoGame.UI.StateMachines;
 
 namespace SpellboundSettlement;
 

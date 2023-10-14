@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Inputs;
-using UI.StateMachines;
+using Andavies.MonoGame.UI.StateMachines;
 
 namespace SpellboundSettlement.GameStates;
 

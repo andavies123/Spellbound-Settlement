@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace UI.StateMachines;
+namespace Andavies.MonoGame.UI.StateMachines;
 
 public interface IUIStateMachine
 {

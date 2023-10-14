@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.Styles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using UI.Enums;
-using UI.Styles;
 
-namespace UI.UIElements;
+namespace Andavies.MonoGame.UI.UIElements;
 
 public class Button : UIElement
 {

@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Andavies.MonoGame.UI.Enums;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using UI.Enums;
 
-namespace UI.UIElements;
+namespace Andavies.MonoGame.UI.UIElements;
 
 public abstract class UIElement
 {

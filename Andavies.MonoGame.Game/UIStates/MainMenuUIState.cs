@@ -1,10 +1,10 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using UI.Enums;
-using UI.StateMachines;
-using UI.Styles;
-using UI.UIElements;
+using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.StateMachines;
+using Andavies.MonoGame.UI.Styles;
+using Andavies.MonoGame.UI.UIElements;
 
 namespace SpellboundSettlement.UIStates;
 
