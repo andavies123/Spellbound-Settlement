@@ -26,8 +26,5 @@ public class PlaneMesh : IMesh
 	public VertexPositionColor[] Vertices { get; } = new VertexPositionColor[MeshConstants.VerticesPerFace];
 	public int[] Indices => MeshConstants.FaceIndices;
 	
-	public void RecalculateMesh()
-	{
-		throw new NotImplementedException();
-	}
+	public void RecalculateMesh() { }
 }
