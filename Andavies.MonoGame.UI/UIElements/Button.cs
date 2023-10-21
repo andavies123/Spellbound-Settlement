@@ -7,30 +7,20 @@ namespace Andavies.MonoGame.UI.UIElements;
 
 public class Button : UIElement
 {
-	public Button(Point position, Point size, string text, ButtonStyle buttonStyle, LayoutAnchor anchor) : base(position, size, anchor)
-	{
-		Text = text;
-		Style = buttonStyle;
-	}
-
-	/// <summary>
-	/// The text that will be displayed on the button
-	/// </summary>
-	public string Text { get; set; }
+	// Text that is displayed on the button
+	public string Text { get; set; } = "N/A";
 	
-	/// <summary>
-	/// Contains properties to help display the button
-	/// </summary>
-	public ButtonStyle Style { get; }
+	// How the button will be displayed
+	public ButtonStyle? Style { get; set; }
 	
-	/// <summary>
-	/// True if this button can be clicked by the user
-	/// False if this button can not be clicked by the user
-	/// </summary>
+	// True = Button can be clicked. False = Can't be clicked
 	public bool IsEnabled { get; set; } = true;
 
 	public override void Draw(SpriteBatch spriteBatch)
 	{
+		if (Style == null)
+			return;
+		
 		spriteBatch.Draw(Style.BackgroundTexture, Bounds, GetCurrentBackgroundColor());
 
 		Vector2 textSize = Style.Font?.MeasureString(Text) ?? Vector2.Zero;
@@ -47,6 +37,9 @@ public class Button : UIElement
 
 	private Color GetCurrentBackgroundColor()
 	{
+		if (Style == null)
+			return Color.Black;
+		
 		Color color;
 		
 		if (!IsEnabled)

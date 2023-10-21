@@ -10,10 +10,7 @@ namespace SpellboundSettlement.UIStates;
 
 public class GameplayUIState : IUIState
 {
-	private const string PauseButtonText = "Pause";
-	private const LayoutAnchor PauseButtonAnchor = LayoutAnchor.TopRight;
-	private static readonly Point PauseButtonPosition = new(-20, 20);
-	private static readonly Point PauseButtonSize = new(75, 25);
+	private readonly ButtonBuilder _buttonBuilder = new();
 	
 	private Button _pauseButton;
 
@@ -33,12 +30,12 @@ public class GameplayUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		_pauseButton = new Button(
-			PauseButtonPosition, 
-			PauseButtonSize, 
-			PauseButtonText, 
-			buttonStyle, 
-			PauseButtonAnchor);
+		_pauseButton = _buttonBuilder
+			.SetText("Pause")
+			.SetStyle(buttonStyle)
+			.SetPositionAndSize(new Point(-20, 20), new Point(75, 25))
+			.SetLayoutAnchor(LayoutAnchor.TopRight)
+			.Build();
 		
 		_pauseButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
 		_pauseButton.MousePressed += RaisePauseButtonPressed;

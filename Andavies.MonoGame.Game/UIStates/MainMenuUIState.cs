@@ -10,15 +10,13 @@ namespace SpellboundSettlement.UIStates;
 
 public class MainMenuUIState : IUIState
 {
-	private const string PlayButtonText = "Play";
-	private const string OptionsButtonText = "Options";
-	private const string QuitButtonText = "Quit";
-	
 	private static readonly Point PlayButtonPosition = new(0, -100);
 	private static readonly Point OptionsButtonPosition = new(0, 0);
 	private static readonly Point QuitButtonPosition = new(0, 100);
 	
 	private static readonly Point ButtonSize = new(125, 75);
+
+	private readonly ButtonBuilder _buttonBuilder = new();
 
 	private Button _playButton;
 	private Button _optionsButton;
@@ -55,27 +53,27 @@ public class MainMenuUIState : IUIState
 			DisabledBackgroundColor = Color.Red,
 			BackgroundTexture = GameManager.Texture
 		};
-		
-		_playButton = new Button(
-			PlayButtonPosition, 
-			ButtonSize, 
-			PlayButtonText,
-			buttonStyle,
-			LayoutAnchor.MiddleCenter);
 
-		_optionsButton = new Button(
-			OptionsButtonPosition,
-			ButtonSize,
-			OptionsButtonText,
-			buttonStyle,
-			LayoutAnchor.MiddleCenter);
+		_playButton = _buttonBuilder
+			.SetText("Play")
+			.SetStyle(buttonStyle)
+			.SetPositionAndSize(PlayButtonPosition, ButtonSize)
+			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
+			.Build();
 
-		_quitButton = new Button(
-			QuitButtonPosition,
-			ButtonSize,
-			QuitButtonText,
-			buttonStyle,
-			LayoutAnchor.MiddleCenter);
+		_optionsButton = _buttonBuilder
+			.SetText("Options")
+			.SetStyle(buttonStyle)
+			.SetPositionAndSize(OptionsButtonPosition, ButtonSize)
+			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
+			.Build();
+
+		_quitButton = _buttonBuilder
+			.SetText("Quit")
+			.SetStyle(buttonStyle)
+			.SetPositionAndSize(QuitButtonPosition, ButtonSize)
+			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
+			.Build();
 		
 		_playButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
 		_optionsButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
