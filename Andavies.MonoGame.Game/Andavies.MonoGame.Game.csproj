@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Andavies.MonoGame.Input\Andavies.MonoGame.Input.csproj" />
+    <ProjectReference Include="..\Andavies.MonoGame.Meshes\Andavies.MonoGame.Meshes.csproj" />
     <ProjectReference Include="..\Andavies.MonoGame.UI\Andavies.MonoGame.UI.csproj" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

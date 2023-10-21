@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace SpellboundSettlement.Meshes;
+namespace Andavies.MonoGame.Meshes;
 
 /// <summary>
 /// Interface to describe everything necessary to display a mesh

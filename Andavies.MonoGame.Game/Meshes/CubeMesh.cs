@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Andavies.MonoGame.Meshes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static SpellboundSettlement.Meshes.WorldMeshConstants;
@@ -7,18 +8,18 @@ namespace SpellboundSettlement.Meshes;
 
 public class CubeMesh : IMesh
 {
-	private readonly CubeFaceMesh[] _faceMeshes;
+	private readonly PlaneMesh[] _faceMeshes;
 
 	public CubeMesh(Vector3 vertexOffset, Color color)
 	{
 		_faceMeshes = new[]
 		{
-			new CubeFaceMesh(GetOffsetVertices(XPosVertices, vertexOffset), color),
-			new CubeFaceMesh(GetOffsetVertices(XNegVertices, vertexOffset), color),
-			new CubeFaceMesh(GetOffsetVertices(YPosVertices, vertexOffset), color),
-			new CubeFaceMesh(GetOffsetVertices(YNegVertices, vertexOffset), color),
-			new CubeFaceMesh(GetOffsetVertices(ZPosVertices, vertexOffset), color),
-			new CubeFaceMesh(GetOffsetVertices(ZNegVertices, vertexOffset), color)
+			new PlaneMesh(GetOffsetVertices(XPosVertices, vertexOffset), color),
+			new PlaneMesh(GetOffsetVertices(XNegVertices, vertexOffset), color),
+			new PlaneMesh(GetOffsetVertices(YPosVertices, vertexOffset), color),
+			new PlaneMesh(GetOffsetVertices(YNegVertices, vertexOffset), color),
+			new PlaneMesh(GetOffsetVertices(ZPosVertices, vertexOffset), color),
+			new PlaneMesh(GetOffsetVertices(ZNegVertices, vertexOffset), color)
 		};
 		RecalculateMesh();
 	}
@@ -38,7 +39,7 @@ public class CubeMesh : IMesh
 		List<int> indices = new();
 		int triangleOffset = 0;
 		
-		foreach (CubeFaceMesh faceMesh in _faceMeshes)
+		foreach (PlaneMesh faceMesh in _faceMeshes)
 		{
 			if (!faceMesh.IsVisible)
 				continue;
