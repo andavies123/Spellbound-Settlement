@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Andavies.MonoGame.UI;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.GameStates;

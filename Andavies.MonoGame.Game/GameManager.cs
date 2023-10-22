@@ -1,4 +1,6 @@
 ﻿using System;
+using Andavies.MonoGame.Game.Client;
+using LiteNetLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
@@ -11,6 +13,7 @@ public class GameManager : Game
 {
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
+	private readonly LiteNetClient _client;
 	
 	// Update Times
 	private DateTime _currentTime;
@@ -63,6 +66,8 @@ public class GameManager : Game
 		
 		Global.SpriteBatch = new SpriteBatch(GraphicsDevice);
 		_gameStateManager.LateInit();
+		
+		_client.Start();
 	}
 
 	protected override void LoadContent()
