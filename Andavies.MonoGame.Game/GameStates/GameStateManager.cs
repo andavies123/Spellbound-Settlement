@@ -26,9 +26,6 @@ public class GameStateManager : IGameStateManager
 		_mainMenuGameState.Init();
 		_gameplayGameState.Init();
 		_pauseMenuGameState.Init();
-		
-		// Set initial state
-		SetState(_mainMenuGameState);
 	}
 
 	public void LateInit()
@@ -43,6 +40,9 @@ public class GameStateManager : IGameStateManager
 		_gameplayGameState.PauseGame += OnPauseGame;
 		_pauseMenuGameState.ResumeGame += OnResumeGame;
 		_pauseMenuGameState.MainMenu += OnMainMenu;
+		
+		// Set initial state
+		SetState(_mainMenuGameState);
 	}
 
 	public void Update(float deltaTimeSeconds)
@@ -67,28 +67,9 @@ public class GameStateManager : IGameStateManager
 		CurrentGameState?.Start();
 	}
 
-	private void OnPauseGame()
-	{
-		SetState(_pauseMenuGameState);
-	}
-
-	private void OnResumeGame()
-	{
-		SetState(_gameplayGameState);
-	}
-
-	private void OnMainMenu()
-	{
-		SetState(_mainMenuGameState);
-	}
-
-	private void OnPlayGame()
-	{
-		SetState(_gameplayGameState);
-	}
-	
-	private void OnQuitGame()
-	{
-		Global.QuitGame();
-	}
+	private void OnPauseGame() => SetState(_pauseMenuGameState);
+	private void OnResumeGame() => SetState(_gameplayGameState);
+	private void OnMainMenu() => SetState(_mainMenuGameState);
+	private void OnPlayGame() => SetState(_gameplayGameState);
+	private void OnQuitGame() => Global.QuitGame();
 }

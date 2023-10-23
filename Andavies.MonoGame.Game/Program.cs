@@ -44,7 +44,8 @@ public static class Program
 		builder.RegisterType<PauseMenuInputManager>().As<IInputManager>().AsSelf().SingleInstance();
 		
 		// UI States
-		builder.RegisterType<MainMenuUIState>().As<IUIState>().AsSelf().SingleInstance();
+		builder.RegisterType<MainMenuMainUIState>().As<IUIState>().AsSelf().SingleInstance();
+		builder.RegisterType<MainMenuConnectToServerUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<GameplayUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<PauseMenuUIState>().As<IUIState>().AsSelf().SingleInstance();
 		

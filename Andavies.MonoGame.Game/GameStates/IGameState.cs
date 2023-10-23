@@ -6,7 +6,8 @@ namespace SpellboundSettlement.GameStates;
 
 public interface IGameState
 {
-	IUIState UIState { get; }
+	// State machine to handle multiple UI states
+	IUIStateMachine UIStateMachine { get; }
 	IInputManager InputState { get; }
 
 	void Init();

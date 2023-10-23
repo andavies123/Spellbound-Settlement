@@ -13,23 +13,22 @@ public class GameplayGameState : GameState
 {
 	private readonly Camera _camera;
 	private readonly World _world = new((0, 0), 5);
+
+	private readonly GameplayUIState _gameplayGameplayUIState;
 	
 	private WorldMesh _worldMesh;
     
-	public GameplayGameState(
-		GameplayUIState uiState, 
-		GameplayInputManager inputManager,
-		Camera camera)
+	public GameplayGameState(GameplayUIState gameplayUIState, GameplayInputManager inputManager, Camera camera)
 	{
-		UIState = uiState;
+		_gameplayGameplayUIState = gameplayUIState;
 		InputState = inputManager;
-
 		_camera = camera;
+		
+		UIStates.Add(gameplayUIState);
 	}
 	
 	public event Action PauseGame;
-	
-	public override GameplayUIState UIState { get; }
+
 	public override GameplayInputManager InputState { get; }
 
 	public override void Init()
@@ -43,7 +42,9 @@ public class GameplayGameState : GameState
 	{
 		base.Start();
 		
-		UIState.PauseButtonPressed += RaisePauseGame;
+		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
+		
+		_gameplayGameplayUIState.PauseButtonPressed += RaisePauseGame;
 		InputState.PauseGame.OnKeyUp += RaisePauseGame;
 	}
 
@@ -60,7 +61,7 @@ public class GameplayGameState : GameState
 	{
 		base.End();
 		
-		UIState.PauseButtonPressed -= RaisePauseGame;
+		_gameplayGameplayUIState.PauseButtonPressed -= RaisePauseGame;
 		InputState.PauseGame.OnKeyUp -= RaisePauseGame;
 	}
 

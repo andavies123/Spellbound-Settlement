@@ -67,7 +67,7 @@ public class GameManager : Game
 		Global.SpriteBatch = new SpriteBatch(GraphicsDevice);
 		_gameStateManager.LateInit();
 		
-		_client.Start();
+		//_client.Start();
 	}
 
 	protected override void LoadContent()

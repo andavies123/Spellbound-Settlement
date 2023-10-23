@@ -1,4 +1,5 @@
 ﻿using System;
+using Andavies.MonoGame.UI.StateMachines;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates;
 
@@ -8,32 +9,33 @@ public class PauseMenuGameState : GameState
 {
 	public event Action ResumeGame;
 	public event Action MainMenu;
-	
-	public override PauseMenuUIState UIState { get; }
+
 	public override PauseMenuInputManager InputState { get; }
+
+	private readonly PauseMenuUIState _pauseMenuUIState;
 
 	public PauseMenuGameState(PauseMenuUIState pauseMenuUIState, PauseMenuInputManager pauseMenuInputManager)
 	{
-		UIState = pauseMenuUIState;
+		_pauseMenuUIState = pauseMenuUIState;
 		InputState = pauseMenuInputManager;
+		
+		UIStates.Add(_pauseMenuUIState);
 	}
 
 	public override void Start()
 	{
-		base.Start();
+		UIStateMachine.ChangeUIState(_pauseMenuUIState);
 		
 		InputState.ExitMenu.OnKeyUp += RaiseResumeGame;
-		UIState.ResumeButtonPressed += RaiseResumeGame;
-		UIState.MainMenuButtonPressed += RaiseMainMenu;
+		_pauseMenuUIState.ResumeButtonPressed += RaiseResumeGame;
+		_pauseMenuUIState.MainMenuButtonPressed += RaiseMainMenu;
 	}
 
 	public override void End()
 	{
-		base.End();
-		
 		InputState.ExitMenu.OnKeyUp -= RaiseResumeGame;
-		UIState.ResumeButtonPressed -= RaiseResumeGame;
-		UIState.MainMenuButtonPressed -= RaiseMainMenu;
+		_pauseMenuUIState.ResumeButtonPressed -= RaiseResumeGame;
+		_pauseMenuUIState.MainMenuButtonPressed -= RaiseMainMenu;
 	}
 
 	private void RaiseResumeGame()
