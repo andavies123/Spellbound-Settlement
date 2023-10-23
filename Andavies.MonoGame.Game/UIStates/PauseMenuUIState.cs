@@ -85,6 +85,8 @@ public class PauseMenuUIState : IUIState
 		_mainMenuButton.Draw(spriteBatch);
 	}
 
+	public void Exit() { }
+
 	private void OnResumeButtonPressed()
 	{
 		ResumeButtonPressed?.Invoke();

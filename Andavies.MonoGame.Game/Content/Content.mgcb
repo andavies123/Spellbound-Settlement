@@ -13,6 +13,13 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin HintFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:HintFont.spritefont
+
 #begin TestFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

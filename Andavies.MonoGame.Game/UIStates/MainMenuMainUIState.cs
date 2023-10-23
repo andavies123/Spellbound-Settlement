@@ -98,4 +98,6 @@ public class MainMenuMainUIState : IUIState
 	{
 		_uiElements.ForEach(uiElement => uiElement.Draw(spriteBatch));
 	}
+
+	public void Exit() { }
 }

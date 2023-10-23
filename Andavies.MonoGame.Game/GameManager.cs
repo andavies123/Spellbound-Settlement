@@ -1,6 +1,5 @@
 ﻿using System;
 using Andavies.MonoGame.Game.Client;
-using LiteNetLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
@@ -23,6 +22,7 @@ public class GameManager : Game
 	// Drawing
 	public static Texture2D Texture;
 	public static SpriteFont Font;
+	public static SpriteFont HintFont;
 	public static Effect Effect;
 	public static Viewport Viewport;
 
@@ -74,6 +74,7 @@ public class GameManager : Game
 	{
 		Effect = Content.Load<Effect>("TestShader");
 		Font = Content.Load<SpriteFont>("TestFont");
+		HintFont = Content.Load<SpriteFont>("HintFont");
 	}
 
 	protected override void Update(GameTime gameTime)

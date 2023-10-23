@@ -1,8 +1,7 @@
 ﻿using Andavies.MonoGame.UI.Enums;
-using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Andavies.MonoGame.UI.UIElements;
+namespace Andavies.MonoGame.UI.Styles;
 
 public class LabelStyle : UIElementStyle
 {

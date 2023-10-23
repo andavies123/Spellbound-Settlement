@@ -8,11 +8,18 @@ namespace Andavies.MonoGame.UI.UIElements;
 public abstract class UIElement
 {
 	private bool _isMouseDown = false;
+	private bool _hasFocus = false; // Backing variable for HasFocus
 
-	public event Action? MouseEntered; // Raised when the mouse first enters the bounds of this element
-	public event Action? MouseExited; // Raised when the mouse first exists the bounds of this element
-	public event Action? MousePressed; // Raised when the mouse is first pressed inside the bounds of this element
-	public event Action? MouseReleased; // Raised when the mouse is first released inside the bounds of this element
+	/// <summary>Raised when the mouse first enters the bounds of this element</summary>
+	public event Action? MouseEntered;
+	/// <summary>Raised when the mouse first exists the bounds of this element</summary>
+	public event Action? MouseExited;
+	/// <summary>Raised when the mouse is first pressed inside the bounds of this element</summary>
+	public event Action? MousePressed;
+	/// <summary>Raised when the mouse is first released inside the bounds of this element</summary>
+	public event Action? MouseReleased;
+	/// <summary>Raised when this UIElement has gained focus</summary>
+	public event Action<UIElement>? ReceivedFocus;
 
 	// The anchored position of this element on the screen.
 	// This value is not the exact position as it is affected by Layout Anchors.
@@ -26,6 +33,18 @@ public abstract class UIElement
 
 	// True if the UI element will be drawn. False if it won't be drawn
 	public bool IsVisible { get; set; } = true;
+	
+	/// <summary>Whether or not this UIElement has focus or not</summary>
+	public bool HasFocus
+	{
+		get => _hasFocus;
+		set
+		{
+			_hasFocus = value;
+			if (_hasFocus)
+				ReceivedFocus?.Invoke(this);
+		}
+	}
 	
 	// The physical bounds of the UI Element used for drawing.
 	// This value is calculated internally using anchors, position, and size

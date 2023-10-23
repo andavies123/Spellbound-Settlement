@@ -8,4 +8,5 @@ public interface IUIState
 	void LateInit();
 	void Update(float deltaTimeSeconds);
 	void Draw(SpriteBatch spriteBatch);
+	void Exit();
 }

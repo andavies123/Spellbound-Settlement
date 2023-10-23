@@ -52,5 +52,7 @@ public class GameplayUIState : IUIState
 		_pauseButton.Draw(spriteBatch);
 	}
 
+	public void Exit() { }
+
 	private void RaisePauseButtonPressed() => PauseButtonPressed?.Invoke();
 }
