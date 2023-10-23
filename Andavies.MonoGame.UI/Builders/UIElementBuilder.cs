@@ -1,7 +1,8 @@
 ﻿using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.UIElements;
 using Microsoft.Xna.Framework;
 
-namespace Andavies.MonoGame.UI.UIElements;
+namespace Andavies.MonoGame.UI.Builders;
 
 public abstract class UIElementBuilder<T> where T : UIElement, new()
 {

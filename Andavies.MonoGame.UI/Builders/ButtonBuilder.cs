@@ -1,6 +1,7 @@
 ﻿using Andavies.MonoGame.UI.Styles;
+using Andavies.MonoGame.UI.UIElements;
 
-namespace Andavies.MonoGame.UI.UIElements;
+namespace Andavies.MonoGame.UI.Builders;
 
 public class ButtonBuilder : UIElementBuilder<Button>
 {

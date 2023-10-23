@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Andavies.MonoGame.UI.Builders;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
@@ -18,6 +19,7 @@ public class MainMenuConnectToServerUIState : IUIState
 	private readonly ButtonBuilder _buttonBuilder = new();
 	private List<UIElement> _uiElements;
 
+	public Label IPLabel { get; private set; }
 	public Button ConnectButton { get; private set; }
 	public Button BackButton { get; private set; }
 	
@@ -32,6 +34,13 @@ public class MainMenuConnectToServerUIState : IUIState
 			HoverBackgroundColor = Color.SlateGray,
 			MousePressedBackgroundColor = Color.DarkSlateGray,
 			DisabledBackgroundColor = Color.Red,
+			BackgroundTexture = GameManager.Texture
+		};
+
+		LabelStyle labelStyle = new()
+		{
+			Font = GameManager.Font,
+			BackgroundColor = Color.White,
 			BackgroundTexture = GameManager.Texture
 		};
 
@@ -51,6 +60,7 @@ public class MainMenuConnectToServerUIState : IUIState
 		
 		_uiElements = new List<UIElement>
 		{
+			IPLabel,
 			ConnectButton,
 			BackButton
 		};
