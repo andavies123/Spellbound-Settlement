@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.UI.Enums;
+﻿using Andavies.MonoGame.Input.InputListeners;
+using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
 
@@ -27,6 +28,12 @@ public class TextInputBuilder : UIElementBuilder<TextInput>
 	public TextInputBuilder SetMaxLength(int maxLength)
 	{
 		UIElement.MaxLength = maxLength;
+		return this;
+	}
+
+	public TextInputBuilder SetTextListener(ITextListener textListener)
+	{
+		UIElement.TextListener = textListener;
 		return this;
 	}
 }

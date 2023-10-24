@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using Andavies.MonoGame.Input.InputListeners;
+using Autofac;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.GameStates;
@@ -42,6 +43,9 @@ public static class Program
 		// Input Managers
 		builder.RegisterType<GameplayInputManager>().As<IInputManager>().AsSelf().SingleInstance();
 		builder.RegisterType<PauseMenuInputManager>().As<IInputManager>().AsSelf().SingleInstance();
+		
+		// Text Listeners
+		builder.RegisterType<NumbersOnlyTextListener>().As<ITextListener>().Keyed<ITextListener>(nameof(NumbersOnlyTextListener)).InstancePerDependency();
 		
 		// UI States
 		builder.RegisterType<MainMenuMainUIState>().As<IUIState>().AsSelf().SingleInstance();

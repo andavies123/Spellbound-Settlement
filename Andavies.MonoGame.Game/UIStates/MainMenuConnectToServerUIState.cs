@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
+using Andavies.MonoGame.Input.InputListeners;
 using Andavies.MonoGame.UI.Builders;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
+using Autofac.Features.AttributeFilters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpellboundSettlement.Globals;
+using Label = Andavies.MonoGame.UI.UIElements.Label;
 
 namespace SpellboundSettlement.UIStates;
 
@@ -18,11 +22,17 @@ public class MainMenuConnectToServerUIState : IUIState
 	
 	private static readonly Point ButtonSize = new(175, 60);
 
+	private readonly ITextListener _numbersOnlyTextListener;
 	private readonly ButtonBuilder _buttonBuilder = new();
 	private readonly LabelBuilder _labelBuilder = new();
 	private readonly TextInputBuilder _textInputBuilder = new();
 	private List<UIElement> _uiElements;
 	private UIElement _focusedUIElement = null;
+
+	public MainMenuConnectToServerUIState([KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
+	{
+		_numbersOnlyTextListener = numbersOnlyTextListener;
+	}
 
 	public Label IpLabel { get; private set; }
 	public TextInput IpInput { get; private set; }
@@ -35,7 +45,7 @@ public class MainMenuConnectToServerUIState : IUIState
 	{
 		ButtonStyle buttonStyle = new()
 		{
-			Font = GameManager.Font,
+			Font = GlobalFonts.DefaultFont,
 			BackgroundColor = Color.LightSlateGray,
 			HoverBackgroundColor = Color.SlateGray,
 			MousePressedBackgroundColor = Color.DarkSlateGray,
@@ -45,15 +55,15 @@ public class MainMenuConnectToServerUIState : IUIState
 
 		LabelStyle labelStyle = new()
 		{
-			Font = GameManager.Font,
+			Font = GlobalFonts.DefaultFont,
 			BackgroundColor = Color.Transparent,
 			BackgroundTexture = GameManager.Texture
 		};
 
 		TextInputStyle textInputStyle = new()
 		{
-			Font = GameManager.Font,
-			HintTextFont = GameManager.HintFont,
+			Font = GlobalFonts.DefaultFont,
+			HintTextFont = GlobalFonts.HintFont,
 			BackgroundColor = Color.LightGray,
 			BackgroundTexture = GameManager.Texture
 		};
@@ -70,6 +80,7 @@ public class MainMenuConnectToServerUIState : IUIState
 			.SetInputType(InputType.NumbersOnly)
 			.SetMaxLength(15)
 			.SetStyle(textInputStyle)
+			.SetTextListener(_numbersOnlyTextListener)
 			.SetPositionAndSize(IpInputPosition, ButtonSize)
 			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
 			.Build();

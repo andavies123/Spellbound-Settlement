@@ -21,8 +21,6 @@ public class GameManager : Game
 	
 	// Drawing
 	public static Texture2D Texture;
-	public static SpriteFont Font;
-	public static SpriteFont HintFont;
 	public static Effect Effect;
 	public static Viewport Viewport;
 
@@ -73,8 +71,8 @@ public class GameManager : Game
 	protected override void LoadContent()
 	{
 		Effect = Content.Load<Effect>("TestShader");
-		Font = Content.Load<SpriteFont>("TestFont");
-		HintFont = Content.Load<SpriteFont>("HintFont");
+		GlobalFonts.DefaultFont = Content.Load<SpriteFont>("TestFont");
+		GlobalFonts.HintFont = Content.Load<SpriteFont>("HintFont");
 	}
 
 	protected override void Update(GameTime gameTime)

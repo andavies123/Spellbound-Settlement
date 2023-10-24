@@ -6,6 +6,7 @@ using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
+using SpellboundSettlement.Globals;
 
 namespace SpellboundSettlement.UIStates;
 
@@ -23,7 +24,7 @@ public class GameplayUIState : IUIState
 	{
 		ButtonStyle buttonStyle = new()
 		{
-			Font = GameManager.Font,
+			Font = GlobalFonts.DefaultFont,
 			BackgroundColor = Color.LightSlateGray,
 			HoverBackgroundColor = Color.SlateGray,
 			MousePressedBackgroundColor = Color.DarkSlateGray,

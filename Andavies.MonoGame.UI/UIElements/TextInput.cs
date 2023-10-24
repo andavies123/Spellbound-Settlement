@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Andavies.MonoGame.Input.InputListeners;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
@@ -17,6 +18,7 @@ public class TextInput : UIElement
 	public string HintText { get; set; } = "Enter Here";
 	public int MaxLength { get; set; } = 15;
 	public InputType InputType { get; set; } = InputType.NumberLettersAndSpecialCharactersOnly;
+	public ITextListener? TextListener { get; set; }
 	public TextInputStyle? Style { get; set; }
 
 	public void Clear()
@@ -57,12 +59,9 @@ public class TextInput : UIElement
 
 		_previousKeyboardState = _currentKeyboardState;
 		_currentKeyboardState = Keyboard.GetState();
-
-		if (_previousKeyboardState == null)
-			return;
 		
 		// Backspace
-		if ((_previousKeyboardState?.IsKeyDown(Keys.Back) ?? false) && (_currentKeyboardState?.IsKeyUp(Keys.Back) ?? false))
+		if (_stringBuilder.Length > 0 && (_previousKeyboardState?.IsKeyDown(Keys.Back) ?? false) && (_currentKeyboardState?.IsKeyUp(Keys.Back) ?? false))
 			_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
 		
 		// Enter
@@ -72,58 +71,8 @@ public class TextInput : UIElement
 		if (_stringBuilder.Length >= MaxLength)
 			return;
 
-		switch (InputType)
-		{
-			case InputType.AllText: ListenForAllText(); break;
-			case InputType.NumbersOnly: ListenForNumbersOnly(); break;
-			case InputType.LettersOnly: break;
-			case InputType.LowerCaseOnly: break;
-			case InputType.UpperCaseOnly: break;
-			case InputType.NumberAndLettersOnly: break;
-			case InputType.NumberLettersAndSpecialCharactersOnly: break;
-			default: ListenForAllText(); break;
-		}
+		TextListener?.Listen(_previousKeyboardState, _currentKeyboardState, _stringBuilder);
 
 		Text = _stringBuilder.ToString();
-	}
-
-	private void ListenForAllText()
-	{
-		
-	}
-
-	private readonly Dictionary<Keys, char> _keyToCharMap = new()
-	{
-		{ Keys.D0, '0' },
-		{ Keys.D1, '1' },
-		{ Keys.D2, '2' },
-		{ Keys.D3, '3' },
-		{ Keys.D4, '4' },
-		{ Keys.D5, '5' },
-		{ Keys.D6, '6' },
-		{ Keys.D7, '7' },
-		{ Keys.D8, '8' },
-		{ Keys.D9, '9' },
-		{ Keys.Decimal, '.' },
-		{ Keys.NumPad0, '0' },
-		{ Keys.NumPad1, '1' },
-		{ Keys.NumPad2, '2' },
-		{ Keys.NumPad3, '3' },
-		{ Keys.NumPad4, '4' },
-		{ Keys.NumPad5, '5' },
-		{ Keys.NumPad6, '6' },
-		{ Keys.NumPad7, '7' },
-		{ Keys.NumPad8, '8' },
-		{ Keys.NumPad9, '9' },
-		{ Keys.OemPeriod, '.' }
-	};
-
-	private void ListenForNumbersOnly()
-	{
-		foreach (KeyValuePair<Keys, char> kvp in _keyToCharMap)
-		{
-			if ((_previousKeyboardState?.IsKeyDown(kvp.Key) ?? false) && (_currentKeyboardState?.IsKeyUp(kvp.Key) ?? false))
-				_stringBuilder.Append(kvp.Value);
-		}
 	}
 }
