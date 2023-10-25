@@ -3,6 +3,7 @@ using Andavies.MonoGame.UI.Builders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
@@ -21,6 +22,11 @@ public class MainMenuMainUIState : IUIState
 	private static readonly Point ButtonSize = new(175, 60);
 
 	private readonly ButtonBuilder _buttonBuilder = new();
+	private readonly VerticalLayoutGroup _verticalLayoutGroup = new()
+	{
+		Spacing = 100,
+		LayoutAnchor = LayoutAnchor.TopRight
+	};
 	private List<UIElement> _uiElements;
 
 	public Button PlayButton { get; private set; }
@@ -28,7 +34,7 @@ public class MainMenuMainUIState : IUIState
 	public Button CreateServerButton { get; private set; }
 	public Button OptionsButton { get; private set; }
 	public Button QuitButton { get; private set; }
-	
+
 	public void Init() { }
 
 	public void LateInit()
@@ -77,6 +83,13 @@ public class MainMenuMainUIState : IUIState
 			.SetPositionAndSize(QuitButtonPosition, ButtonSize)
 			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
 			.Build();
+		
+		_verticalLayoutGroup.AddUIElements(
+			PlayButton, 
+			ConnectToServerButton, 
+			CreateServerButton, 
+			OptionsButton, 
+			QuitButton);
 		
 		_uiElements = new List<UIElement>
 		{
