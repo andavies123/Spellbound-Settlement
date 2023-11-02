@@ -1,5 +1,6 @@
 ﻿using System;
 using Andavies.MonoGame.Game.Client;
+using Andavies.MonoGame.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
@@ -40,7 +41,7 @@ public class GameManager : Game
 		Global.GraphicsDeviceManager.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
 		Global.GraphicsDeviceManager.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 		
-		Global.GraphicsDeviceManager.IsFullScreen = true;
+		Global.GraphicsDeviceManager.IsFullScreen = false;
 		Global.GraphicsDeviceManager.ApplyChanges();
 		Viewport = GraphicsDevice.Viewport;
 	}
@@ -81,6 +82,8 @@ public class GameManager : Game
 		_deltaTime = _currentTime - _previousTime;
 
 		float deltaTimeSeconds = (float) _deltaTime.TotalSeconds;
+
+		Input.Update();
 		
 		_gameStateManager.Update(deltaTimeSeconds);
 		_cameraController.UpdateCamera(deltaTimeSeconds);

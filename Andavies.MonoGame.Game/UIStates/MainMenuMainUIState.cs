@@ -22,11 +22,7 @@ public class MainMenuMainUIState : IUIState
 	private static readonly Point ButtonSize = new(175, 60);
 
 	private readonly ButtonBuilder _buttonBuilder = new();
-	private readonly VerticalLayoutGroup _verticalLayoutGroup = new()
-	{
-		Spacing = 100,
-		LayoutAnchor = LayoutAnchor.TopRight
-	};
+	private VerticalLayoutGroup _verticalLayoutGroup;
 	private List<UIElement> _uiElements;
 
 	public Button PlayButton { get; private set; }
@@ -39,6 +35,14 @@ public class MainMenuMainUIState : IUIState
 
 	public void LateInit()
 	{
+		_verticalLayoutGroup = new VerticalLayoutGroup
+		{
+			Spacing = 100,
+			ChildAnchor = HorizontalAnchor.Center,
+			ForceExpandChildWidth = false,
+			Bounds = new Rectangle(0, 0, GameManager.Viewport.Width, GameManager.Viewport.Height)
+		};
+		
 		ButtonStyle buttonStyle = new()
 		{
 			Font = GlobalFonts.DefaultFont,
@@ -53,41 +57,36 @@ public class MainMenuMainUIState : IUIState
 			.SetText("Play")
 			.SetStyle(buttonStyle)
 			.SetPositionAndSize(PlayButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
 			.Build();
 
 		ConnectToServerButton = _buttonBuilder
 			.SetText("Connect to Server")
 			.SetStyle(buttonStyle)
 			.SetPositionAndSize(ConnectToServerButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
 			.Build();
 
 		CreateServerButton = _buttonBuilder
 			.SetText("Create Server")
 			.SetStyle(buttonStyle)
 			.SetPositionAndSize(CreateServerButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
 			.Build();
 
 		OptionsButton = _buttonBuilder
 			.SetText("Options")
 			.SetStyle(buttonStyle)
 			.SetPositionAndSize(OptionsButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
 			.Build();
 
 		QuitButton = _buttonBuilder
 			.SetText("Quit")
 			.SetStyle(buttonStyle)
 			.SetPositionAndSize(QuitButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
 			.Build();
 		
 		_verticalLayoutGroup.AddUIElements(
-			PlayButton, 
-			ConnectToServerButton, 
-			CreateServerButton, 
+			PlayButton,
+			ConnectToServerButton,
+			CreateServerButton,
 			OptionsButton, 
 			QuitButton);
 		
@@ -99,8 +98,6 @@ public class MainMenuMainUIState : IUIState
 			OptionsButton,
 			QuitButton
 		};
-		
-		_uiElements.ForEach(uiElement => uiElement.CalculateBounds(GameManager.Viewport.Bounds.Size));
 	}
 
 	public void Update(float deltaTimeSeconds)

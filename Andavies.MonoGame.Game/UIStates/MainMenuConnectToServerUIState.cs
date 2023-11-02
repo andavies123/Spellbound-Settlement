@@ -107,7 +107,6 @@ public class MainMenuConnectToServerUIState : IUIState
 			BackButton
 		};
 		
-		_uiElements.ForEach(uiElement => uiElement.CalculateBounds(GameManager.Viewport.Bounds.Size));
 		_uiElements.ForEach(uiElement => uiElement.ReceivedFocus += OnUIElementReceivedFocus);
 
 		IpInput.HasFocus = true;

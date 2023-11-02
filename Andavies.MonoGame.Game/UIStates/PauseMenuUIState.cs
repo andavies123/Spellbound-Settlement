@@ -3,6 +3,7 @@ using Andavies.MonoGame.UI.Builders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
@@ -20,6 +21,8 @@ public class PauseMenuUIState : IUIState
 
 	private readonly ButtonBuilder _buttonBuilder = new();
 
+	private HorizontalLayoutGroup _horizontalLayoutGroup;
+
 	private Button _resumeButton;
 	private Button _optionsButton;
 	private Button _mainMenuButton;
@@ -32,6 +35,14 @@ public class PauseMenuUIState : IUIState
 
 	public void LateInit()
 	{
+		_horizontalLayoutGroup = new HorizontalLayoutGroup()
+		{
+			Bounds = new Rectangle(0, 0, GameManager.Viewport.Width, GameManager.Viewport.Height),
+			ChildAnchor = VerticalAnchor.Center,
+			ForceExpandChildHeight = false,
+			Spacing = 200
+		};
+		
 		ButtonStyle buttonStyle = new()
 		{
 			Font = GlobalFonts.DefaultFont,
@@ -63,9 +74,7 @@ public class PauseMenuUIState : IUIState
 			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
 			.Build();
 		
-		_resumeButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
-		_optionsButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
-		_mainMenuButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
+		_horizontalLayoutGroup.AddUIElements(_resumeButton, _optionsButton, _mainMenuButton);
 		
 		_resumeButton.MouseReleased += OnResumeButtonPressed;
 		_optionsButton.MouseReleased += OnOptionsButtonPressed;

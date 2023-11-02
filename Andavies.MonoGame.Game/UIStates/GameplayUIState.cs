@@ -39,7 +39,7 @@ public class GameplayUIState : IUIState
 			.SetLayoutAnchor(LayoutAnchor.TopRight)
 			.Build();
 		
-		_pauseButton.CalculateBounds(GameManager.Viewport.Bounds.Size);
+		//_pauseButton.CalculateBounds(GameManager.Viewport.Bounds);
 		_pauseButton.MousePressed += RaisePauseButtonPressed;
 	}
 
