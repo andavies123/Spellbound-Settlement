@@ -1,5 +1,3 @@
-using System;
-using Andavies.MonoGame.UI.Builders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Andavies.MonoGame.UI.Enums;
@@ -19,27 +17,21 @@ public class PauseMenuUIState : IUIState
 	
 	private static readonly Point ButtonSize = new(125, 75);
 
-	private readonly ButtonBuilder _buttonBuilder = new();
+	private VerticalLayoutGroup _verticalLayoutGroup;
 
-	private HorizontalLayoutGroup _horizontalLayoutGroup;
-
-	private Button _resumeButton;
-	private Button _optionsButton;
-	private Button _mainMenuButton;
-
-	public event Action ResumeButtonPressed;
-	public event Action OptionsButtonPressed;
-	public event Action MainMenuButtonPressed;
+	public Button ResumeButton { get; private set; }
+	public Button OptionsButton { get; private set; }
+	public Button MainMenuButton { get; private set; }
 	
 	public void Init() { }
 
 	public void LateInit()
 	{
-		_horizontalLayoutGroup = new HorizontalLayoutGroup()
+		_verticalLayoutGroup = new VerticalLayoutGroup
 		{
 			Bounds = new Rectangle(0, 0, GameManager.Viewport.Width, GameManager.Viewport.Height),
-			ChildAnchor = VerticalAnchor.Center,
-			ForceExpandChildHeight = false,
+			ChildAnchor = HorizontalAnchor.Center,
+			ForceExpandChildWidth = false,
 			Spacing = 200
 		};
 		
@@ -53,62 +45,29 @@ public class PauseMenuUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		_resumeButton = _buttonBuilder
-			.SetText("Resume")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(ResumeButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
-			.Build();
-
-		_optionsButton = _buttonBuilder
-			.SetText("Options")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(OptionsButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
-			.Build();
-
-		_mainMenuButton = _buttonBuilder
-			.SetText("Main Menu")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(MainMenuButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
-			.Build();
+		ResumeButton = new Button(ResumeButtonPosition, ButtonSize, "Resume", buttonStyle);
+		OptionsButton = new Button(OptionsButtonPosition, ButtonSize, "Options", buttonStyle);
+		MainMenuButton = new Button(MainMenuButtonPosition, ButtonSize, "Main Menu", buttonStyle);
 		
-		_horizontalLayoutGroup.AddUIElements(_resumeButton, _optionsButton, _mainMenuButton);
-		
-		_resumeButton.MouseReleased += OnResumeButtonPressed;
-		_optionsButton.MouseReleased += OnOptionsButtonPressed;
-		_mainMenuButton.MouseReleased += OnMainMenuButtonPressed;
+		_verticalLayoutGroup.AddUIElements(
+			ResumeButton, 
+			OptionsButton, 
+			MainMenuButton);
 	}
 
 	public void Update(float deltaTimeSeconds)
 	{
-		_resumeButton.Update();
-		_optionsButton.Update();
-		_mainMenuButton.Update();
+		ResumeButton.Update();
+		OptionsButton.Update();
+		MainMenuButton.Update();
 	}
 
 	public void Draw(SpriteBatch spriteBatch)
 	{
-		_resumeButton.Draw(spriteBatch);
-		_optionsButton.Draw(spriteBatch);
-		_mainMenuButton.Draw(spriteBatch);
+		ResumeButton.Draw(spriteBatch);
+		OptionsButton.Draw(spriteBatch);
+		MainMenuButton.Draw(spriteBatch);
 	}
 
 	public void Exit() { }
-
-	private void OnResumeButtonPressed()
-	{
-		ResumeButtonPressed?.Invoke();
-	}
-
-	private void OnOptionsButtonPressed()
-	{
-		OptionsButtonPressed?.Invoke();
-	}
-
-	private void OnMainMenuButtonPressed()
-	{
-		MainMenuButtonPressed?.Invoke();
-	}
 }

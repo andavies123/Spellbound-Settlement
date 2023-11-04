@@ -1,8 +1,5 @@
-﻿using System;
-using Andavies.MonoGame.UI.Builders;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
@@ -12,11 +9,7 @@ namespace SpellboundSettlement.UIStates;
 
 public class GameplayUIState : IUIState
 {
-	private readonly ButtonBuilder _buttonBuilder = new();
-	
-	private Button _pauseButton;
-
-	public event Action PauseButtonPressed;
+	public Button PauseButton { get; private set; }
 
 	public void Init() { }
 
@@ -32,28 +25,18 @@ public class GameplayUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		_pauseButton = _buttonBuilder
-			.SetText("Pause")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(new Point(-20, 20), new Point(75, 25))
-			.SetLayoutAnchor(LayoutAnchor.TopRight)
-			.Build();
-		
-		//_pauseButton.CalculateBounds(GameManager.Viewport.Bounds);
-		_pauseButton.MousePressed += RaisePauseButtonPressed;
+		PauseButton = new Button(new Point(GameManager.Viewport.Width - 100, 50), new Point(75, 25), "Pause", buttonStyle);
 	}
 
 	public void Update(float deltaTimeSeconds)
 	{
-		_pauseButton.Update();
+		PauseButton.Update();
 	}
     
 	public void Draw(SpriteBatch spriteBatch)
 	{
-		_pauseButton.Draw(spriteBatch);
+		PauseButton.Draw(spriteBatch);
 	}
 
 	public void Exit() { }
-
-	private void RaisePauseButtonPressed() => PauseButtonPressed?.Invoke();
 }

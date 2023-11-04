@@ -5,17 +5,36 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Andavies.MonoGame.UI.UIElements;
 
+/// <summary>
+/// Class that defines and handles an instance of a UI button
+/// </summary>
 public class Button : UIElement
 {
-	public string Text { get; set; } = "N/A"; // Text that is displayed on the button
-	public ButtonStyle? Style { get; set; } // How the button will be displayed
-	public bool IsEnabled { get; set; } = true; // True = Button can be clicked. False = Can't be clicked
+	public Button(Point position, Point size, string text, ButtonStyle style) : base(position, size)
+	{
+		Text = text;
+		Style = style;
+	}
+	
+	/// <summary>
+	/// The text that will be displayed on the button
+	/// </summary>
+	public string Text { get; set; }
+	
+	/// <summary>
+	/// The style components of the button that defines how it will look when drawn
+	/// </summary>
+	public ButtonStyle Style { get; set; }
+	
+	/// <summary>
+	/// Whether or not the button can be used or not.
+	/// True = Button can be used/clicked
+	/// False = Button cannot be used/clicked
+	/// </summary>
+	public bool IsEnabled { get; set; } = true;
 
 	public override void Draw(SpriteBatch spriteBatch)
 	{
-		if (Style == null)
-			return;
-		
 		spriteBatch.Draw(Style.BackgroundTexture, Bounds, GetCurrentBackgroundColor());
 
 		Vector2 textSize = Style.Font?.MeasureString(Text) ?? Vector2.Zero;
@@ -32,9 +51,6 @@ public class Button : UIElement
 
 	private Color GetCurrentBackgroundColor()
 	{
-		if (Style == null)
-			return Color.Black;
-		
 		Color color;
 		
 		if (!IsEnabled)

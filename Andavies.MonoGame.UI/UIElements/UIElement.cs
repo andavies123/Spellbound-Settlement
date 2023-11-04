@@ -10,6 +10,12 @@ public abstract class UIElement
 	private bool _isMouseDown = false;
 	private bool _hasFocus = false; // Backing variable for HasFocus
 
+	protected UIElement(Point position, Point size)
+	{
+		Position = position;
+		Size = size;
+	}
+
 	/// <summary>Raised when the mouse first enters the bounds of this element</summary>
 	public event Action? MouseEntered;
 	/// <summary>Raised when the mouse first exists the bounds of this element</summary>
@@ -77,7 +83,9 @@ public abstract class UIElement
 		CheckMouseReleased();
 	}
 	
-	/// <summary>Checks to see if the mouse has entered the bounds of this element whether it is pressed or not</summary>
+	/// <summary>
+	/// Checks to see if the mouse has entered the bounds of this element whether it is pressed or not
+	/// </summary>
 	protected virtual void CheckMouseEntered()
 	{
 		if (!IsMouseInside && Bounds.Contains(CurrentMousePosition))
@@ -87,7 +95,9 @@ public abstract class UIElement
 		}
 	}
 	
-	/// <summary>Checks to see if the mouse has exited the bounds of this element whether it is pressed or not</summary>
+	/// <summary>
+	/// Checks to see if the mouse has exited the bounds of this element whether it is pressed or not
+	/// </summary>
 	protected virtual void CheckMouseExited()
 	{
 		if (IsMouseInside && !Bounds.Contains(CurrentMousePosition))
@@ -97,7 +107,9 @@ public abstract class UIElement
 		}
 	}
 
-	/// <summary>Checks to see if the mouse was pressed inside the bounds of this element</summary>
+	/// <summary>
+	/// Checks to see if the mouse was pressed inside the bounds of this element
+	/// </summary>
 	protected virtual void CheckMousePressed()
 	{
 		if (!_isMouseDown && IsMousePressed)
@@ -111,7 +123,9 @@ public abstract class UIElement
 		}
 	}
 
-	/// <summary>Checks to see if the mouse was released inside the bounds of this element</summary>
+	/// <summary>
+	/// Checks to see if the mouse was released inside the bounds of this element
+	/// </summary>
 	protected virtual void CheckMouseReleased()
 	{
 		if (_isMouseDown && IsMouseReleased)

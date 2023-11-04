@@ -7,14 +7,24 @@ namespace Andavies.MonoGame.UI.UIElements;
 
 public class Label : UIElement
 {
-	public string Text { get; set; } = "N/A"; // Text that is displayed on the label
-	public LabelStyle? Style { get; set; } // How the label will be displayed
+	public Label(Point position, Point size, string text, LabelStyle style) : base(position, size)
+	{
+		Text = text;
+		Style = style;
+	}
+	
+	/// <summary>
+	/// The text that will be displayed on the label
+	/// </summary>
+	public string Text { get; set; }
+	
+	/// <summary>
+	/// Defines how the label will be drawn
+	/// </summary>
+	public LabelStyle Style { get; set; }
 	
 	public override void Draw(SpriteBatch spriteBatch)
 	{
-		if (Style == null)
-			return;
-		
 		spriteBatch.Draw(Style.BackgroundTexture, Bounds, Style.BackgroundColor);
 
 		Vector2 textSize = Style.Font?.MeasureString(Text) ?? Vector2.Zero;

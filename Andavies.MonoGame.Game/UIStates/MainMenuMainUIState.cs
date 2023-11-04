@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Andavies.MonoGame.UI.Builders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Andavies.MonoGame.UI.Enums;
@@ -21,7 +20,6 @@ public class MainMenuMainUIState : IUIState
 	
 	private static readonly Point ButtonSize = new(175, 60);
 
-	private readonly ButtonBuilder _buttonBuilder = new();
 	private VerticalLayoutGroup _verticalLayoutGroup;
 	private List<UIElement> _uiElements;
 
@@ -53,35 +51,11 @@ public class MainMenuMainUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		PlayButton = _buttonBuilder
-			.SetText("Play")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(PlayButtonPosition, ButtonSize)
-			.Build();
-
-		ConnectToServerButton = _buttonBuilder
-			.SetText("Connect to Server")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(ConnectToServerButtonPosition, ButtonSize)
-			.Build();
-
-		CreateServerButton = _buttonBuilder
-			.SetText("Create Server")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(CreateServerButtonPosition, ButtonSize)
-			.Build();
-
-		OptionsButton = _buttonBuilder
-			.SetText("Options")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(OptionsButtonPosition, ButtonSize)
-			.Build();
-
-		QuitButton = _buttonBuilder
-			.SetText("Quit")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(QuitButtonPosition, ButtonSize)
-			.Build();
+		PlayButton = new Button(PlayButtonPosition, ButtonSize, "Play", buttonStyle);
+		ConnectToServerButton = new Button(ConnectToServerButtonPosition, ButtonSize, "Connect to Server", buttonStyle);
+		CreateServerButton = new Button(CreateServerButtonPosition, ButtonSize, "Create Server", buttonStyle);
+		OptionsButton = new Button(OptionsButtonPosition, ButtonSize, "Options", buttonStyle);
+		QuitButton = new Button(QuitButtonPosition, ButtonSize, "Quit", buttonStyle);
 		
 		_verticalLayoutGroup.AddUIElements(
 			PlayButton,

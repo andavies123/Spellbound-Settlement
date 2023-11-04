@@ -27,15 +27,15 @@ public class PauseMenuGameState : GameState
 		UIStateMachine.ChangeUIState(_pauseMenuUIState);
 		
 		InputState.ExitMenu.OnKeyUp += RaiseResumeGame;
-		_pauseMenuUIState.ResumeButtonPressed += RaiseResumeGame;
-		_pauseMenuUIState.MainMenuButtonPressed += RaiseMainMenu;
+		_pauseMenuUIState.ResumeButton.MousePressed += RaiseResumeGame;
+		_pauseMenuUIState.MainMenuButton.MousePressed += RaiseMainMenu;
 	}
 
 	public override void End()
 	{
 		InputState.ExitMenu.OnKeyUp -= RaiseResumeGame;
-		_pauseMenuUIState.ResumeButtonPressed -= RaiseResumeGame;
-		_pauseMenuUIState.MainMenuButtonPressed -= RaiseMainMenu;
+		_pauseMenuUIState.ResumeButton.MousePressed -= RaiseResumeGame;
+		_pauseMenuUIState.MainMenuButton.MousePressed -= RaiseMainMenu;
 	}
 
 	private void RaiseResumeGame()

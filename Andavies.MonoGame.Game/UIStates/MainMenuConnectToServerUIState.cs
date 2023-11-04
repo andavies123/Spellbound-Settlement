@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Andavies.MonoGame.Input.InputListeners;
-using Andavies.MonoGame.UI.Builders;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
@@ -23,13 +22,11 @@ public class MainMenuConnectToServerUIState : IUIState
 	private static readonly Point ButtonSize = new(175, 60);
 
 	private readonly ITextListener _numbersOnlyTextListener;
-	private readonly ButtonBuilder _buttonBuilder = new();
-	private readonly LabelBuilder _labelBuilder = new();
-	private readonly TextInputBuilder _textInputBuilder = new();
 	private List<UIElement> _uiElements;
 	private UIElement _focusedUIElement = null;
 
-	public MainMenuConnectToServerUIState([KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
+	public MainMenuConnectToServerUIState(
+		[KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
 	{
 		_numbersOnlyTextListener = numbersOnlyTextListener;
 	}
@@ -68,36 +65,15 @@ public class MainMenuConnectToServerUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		IpLabel = _labelBuilder
-			.SetText("IP Address:")
-			.SetStyle(labelStyle)
-			.SetPositionAndSize(IpLabelPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
-			.Build();
-
-		IpInput = _textInputBuilder
-			.SetHintText("Enter Here")
-			.SetInputType(InputType.NumbersOnly)
-			.SetMaxLength(15)
-			.SetStyle(textInputStyle)
-			.SetTextListener(_numbersOnlyTextListener)
-			.SetPositionAndSize(IpInputPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
-			.Build();
-
-		ConnectButton = _buttonBuilder
-			.SetText("Connect")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(ConnectButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
-			.Build();
-		
-		BackButton = _buttonBuilder
-			.SetText("Back")
-			.SetStyle(buttonStyle)
-			.SetPositionAndSize(BackButtonPosition, ButtonSize)
-			.SetLayoutAnchor(LayoutAnchor.MiddleCenter)
-			.Build();
+		IpLabel = new Label(IpLabelPosition, ButtonSize, "IP Address:", labelStyle);
+		IpInput = new TextInput(IpInputPosition, ButtonSize, textInputStyle, _numbersOnlyTextListener)
+		{
+			InputType = InputType.NumbersOnly,
+			MaxLength = 15, // Max length of an IP address
+			HintText = "Ip Address"
+		};
+		ConnectButton = new Button(ConnectButtonPosition, ButtonSize, "Connect", buttonStyle);
+		BackButton = new Button(BackButtonPosition, ButtonSize, "Back", buttonStyle);
 		
 		_uiElements = new List<UIElement>
 		{
