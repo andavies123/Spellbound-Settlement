@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.UI.Enums;
+﻿using Andavies.MonoGame.UI.Core;
+using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

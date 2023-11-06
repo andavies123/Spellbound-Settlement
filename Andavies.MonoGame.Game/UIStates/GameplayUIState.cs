@@ -30,7 +30,7 @@ public class GameplayUIState : IUIState
 
 	public void Update(float deltaTimeSeconds)
 	{
-		PauseButton.Update();
+		PauseButton.Update(deltaTimeSeconds);
 	}
     
 	public void Draw(SpriteBatch spriteBatch)

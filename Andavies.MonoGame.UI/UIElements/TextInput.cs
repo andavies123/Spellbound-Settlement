@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Andavies.MonoGame.Input.InputListeners;
+using Andavies.MonoGame.UI.Core;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
@@ -54,9 +55,9 @@ public class TextInput : UIElement
 		spriteBatch.DrawString(font, text, textPosition, Color.Black);
 	}
 
-	public override void Update()
+	public override void Update(float deltaTimeSeconds)
 	{
-		base.Update();
+		base.Update(deltaTimeSeconds);
 
 		if (!HasFocus)
 			return;
@@ -71,14 +72,6 @@ public class TextInput : UIElement
 		// Enter
 		if (Input.Input.WasKeyPressed(Keys.Enter))
 			_stringBuilder.Clear();
-		
-		// // Backspace
-		// if (_stringBuilder.Length > 0 && (_previousKeyboardState?.IsKeyDown(Keys.Back) ?? false) && (_currentKeyboardState?.IsKeyUp(Keys.Back) ?? false))
-		// 	_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
-		//
-		// // Enter
-		// if ((_previousKeyboardState?.IsKeyDown(Keys.Enter) ?? false) && (_currentKeyboardState?.IsKeyUp(Keys.Enter) ?? false))
-		// 	_stringBuilder.Clear();
 
 		if (_stringBuilder.Length >= MaxLength)
 			return;
