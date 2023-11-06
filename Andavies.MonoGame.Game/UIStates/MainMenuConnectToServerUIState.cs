@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Andavies.MonoGame.Input.InputListeners;
 using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
@@ -22,8 +23,8 @@ public class MainMenuConnectToServerUIState : IUIState
 	private static readonly Point ButtonSize = new(175, 60);
 
 	private readonly ITextListener _numbersOnlyTextListener;
-	private List<UIElement> _uiElements;
-	private UIElement _focusedUIElement = null;
+	private List<IUIElement> _uiElements;
+	private IUIElement _focusedUIElement;
 
 	public MainMenuConnectToServerUIState(
 		[KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
@@ -75,7 +76,7 @@ public class MainMenuConnectToServerUIState : IUIState
 		ConnectButton = new Button(ConnectButtonPosition, ButtonSize, "Connect", buttonStyle);
 		BackButton = new Button(BackButtonPosition, ButtonSize, "Back", buttonStyle);
 		
-		_uiElements = new List<UIElement>
+		_uiElements = new List<IUIElement>
 		{
 			IpLabel,
 			IpInput,
@@ -90,7 +91,7 @@ public class MainMenuConnectToServerUIState : IUIState
 
 	public void Update(float deltaTimeSeconds)
 	{
-		_uiElements.ForEach(uiElement => uiElement.Update());
+		_uiElements.ForEach(uiElement => uiElement.Update(deltaTimeSeconds));
 	}
 
 	public void Draw(SpriteBatch spriteBatch)
@@ -103,7 +104,7 @@ public class MainMenuConnectToServerUIState : IUIState
 		IpInput.Clear();
 	}
 	
-	private void OnUIElementReceivedFocus(UIElement uiElement)
+	private void OnUIElementReceivedFocus(IUIElement uiElement)
 	{
 		if (_focusedUIElement != null)
 			_focusedUIElement.HasFocus = false;

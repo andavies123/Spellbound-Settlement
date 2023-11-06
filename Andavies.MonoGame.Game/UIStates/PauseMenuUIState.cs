@@ -27,9 +27,9 @@ public class PauseMenuUIState : IUIState
 
 	public void LateInit()
 	{
-		_verticalLayoutGroup = new VerticalLayoutGroup
+		_verticalLayoutGroup = new VerticalLayoutGroup(
+			new Rectangle(0, 0, GameManager.Viewport.Width, GameManager.Viewport.Height))
 		{
-			Bounds = new Rectangle(0, 0, GameManager.Viewport.Width, GameManager.Viewport.Height),
 			ChildAnchor = HorizontalAnchor.Center,
 			ForceExpandChildWidth = false,
 			Spacing = 200
@@ -49,7 +49,7 @@ public class PauseMenuUIState : IUIState
 		OptionsButton = new Button(OptionsButtonPosition, ButtonSize, "Options", buttonStyle);
 		MainMenuButton = new Button(MainMenuButtonPosition, ButtonSize, "Main Menu", buttonStyle);
 		
-		_verticalLayoutGroup.AddUIElements(
+		_verticalLayoutGroup.AddChildren(
 			ResumeButton, 
 			OptionsButton, 
 			MainMenuButton);
@@ -57,16 +57,12 @@ public class PauseMenuUIState : IUIState
 
 	public void Update(float deltaTimeSeconds)
 	{
-		ResumeButton.Update();
-		OptionsButton.Update();
-		MainMenuButton.Update();
+		_verticalLayoutGroup.Update(deltaTimeSeconds);
 	}
 
 	public void Draw(SpriteBatch spriteBatch)
 	{
-		ResumeButton.Draw(spriteBatch);
-		OptionsButton.Draw(spriteBatch);
-		MainMenuButton.Draw(spriteBatch);
+		_verticalLayoutGroup.Draw(spriteBatch);
 	}
 
 	public void Exit() { }

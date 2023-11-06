@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.UI.Enums;
+﻿using Andavies.MonoGame.UI.Core;
+using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,6 +32,8 @@ public class Button : UIElement
 	/// True = Button can be used/clicked
 	/// False = Button cannot be used/clicked
 	/// </summary>
+	// Todo: Would it be a good idea to change this to an interface "IInteractable"
+	// Todo: maybe create a base class that extends IInteractable and UIElement "InteractableUIElement"
 	public bool IsEnabled { get; set; } = true;
 
 	public override void Draw(SpriteBatch spriteBatch)
@@ -57,7 +60,7 @@ public class Button : UIElement
 			color = Style.DisabledBackgroundColor;
 		else if (IsElementPressed)
 			color = Style.MousePressedBackgroundColor;
-		else if (IsMouseInside)
+		else if (IsElementHovered)
 			color = Style.HoverBackgroundColor;
 		else
 			color = Style.BackgroundColor;
