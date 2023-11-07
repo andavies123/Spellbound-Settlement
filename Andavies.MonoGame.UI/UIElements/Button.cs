@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.UI.Core;
+﻿using System.Runtime.CompilerServices;
+using Andavies.MonoGame.UI.Core;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
@@ -12,6 +13,12 @@ namespace Andavies.MonoGame.UI.UIElements;
 public class Button : UIElement
 {
 	public Button(Point position, Point size, string text, ButtonStyle style) : base(position, size)
+	{
+		Text = text;
+		Style = style;
+	}
+
+	public Button(Point size, string text, ButtonStyle style) : base(size)
 	{
 		Text = text;
 		Style = style;

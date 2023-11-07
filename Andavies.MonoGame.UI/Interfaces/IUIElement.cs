@@ -35,7 +35,19 @@ public interface IUIElement
 	/// Usually set by an element's parent such as a layout group
 	/// </summary>
 	Rectangle Bounds { get; set; }
+
+	/// <summary>
+	/// References the width of this UI Element's bounds.
+	/// Points to Bounds.Width
+	/// </summary>
+	int Width { get; }
 	
+	/// <summary>
+	/// References the height of this UI Element's bounds.
+	/// Points to Bounds.Height
+	/// </summary>
+	int Height { get; }
+
 	/// <summary>
 	/// Whether or not this UI Element should be drawn
 	/// True = Should be drawn
@@ -49,13 +61,13 @@ public interface IUIElement
 	/// False = Does not have focus
 	/// </summary>
 	bool HasFocus { get; set; }
-	
+
 	/// <summary>
 	/// Used to update any elements. Can be used for animation or anything that requires logic updates
 	/// </summary>
 	/// <param name="deltaTimeSeconds">Time that has passed for this frame</param>
 	void Update(float deltaTimeSeconds);
-	
+
 	/// <summary>
 	/// Used to draw the UIElement or even call draw on a UIElements children components
 	/// </summary>

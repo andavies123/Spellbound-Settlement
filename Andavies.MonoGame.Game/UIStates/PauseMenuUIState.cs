@@ -11,10 +11,6 @@ namespace SpellboundSettlement.UIStates;
 
 public class PauseMenuUIState : IUIState
 {
-	private static readonly Point ResumeButtonPosition = new(0, -100);
-	private static readonly Point OptionsButtonPosition = new(0, 0);
-	private static readonly Point MainMenuButtonPosition = new(0, 100);
-	
 	private static readonly Point ButtonSize = new(125, 75);
 
 	private VerticalLayoutGroup _verticalLayoutGroup;
@@ -45,9 +41,9 @@ public class PauseMenuUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		ResumeButton = new Button(ResumeButtonPosition, ButtonSize, "Resume", buttonStyle);
-		OptionsButton = new Button(OptionsButtonPosition, ButtonSize, "Options", buttonStyle);
-		MainMenuButton = new Button(MainMenuButtonPosition, ButtonSize, "Main Menu", buttonStyle);
+		ResumeButton = new Button(ButtonSize, "Resume", buttonStyle);
+		OptionsButton = new Button(ButtonSize, "Options", buttonStyle);
+		MainMenuButton = new Button(ButtonSize, "Main Menu", buttonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			ResumeButton, 

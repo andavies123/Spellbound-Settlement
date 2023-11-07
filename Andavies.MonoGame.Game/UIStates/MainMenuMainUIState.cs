@@ -11,12 +11,6 @@ namespace SpellboundSettlement.UIStates;
 
 public class MainMenuMainUIState : IUIState
 {
-	private static readonly Point PlayButtonPosition = new(0, -200);
-	private static readonly Point ConnectToServerButtonPosition = new(0, -100);
-	private static readonly Point CreateServerButtonPosition = new(0, 0);
-	private static readonly Point OptionsButtonPosition = new(0, 100);
-	private static readonly Point QuitButtonPosition = new(0, 200);
-	
 	private static readonly Point ButtonSize = new(175, 60);
 
 	private VerticalLayoutGroup _verticalLayoutGroup;
@@ -31,8 +25,7 @@ public class MainMenuMainUIState : IUIState
 
 	public void LateInit()
 	{
-		_verticalLayoutGroup = new VerticalLayoutGroup(
-			new Rectangle(0, 0, GameManager.Viewport.Width, GameManager.Viewport.Height))
+		_verticalLayoutGroup = new VerticalLayoutGroup(Point.Zero, GameManager.Viewport.Bounds.Size)
 		{
 			Spacing = 100,
 			ChildAnchor = HorizontalAnchor.Center,
@@ -49,11 +42,11 @@ public class MainMenuMainUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		PlayButton = new Button(PlayButtonPosition, ButtonSize, "Play", buttonStyle);
-		ConnectToServerButton = new Button(ConnectToServerButtonPosition, ButtonSize, "Connect to Server", buttonStyle);
-		CreateServerButton = new Button(CreateServerButtonPosition, ButtonSize, "Create Server", buttonStyle);
-		OptionsButton = new Button(OptionsButtonPosition, ButtonSize, "Options", buttonStyle);
-		QuitButton = new Button(QuitButtonPosition, ButtonSize, "Quit", buttonStyle);
+		PlayButton = new Button(ButtonSize, "Play", buttonStyle);
+		ConnectToServerButton = new Button(ButtonSize, "Connect to Server", buttonStyle);
+		CreateServerButton = new Button(ButtonSize, "Create Server", buttonStyle);
+		OptionsButton = new Button(ButtonSize, "Options", buttonStyle);
+		QuitButton = new Button(ButtonSize, "Quit", buttonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			PlayButton,

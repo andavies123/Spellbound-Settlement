@@ -10,15 +10,29 @@ public abstract class UIElement : IUIElement
 	private bool _isMouseDown = false;
 	private bool _hasFocus = false; // Backing variable for HasFocus
 	
+	/// <summary>
+	/// Use this constructor when the bounds are already defined as a Rectangle
+	/// </summary>
+	/// <param name="bounds">The bounds of this UI Element</param>
 	protected UIElement(Rectangle bounds)
 	{
 		Bounds = bounds;
 	}
 
-	protected UIElement(Point location, Point size)
-	{
-		Bounds = new Rectangle(location, size);
-	}
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="location"></param>
+	/// <param name="size"></param>
+	protected UIElement(Point location, Point size) : 
+		this(new Rectangle(location, size)) { }
+
+	/// <summary>
+	/// Constructor that will set the bounds location to (0, 0)
+	/// Use this constructor when a parent layout group will have control over positions
+	/// </summary>
+	protected UIElement(Point size) : 
+		this(new Rectangle(new Point(0, 0), size)) { }
 	
 	public event Action? MouseEntered;
 	public event Action? MouseExited;
@@ -27,6 +41,8 @@ public abstract class UIElement : IUIElement
 	public event Action<IUIElement>? ReceivedFocus;
 	
 	public Rectangle Bounds { get; set; }
+	public int Width => Bounds.Width;
+	public int Height => Bounds.Height;
 	public bool IsVisible { get; set; } = true;
 	
 	public bool HasFocus
