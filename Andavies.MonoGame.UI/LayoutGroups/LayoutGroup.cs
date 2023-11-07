@@ -11,6 +11,7 @@ public abstract class LayoutGroup : UIElement, ILayoutGroup
 
 	protected LayoutGroup(Rectangle bounds) : base(bounds) { }
 	protected LayoutGroup(Point location, Point size) : base(location, size) { }
+	protected LayoutGroup(Point size) : base(size) { }
 	
 	public int Spacing { get; set; }
 	

@@ -8,6 +8,7 @@ public class HorizontalLayoutGroup : LayoutGroup
 {
 	public HorizontalLayoutGroup(Rectangle bounds) : base(bounds) { }
 	public HorizontalLayoutGroup(Point location, Point size) : base(location, size) { }
+	public HorizontalLayoutGroup(Point size) : base(size) { }
 	
 	public bool ForceExpandChildHeight { get; set; } = true;
 	public VerticalAnchor ChildAnchor { get; set; } = VerticalAnchor.Center;

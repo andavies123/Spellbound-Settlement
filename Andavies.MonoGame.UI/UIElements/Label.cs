@@ -13,6 +13,12 @@ public class Label : UIElement
 		Text = text;
 		Style = style;
 	}
+
+	public Label(Point size, string text, LabelStyle style) : base(size)
+	{
+		Text = text;
+		Style = style;
+	}
 	
 	/// <summary>
 	/// The text that will be displayed on the label
@@ -33,7 +39,7 @@ public class Label : UIElement
 		Vector2 textPosition = Style.TextAlignment switch
 		{
 			TextAlignment.Left => new Vector2(Bounds.Left, verticalCenter),
-			TextAlignment.Center => new Vector2(Bounds.Left + (Bounds.Width - textSize.X)/2, verticalCenter),
+			TextAlignment.Center => new Vector2(Bounds.Left + (Width - textSize.X)/2, verticalCenter),
 			TextAlignment.Right => new Vector2(Bounds.Right - textSize.X, verticalCenter),
 			_ => new Vector2(Bounds.Left, verticalCenter)
 		};

@@ -22,6 +22,12 @@ public class TextInput : UIElement
 		TextListener = textListener;
 	}
 
+	public TextInput(Point size, TextInputStyle style, ITextListener textListener) : base(size)
+	{
+		Style = style;
+		TextListener = textListener;
+	}
+
 	public string Text { get; set; } = string.Empty;
 	public string HintText { get; set; } = "Enter Here";
 	public int MaxLength { get; set; } = 15;
@@ -76,7 +82,7 @@ public class TextInput : UIElement
 		if (_stringBuilder.Length >= MaxLength)
 			return;
 
-		TextListener?.Listen(_previousKeyboardState, _currentKeyboardState, _stringBuilder);
+		TextListener.Listen(_previousKeyboardState, _currentKeyboardState, _stringBuilder);
 
 		Text = _stringBuilder.ToString();
 	}
