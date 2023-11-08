@@ -25,11 +25,13 @@ public class HorizontalLayoutGroup : LayoutGroup
 
 			Point size = ForceExpandChildHeight ? new Point(child.Bounds.Width, Bounds.Height) : child.Bounds.Size;
 
+			int childXPos = (int) startX - child.Width / 2 + index * Spacing;
+
 			Point location = ChildAnchor switch
 			{
-				VerticalAnchor.Top => new Point((int)startX + index * Spacing, Bounds.Top),
-				VerticalAnchor.Center => new Point((int)startX + index * Spacing, Bounds.Center.Y - child.Bounds.Height / 2),
-				VerticalAnchor.Bottom => new Point((int)startX + index * Spacing, Bounds.Bottom - child.Bounds.Height),
+				VerticalAnchor.Top => new Point(childXPos, Bounds.Top),
+				VerticalAnchor.Center => new Point(childXPos, Bounds.Center.Y - child.Bounds.Height / 2),
+				VerticalAnchor.Bottom => new Point(childXPos, Bounds.Bottom - child.Bounds.Height),
 				_ => throw new ArgumentOutOfRangeException()
 			};
 

@@ -36,5 +36,10 @@ public abstract class LayoutGroup : UIElement, ILayoutGroup
 		RecalculateChildrenBounds();
 	}
 
+	protected override void OnBoundsChanged()
+	{
+		RecalculateChildrenBounds();
+	}
+
 	public abstract void RecalculateChildrenBounds();
 }
