@@ -72,7 +72,7 @@ public class TextInput : UIElement
 		_currentKeyboardState = Keyboard.GetState();
 		
 		// Backspace
-		if (Input.Input.WasKeyPressed(Keys.Back))
+		if (_stringBuilder.Length > 0 && Input.Input.WasKeyPressed(Keys.Back))
 			_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
 		
 		// Enter
