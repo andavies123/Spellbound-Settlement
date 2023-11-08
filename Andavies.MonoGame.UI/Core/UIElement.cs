@@ -36,10 +36,10 @@ public abstract class UIElement : IUIElement
 	protected UIElement(Point size) : 
 		this(new Rectangle(new Point(0, 0), size)) { }
 	
-	public event Action? MouseEntered;
-	public event Action? MouseExited;
-	public event Action? MousePressed;
-	public event Action? MouseReleased;
+	public event Action<IUIElement>? MouseEntered;
+	public event Action<IUIElement>? MouseExited;
+	public event Action<IUIElement>? MousePressed;
+	public event Action<IUIElement>? MouseReleased;
 	public event Action<IUIElement>? ReceivedFocus;
 
 	public Rectangle Bounds
@@ -112,7 +112,7 @@ public abstract class UIElement : IUIElement
 			return;
 		
 		IsElementHovered = true;
-		MouseEntered?.Invoke();
+		MouseEntered?.Invoke(this);
 	}
 	
 	/// <summary>
@@ -124,7 +124,7 @@ public abstract class UIElement : IUIElement
 			return;
 		
 		IsElementHovered = false;
-		MouseExited?.Invoke();
+		MouseExited?.Invoke(this);
 	}
 
 	/// <summary>
@@ -140,8 +140,8 @@ public abstract class UIElement : IUIElement
 		if (!Bounds.Contains(CurrentMousePosition)) 
 			return;
 		
-		MousePressed?.Invoke();
 		IsElementPressed = true;
+		MousePressed?.Invoke(this);
 	}
 
 	/// <summary>
@@ -155,6 +155,6 @@ public abstract class UIElement : IUIElement
 		_isMouseDown = false;
 		IsElementPressed = false;
 		if (Bounds.Contains(CurrentMousePosition))
-			MouseReleased?.Invoke();
+			MouseReleased?.Invoke(this);
 	}
 }

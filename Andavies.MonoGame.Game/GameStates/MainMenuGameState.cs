@@ -1,4 +1,5 @@
 using System;
+using Andavies.MonoGame.UI.Interfaces;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates;
 using SpellboundSettlement.UIStates.MainMenu;
@@ -13,13 +14,13 @@ public class MainMenuGameState : GameState
 	private readonly MainMenuConnectToServerUIState _connectToServerUIState;
 	private readonly MainMenuCreateServerUIState _createServerUIState;
 	
-	public event Action PlayGame
+	public event Action<IUIElement> PlayGame
 	{
 		add => _mainUIState.PlayButton.MouseReleased += value;
 		remove => _mainUIState.PlayButton.MouseReleased -= value;
 	}
 
-	public event Action QuitGame
+	public event Action<IUIElement> QuitGame
 	{
 		add => _mainUIState.QuitButton.MouseReleased += value;
 		remove => _mainUIState.QuitButton.MouseReleased -= value;
@@ -72,14 +73,14 @@ public class MainMenuGameState : GameState
 	}
 
 	// MainUI Actions
-	private void OnConnectToServerButtonPressed() => UIStateMachine.ChangeUIState(_connectToServerUIState);
-	private void OnCreateServerButtonPressed() => UIStateMachine.ChangeUIState(_createServerUIState);
+	private void OnConnectToServerButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_connectToServerUIState);
+	private void OnCreateServerButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_createServerUIState);
 	
 	// ConnectToServerUI Actions
-	private void OnConnectToServerConnectButtonPressed() => UIStateMachine.ChangeUIState(_mainUIState);
-	private void OnConnectToServerBackButtonPressed() => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnConnectToServerConnectButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnConnectToServerBackButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
 	
 	// CreateServerUI Actions
-	private void OnCreateServerCreateButtonPressed() => UIStateMachine.ChangeUIState(_mainUIState);
-	private void OnCreateServerBackButtonPressed() => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnCreateServerCreateButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnCreateServerBackButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
 }

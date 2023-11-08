@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Andavies.MonoGame.UI.Interfaces;
+using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
 
 namespace SpellboundSettlement.GameStates;
@@ -70,6 +71,6 @@ public class GameStateManager : IGameStateManager
 	private void OnPauseGame() => SetState(_pauseMenuGameState);
 	private void OnResumeGame() => SetState(_gameplayGameState);
 	private void OnMainMenu() => SetState(_mainMenuGameState);
-	private void OnPlayGame() => SetState(_gameplayGameState);
-	private void OnQuitGame() => Global.QuitGame();
+	private void OnPlayGame(IUIElement uiElement) => SetState(_gameplayGameState);
+	private void OnQuitGame(IUIElement uiElement) => Global.QuitGame();
 }

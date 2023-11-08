@@ -1,7 +1,6 @@
 ﻿using System;
-using Andavies.MonoGame.UI.StateMachines;
+using Andavies.MonoGame.UI.Interfaces;
 using SpellboundSettlement.Inputs;
-using SpellboundSettlement.UIStates;
 using SpellboundSettlement.UIStates.PauseMenu;
 
 namespace SpellboundSettlement.GameStates;
@@ -27,24 +26,29 @@ public class PauseMenuGameState : GameState
 	{
 		UIStateMachine.ChangeUIState(_pauseMenuUIState);
 		
-		InputState.ExitMenu.OnKeyUp += RaiseResumeGame;
+		InputState.ExitMenu.OnKeyUp += RaiseKeyPressResumeGame;
 		_pauseMenuUIState.ResumeButton.MousePressed += RaiseResumeGame;
 		_pauseMenuUIState.MainMenuButton.MousePressed += RaiseMainMenu;
 	}
 
 	public override void End()
 	{
-		InputState.ExitMenu.OnKeyUp -= RaiseResumeGame;
+		InputState.ExitMenu.OnKeyUp -= RaiseKeyPressResumeGame;
 		_pauseMenuUIState.ResumeButton.MousePressed -= RaiseResumeGame;
 		_pauseMenuUIState.MainMenuButton.MousePressed -= RaiseMainMenu;
 	}
 
-	private void RaiseResumeGame()
+	private void RaiseKeyPressResumeGame()
 	{
 		ResumeGame?.Invoke();
 	}
 
-	private void RaiseMainMenu()
+	private void RaiseResumeGame(IUIElement uiElement)
+	{
+		ResumeGame?.Invoke();
+	}
+
+	private void RaiseMainMenu(IUIElement uiElement)
 	{
 		MainMenu?.Invoke();
 	}

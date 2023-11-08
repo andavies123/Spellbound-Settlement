@@ -8,22 +8,22 @@ public interface IUIElement
 	/// <summary>
 	/// Raised when the mouse first enters the bounds of this element
 	/// </summary>
-	event Action? MouseEntered;
+	event Action<IUIElement>? MouseEntered;
 	
 	/// <summary>
 	/// Raised when the mouse first exists the bounds of this element
 	/// </summary>
-	event Action? MouseExited;
+	event Action<IUIElement>? MouseExited;
 	
 	/// <summary>
 	/// Raised when the mouse is first pressed inside the bounds of this element
 	/// </summary>
-	event Action? MousePressed;
+	event Action<IUIElement>? MousePressed;
 	
 	/// <summary>
 	/// Raised when the mouse is first released inside the bounds of this element
 	/// </summary>
-	event Action? MouseReleased;
+	event Action<IUIElement>? MouseReleased;
 	
 	/// <summary>
 	/// Raised when this UIElement has gained focus

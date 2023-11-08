@@ -31,6 +31,7 @@ public class MainMenuCreateServerUIState : IUIState
 
 	public Label EnterIpLabel { get; private set; }
 	public TextInput IpInput { get; private set; }
+	public TextInput ServerPortInput { get; private set; }
 	public Button CreateButton { get; private set; }
 	public Button BackButton { get; private set; }
 	
@@ -84,15 +85,22 @@ public class MainMenuCreateServerUIState : IUIState
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};
+		ServerPortInput = new TextInput(ButtonSize, textInputStyle, _numbersOnlyTextListener)
+		{
+			InputType = InputType.NumbersOnly,
+			MaxLength = 5, // Max port length
+			HintText = "Ip Port"
+		};
 		CreateButton = new Button(ButtonSize, "Create", buttonStyle);
 		BackButton = new Button(ButtonSize, "Back", buttonStyle);
 		
-		_horizontalGroup.AddChildren(EnterIpLabel, IpInput);
+		_horizontalGroup.AddChildren(EnterIpLabel, IpInput, ServerPortInput);
 		_verticalGroup.AddChildren(_horizontalGroup, CreateButton, BackButton);
 		
-		//_uiElements.ForEach(uiElement => uiElement.ReceivedFocus += OnUIElementReceivedFocus);
+		IpInput.MouseReleased += SetFocusedElement;
+		ServerPortInput.MouseReleased += SetFocusedElement;
 
-		IpInput.HasFocus = true;
+		SetFocusedElement(IpInput);
 	}
 
 	public void Update(float deltaTimeSeconds)
@@ -108,12 +116,17 @@ public class MainMenuCreateServerUIState : IUIState
 	public void Exit()
 	{
 		IpInput.Clear();
+		ServerPortInput.Clear();
 	}
-	
-	private void OnUIElementReceivedFocus(IUIElement uiElement)
+
+	private void SetFocusedElement(IUIElement uiElement)
 	{
 		if (_focusedUIElement != null)
 			_focusedUIElement.HasFocus = false;
+
 		_focusedUIElement = uiElement;
+		
+		if (_focusedUIElement != null)
+			_focusedUIElement.HasFocus = true;
 	}
 }

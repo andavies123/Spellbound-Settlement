@@ -1,10 +1,10 @@
 ﻿using System;
 using Andavies.MonoGame.Meshes;
+using Andavies.MonoGame.UI.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.Meshes;
-using SpellboundSettlement.UIStates;
 using SpellboundSettlement.UIStates.Gameplay;
 using SpellboundSettlement.WorldObjects;
 
@@ -46,7 +46,7 @@ public class GameplayGameState : GameState
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
 		
 		_gameplayGameplayUIState.PauseButton.MousePressed += RaisePauseGame;
-		InputState.PauseGame.OnKeyUp += RaisePauseGame;
+		InputState.PauseGame.OnKeyUp += RaiseKeyPressPauseGame;
 	}
 
 	public override void Draw3D(GraphicsDevice graphicsDevice)
@@ -63,10 +63,15 @@ public class GameplayGameState : GameState
 		base.End();
 		
 		_gameplayGameplayUIState.PauseButton.MousePressed -= RaisePauseGame;
-		InputState.PauseGame.OnKeyUp -= RaisePauseGame;
+		InputState.PauseGame.OnKeyUp -= RaiseKeyPressPauseGame;
 	}
 
-	private void RaisePauseGame()
+	private void RaiseKeyPressPauseGame()
+	{
+		PauseGame?.Invoke();
+	}
+
+	private void RaisePauseGame(IUIElement uiElement)
 	{
 		PauseGame?.Invoke();
 	}
