@@ -1,34 +1,35 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
 
-namespace SpellboundSettlement.UIStates;
+namespace SpellboundSettlement.UIStates.MainMenu;
 
-public class PauseMenuUIState : IUIState
+public class MainMenuMainUIState : IUIState
 {
-	private static readonly Point ButtonSize = new(125, 75);
+	private static readonly Point ButtonSize = new(175, 60);
 
 	private VerticalLayoutGroup _verticalLayoutGroup;
 
-	public Button ResumeButton { get; private set; }
+	public Button PlayButton { get; private set; }
+	public Button ConnectToServerButton { get; private set; }
+	public Button CreateServerButton { get; private set; }
 	public Button OptionsButton { get; private set; }
-	public Button MainMenuButton { get; private set; }
-	
+	public Button QuitButton { get; private set; }
+
 	public void Init() { }
 
 	public void LateInit()
 	{
-		_verticalLayoutGroup = new VerticalLayoutGroup(
-			new Rectangle(0, 0, GameManager.Viewport.Width, GameManager.Viewport.Height))
+		_verticalLayoutGroup = new VerticalLayoutGroup(Point.Zero, GameManager.Viewport.Bounds.Size)
 		{
+			Spacing = 100,
 			ChildAnchor = HorizontalAnchor.Center,
-			ForceExpandChildWidth = false,
-			Spacing = 200
+			ForceExpandChildWidth = false
 		};
 		
 		ButtonStyle buttonStyle = new()
@@ -41,14 +42,18 @@ public class PauseMenuUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		ResumeButton = new Button(ButtonSize, "Resume", buttonStyle);
+		PlayButton = new Button(ButtonSize, "Play", buttonStyle);
+		ConnectToServerButton = new Button(ButtonSize, "Connect to Server", buttonStyle);
+		CreateServerButton = new Button(ButtonSize, "Create Server", buttonStyle);
 		OptionsButton = new Button(ButtonSize, "Options", buttonStyle);
-		MainMenuButton = new Button(ButtonSize, "Main Menu", buttonStyle);
+		QuitButton = new Button(ButtonSize, "Quit", buttonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
-			ResumeButton, 
+			PlayButton,
+			ConnectToServerButton,
+			CreateServerButton,
 			OptionsButton, 
-			MainMenuButton);
+			QuitButton);
 	}
 
 	public void Update(float deltaTimeSeconds)

@@ -2,6 +2,7 @@
 using Andavies.MonoGame.UI.StateMachines;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates;
+using SpellboundSettlement.UIStates.PauseMenu;
 
 namespace SpellboundSettlement.GameStates;
 

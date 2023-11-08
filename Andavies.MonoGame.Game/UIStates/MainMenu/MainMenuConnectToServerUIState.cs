@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
 using Label = Andavies.MonoGame.UI.UIElements.Label;
 
-namespace SpellboundSettlement.UIStates;
+namespace SpellboundSettlement.UIStates.MainMenu;
 
 public class MainMenuConnectToServerUIState : IUIState
 {

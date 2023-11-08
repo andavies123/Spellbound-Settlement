@@ -1,11 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Andavies.MonoGame.UI.StateMachines;
+﻿using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
 
-namespace SpellboundSettlement.UIStates;
+namespace SpellboundSettlement.UIStates.Gameplay;
 
 public class GameplayUIState : IUIState
 {

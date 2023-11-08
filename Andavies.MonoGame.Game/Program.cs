@@ -6,6 +6,9 @@ using SpellboundSettlement.GameStates;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates;
 using Andavies.MonoGame.UI.StateMachines;
+using SpellboundSettlement.UIStates.Gameplay;
+using SpellboundSettlement.UIStates.MainMenu;
+using SpellboundSettlement.UIStates.PauseMenu;
 
 namespace SpellboundSettlement;
 
