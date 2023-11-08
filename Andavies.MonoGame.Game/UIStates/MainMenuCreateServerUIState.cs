@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Andavies.MonoGame.Input.InputListeners;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
@@ -10,28 +10,28 @@ using Autofac.Features.AttributeFilters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
-using Label = Andavies.MonoGame.UI.UIElements.Label;
 
-namespace SpellboundSettlement.UIStates.MainMenu;
+namespace SpellboundSettlement.UIStates;
 
-public class MainMenuConnectToServerUIState : IUIState
+public class MainMenuCreateServerUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
 	private readonly ITextListener _numbersOnlyTextListener;
-	private VerticalLayoutGroup _verticalGroup;
-	private List<IUIElement> _uiElements;
 	private IUIElement _focusedUIElement;
 
-	public MainMenuConnectToServerUIState(
+	private VerticalLayoutGroup _verticalGroup;
+	private HorizontalLayoutGroup _horizontalGroup;
+
+	public MainMenuCreateServerUIState(
 		[KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
 	{
 		_numbersOnlyTextListener = numbersOnlyTextListener;
 	}
 
-	public Label IpLabel { get; private set; }
+	public Label EnterIpLabel { get; private set; }
 	public TextInput IpInput { get; private set; }
-	public Button ConnectButton { get; private set; }
+	public Button CreateButton { get; private set; }
 	public Button BackButton { get; private set; }
 	
 	public void Init() { }
@@ -43,6 +43,13 @@ public class MainMenuConnectToServerUIState : IUIState
 			Spacing = 100,
 			ChildAnchor = HorizontalAnchor.Center,
 			ForceExpandChildWidth = false
+		};
+
+		_horizontalGroup = new HorizontalLayoutGroup(new Point(GameManager.Viewport.Width, 60))
+		{
+			Spacing = 200,
+			ChildAnchor = VerticalAnchor.Center,
+			ForceExpandChildHeight = false
 		};
 		
 		ButtonStyle buttonStyle = new()
@@ -70,27 +77,20 @@ public class MainMenuConnectToServerUIState : IUIState
 			BackgroundTexture = GameManager.Texture
 		};
 
-		IpLabel = new Label(ButtonSize, "IP Address:", labelStyle);
+		EnterIpLabel = new Label(ButtonSize, "IP Address:", labelStyle);
 		IpInput = new TextInput(ButtonSize, textInputStyle, _numbersOnlyTextListener)
 		{
 			InputType = InputType.NumbersOnly,
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};
-		ConnectButton = new Button(ButtonSize, "Connect", buttonStyle);
+		CreateButton = new Button(ButtonSize, "Create", buttonStyle);
 		BackButton = new Button(ButtonSize, "Back", buttonStyle);
 		
-		_verticalGroup.AddChildren(IpLabel, IpInput, ConnectButton, BackButton);
+		_horizontalGroup.AddChildren(EnterIpLabel, IpInput);
+		_verticalGroup.AddChildren(_horizontalGroup, CreateButton, BackButton);
 		
-		_uiElements = new List<IUIElement>
-		{
-			IpLabel,
-			IpInput,
-			ConnectButton,
-			BackButton
-		};
-		
-		_uiElements.ForEach(uiElement => uiElement.ReceivedFocus += OnUIElementReceivedFocus);
+		//_uiElements.ForEach(uiElement => uiElement.ReceivedFocus += OnUIElementReceivedFocus);
 
 		IpInput.HasFocus = true;
 	}

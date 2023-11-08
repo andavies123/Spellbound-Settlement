@@ -7,6 +7,7 @@ namespace Andavies.MonoGame.UI.Core;
 
 public abstract class UIElement : IUIElement
 {
+	private Rectangle _bounds = Rectangle.Empty;
 	private bool _isMouseDown = false;
 	private bool _hasFocus = false; // Backing variable for HasFocus
 	
@@ -20,10 +21,10 @@ public abstract class UIElement : IUIElement
 	}
 
 	/// <summary>
-	/// 
+	/// Use this constructor when a rectangle object has not already been created
 	/// </summary>
-	/// <param name="location"></param>
-	/// <param name="size"></param>
+	/// <param name="location">The location/position of the top left corner of the bounds</param>
+	/// <param name="size">The size (width/height) of the bounds</param>
 	protected UIElement(Point location, Point size) : 
 		this(new Rectangle(location, size)) { }
 
@@ -31,6 +32,7 @@ public abstract class UIElement : IUIElement
 	/// Constructor that will set the bounds location to (0, 0)
 	/// Use this constructor when a parent layout group will have control over positions
 	/// </summary>
+	/// <param name="size">The size (width/height) of the bounds</param>
 	protected UIElement(Point size) : 
 		this(new Rectangle(new Point(0, 0), size)) { }
 	
@@ -39,8 +41,18 @@ public abstract class UIElement : IUIElement
 	public event Action? MousePressed;
 	public event Action? MouseReleased;
 	public event Action<IUIElement>? ReceivedFocus;
-	
-	public Rectangle Bounds { get; set; }
+
+	public Rectangle Bounds
+	{
+		get => _bounds;
+		set
+		{
+			bool changed = _bounds != value;
+			_bounds = value;
+			if (changed)
+				OnBoundsChanged();
+		}
+	}
 	public int Width => Bounds.Width;
 	public int Height => Bounds.Height;
 	public bool IsVisible { get; set; } = true;
@@ -84,6 +96,12 @@ public abstract class UIElement : IUIElement
 		CheckMousePressed();
 		CheckMouseReleased();
 	}
+	
+	/// <summary>
+	/// Add any logic that needs to occur when the bounds of this UI Element changed such as
+	/// recalculating any children elements
+	/// </summary>
+	protected virtual void OnBoundsChanged() { }
 	
 	/// <summary>
 	/// Checks to see if the mouse has entered the bounds of this element whether it is pressed or not
