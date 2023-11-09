@@ -56,6 +56,7 @@ public abstract class UIElement : IUIElement
 	public int Width => Bounds.Width;
 	public int Height => Bounds.Height;
 	public bool IsVisible { get; set; } = true;
+	public bool IsInteractable { get; set; } = true;
 	
 	public bool HasFocus
 	{
@@ -91,6 +92,9 @@ public abstract class UIElement : IUIElement
 
 	public virtual void Update(float deltaTimeSeconds)
 	{
+		if (!IsInteractable)
+			return;
+		
 		CheckMouseEntered();
 		CheckMouseExited();
 		CheckMousePressed();

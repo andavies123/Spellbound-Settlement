@@ -1,5 +1,4 @@
-﻿using System;
-using Andavies.MonoGame.Inputs.InputListeners;
+﻿using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
@@ -11,7 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
 
-namespace SpellboundSettlement.UIStates;
+namespace SpellboundSettlement.UIStates.MainMenu;
 
 public class MainMenuCreateServerUIState : IUIState
 {
@@ -59,7 +58,7 @@ public class MainMenuCreateServerUIState : IUIState
 			BackgroundColor = Color.LightSlateGray,
 			HoverBackgroundColor = Color.SlateGray,
 			MousePressedBackgroundColor = Color.DarkSlateGray,
-			DisabledBackgroundColor = Color.Red,
+			DisabledBackgroundColor = new Color(.3f, .3f, .3f),
 			BackgroundTexture = GameManager.Texture
 		};
 
@@ -104,6 +103,7 @@ public class MainMenuCreateServerUIState : IUIState
 	public void Update(float deltaTimeSeconds)
 	{
 		_verticalGroup.Update(deltaTimeSeconds);
+		CreateButton.IsInteractable = IpInput.ContainsValidString;
 	}
 
 	public void Draw(SpriteBatch spriteBatch)

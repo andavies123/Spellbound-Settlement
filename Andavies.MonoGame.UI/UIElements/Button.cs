@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Andavies.MonoGame.UI.Core;
+﻿using Andavies.MonoGame.UI.Core;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
@@ -33,15 +32,6 @@ public class Button : UIElement
 	/// The style components of the button that defines how it will look when drawn
 	/// </summary>
 	public ButtonStyle Style { get; set; }
-	
-	/// <summary>
-	/// Whether or not the button can be used or not.
-	/// True = Button can be used/clicked
-	/// False = Button cannot be used/clicked
-	/// </summary>
-	// Todo: Would it be a good idea to change this to an interface "IInteractable"
-	// Todo: maybe create a base class that extends IInteractable and UIElement "InteractableUIElement"
-	public bool IsEnabled { get; set; } = true;
 
 	public override void Draw(SpriteBatch spriteBatch)
 	{
@@ -63,7 +53,7 @@ public class Button : UIElement
 	{
 		Color color;
 		
-		if (!IsEnabled)
+		if (!IsInteractable)
 			color = Style.DisabledBackgroundColor;
 		else if (IsElementPressed)
 			color = Style.MousePressedBackgroundColor;

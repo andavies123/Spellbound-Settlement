@@ -56,6 +56,14 @@ public interface IUIElement
 	bool IsVisible { get; set; }
 	
 	/// <summary>
+	/// Whether or not this UI Element can be interacted with
+	/// It will still be drawn, but the user won't be able to get any mouse events from it
+	/// True = Can be interacted with
+	/// False = Can not be interacted with
+	/// </summary>
+	bool IsInteractable { get; set; }
+	
+	/// <summary>
 	/// Whether or not this UI Element has focus from the user
 	/// True = Has Focus
 	/// False = Does not have focus

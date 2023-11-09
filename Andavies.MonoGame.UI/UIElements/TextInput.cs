@@ -14,6 +14,8 @@ public class TextInput : UIElement
 {
 	private const float TimeBetweenBackspaces = 0.1f;
 	private const float InitialTimeBetweenBackspaces = 0.5f;
+
+	private string _text = string.Empty;
 	
 	private readonly StringBuilder _stringBuilder = new();
 	private KeyboardState? _currentKeyboardState;
@@ -34,7 +36,18 @@ public class TextInput : UIElement
 		TextListener = textListener;
 	}
 
-	public string Text { get; set; } = string.Empty;
+	public string Text
+	{
+		get => _text;
+		set
+		{
+			bool changed = _text != value;
+			_text = value;
+			if (changed)
+				ValidateText();
+		}
+	}
+	
 	public string HintText { get; set; } = "Enter Here";
 	public int MaxLength { get; set; } = 15;
 	public bool ContainsValidString { get; set; } = false;
@@ -86,15 +99,10 @@ public class TextInput : UIElement
 
 		TextListener.Listen(_previousKeyboardState, _currentKeyboardState, _stringBuilder);
 
-		// Only check for validity when the text has changed
-		// Does not need to be checked every frame especially if there has been no changes
-		string oldText = Text;
 		Text = _stringBuilder.ToString();
-		if (Text != oldText)
-			CheckValidity();
 	}
 
-	protected virtual void CheckValidity()
+	protected virtual void ValidateText()
 	{
 		ContainsValidString = true;
 	}

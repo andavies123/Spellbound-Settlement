@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using Andavies.MonoGame.Inputs.InputListeners;
-using Andavies.MonoGame.UI.Enums;
+﻿using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
-using Autofac.Features.AttributeFilters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
@@ -18,16 +15,8 @@ public class MainMenuConnectToServerUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
-	private readonly ITextListener _numbersOnlyTextListener;
 	private VerticalLayoutGroup _verticalGroup;
-	private List<IUIElement> _uiElements;
 	private IUIElement _focusedUIElement;
-
-	public MainMenuConnectToServerUIState(
-		[KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
-	{
-		_numbersOnlyTextListener = numbersOnlyTextListener;
-	}
 
 	public Label IpLabel { get; private set; }
 	public TextInput IpInput { get; private set; }
@@ -51,7 +40,7 @@ public class MainMenuConnectToServerUIState : IUIState
 			BackgroundColor = Color.LightSlateGray,
 			HoverBackgroundColor = Color.SlateGray,
 			MousePressedBackgroundColor = Color.DarkSlateGray,
-			DisabledBackgroundColor = Color.Red,
+			DisabledBackgroundColor = new Color(.3f, .3f, .3f),
 			BackgroundTexture = GameManager.Texture
 		};
 
@@ -80,16 +69,8 @@ public class MainMenuConnectToServerUIState : IUIState
 		BackButton = new Button(ButtonSize, "Back", buttonStyle);
 		
 		_verticalGroup.AddChildren(IpLabel, IpInput, ConnectButton, BackButton);
-		
-		_uiElements = new List<IUIElement>
-		{
-			IpLabel,
-			IpInput,
-			ConnectButton,
-			BackButton
-		};
-		
-		_uiElements.ForEach(uiElement => uiElement.ReceivedFocus += OnUIElementReceivedFocus);
+
+		ConnectButton.ReceivedFocus += OnUIElementReceivedFocus;
 
 		IpInput.HasFocus = true;
 	}
@@ -97,6 +78,7 @@ public class MainMenuConnectToServerUIState : IUIState
 	public void Update(float deltaTimeSeconds)
 	{
 		_verticalGroup.Update(deltaTimeSeconds);
+		ConnectButton.IsInteractable = IpInput.ContainsValidString;
 	}
 
 	public void Draw(SpriteBatch spriteBatch)

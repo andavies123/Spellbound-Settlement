@@ -15,7 +15,7 @@ public class IpAddressTextInput : TextInput
 	public IpAddressTextInput(Point size, TextInputStyle style) : 
 		base(size, style, new NumbersOnlyTextListener()) { }
 
-	protected override void CheckValidity()
+	protected override void ValidateText()
 	{
 		ContainsValidString = Regex.IsMatch(Text, IpAddressPattern);
 	}
