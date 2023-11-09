@@ -15,8 +15,8 @@ public class TextInput : UIElement
 	private KeyboardState? _currentKeyboardState;
 	private KeyboardState? _previousKeyboardState;
 
-	public TextInput(Point position, Point size, TextInputStyle style, ITextListener textListener)
-		: base(position, size)
+	public TextInput(Point position, Point size, TextInputStyle style, ITextListener textListener) : 
+		base(position, size)
 	{
 		Style = style;
 		TextListener = textListener;
@@ -31,7 +31,7 @@ public class TextInput : UIElement
 	public string Text { get; set; } = string.Empty;
 	public string HintText { get; set; } = "Enter Here";
 	public int MaxLength { get; set; } = 15;
-	public InputType InputType { get; set; } = InputType.NumberLettersAndSpecialCharactersOnly;
+	public bool ContainsValidString { get; set; } = false;
 	public ITextListener TextListener { get; set; }
 	public TextInputStyle Style { get; set; }
 
@@ -84,6 +84,16 @@ public class TextInput : UIElement
 
 		TextListener.Listen(_previousKeyboardState, _currentKeyboardState, _stringBuilder);
 
+		// Only check for validity when the text has changed
+		// Does not need to be checked every frame especially if there has been no changes
+		string oldText = Text;
 		Text = _stringBuilder.ToString();
+		if (Text != oldText)
+			CheckValidity();
+	}
+
+	protected virtual void CheckValidity()
+	{
+		ContainsValidString = true;
 	}
 }

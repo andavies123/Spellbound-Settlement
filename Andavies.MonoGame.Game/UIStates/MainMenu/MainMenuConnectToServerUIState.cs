@@ -71,9 +71,8 @@ public class MainMenuConnectToServerUIState : IUIState
 		};
 
 		IpLabel = new Label(ButtonSize, "IP Address:", labelStyle);
-		IpInput = new TextInput(ButtonSize, textInputStyle, _numbersOnlyTextListener)
+		IpInput = new IpAddressTextInput(ButtonSize, textInputStyle)
 		{
-			InputType = InputType.NumbersOnly,
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};

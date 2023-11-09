@@ -79,15 +79,13 @@ public class MainMenuCreateServerUIState : IUIState
 		};
 
 		EnterIpLabel = new Label(ButtonSize, "IP Address:", labelStyle);
-		IpInput = new TextInput(ButtonSize, textInputStyle, _numbersOnlyTextListener)
+		IpInput = new IpAddressTextInput(ButtonSize, textInputStyle)
 		{
-			InputType = InputType.NumbersOnly,
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};
 		ServerPortInput = new TextInput(ButtonSize, textInputStyle, _numbersOnlyTextListener)
 		{
-			InputType = InputType.NumbersOnly,
 			MaxLength = 5, // Max port length
 			HintText = "Ip Port"
 		};

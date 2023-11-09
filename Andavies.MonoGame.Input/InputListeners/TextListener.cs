@@ -7,12 +7,19 @@ public abstract class TextListener : ITextListener
 {
 	protected abstract Dictionary<Keys, char> KeyMap { get; }
 
-	public void Listen(KeyboardState? previousState, KeyboardState? currentState, StringBuilder stringBuilder)
+	public virtual void Listen(KeyboardState? previousState, KeyboardState? currentState, StringBuilder stringBuilder)
 	{
-		foreach (KeyValuePair<Keys, char> kvp in KeyMap)
+		if (!currentState.HasValue || !previousState.HasValue)
+			return;
+
+		// Values that are in the current state and not the previous state
+		// This should represent the keys that were just pressed this state
+		List<Keys> newlyPressedKeys = currentState.Value.GetPressedKeys().Except(previousState.Value.GetPressedKeys()).ToList();
+
+		foreach (Keys pressedKey in newlyPressedKeys)
 		{
-			if ((previousState?.IsKeyDown(kvp.Key) ?? false) && (currentState?.IsKeyUp(kvp.Key) ?? false))
-				stringBuilder.Append(kvp.Value);
+			if (KeyMap.TryGetValue(pressedKey, out char character))
+				stringBuilder.Append(character);
 		}
 	}
 }
