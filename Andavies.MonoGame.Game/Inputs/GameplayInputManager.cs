@@ -1,5 +1,5 @@
 ﻿using System;
-using Andavies.MonoGame.Input;
+using Andavies.MonoGame.Inputs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SpellboundSettlement.Globals;

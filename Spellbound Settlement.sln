@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andavies.MonoGame.Game", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.UI", "Andavies.MonoGame.UI\Andavies.MonoGame.UI.csproj", "{F33C267E-3E88-484D-96CD-9D05B044F6FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Input", "Andavies.MonoGame.Input\Andavies.MonoGame.Input.csproj", "{481054D3-8524-43B6-B829-FAB26A919FBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Inputs", "Andavies.MonoGame.Inputs\Andavies.MonoGame.Inputs.csproj", "{481054D3-8524-43B6-B829-FAB26A919FBF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Meshes", "Andavies.MonoGame.Meshes\Andavies.MonoGame.Meshes.csproj", "{B656533D-D522-402E-AA7B-E71ED0023526}"
 EndProject

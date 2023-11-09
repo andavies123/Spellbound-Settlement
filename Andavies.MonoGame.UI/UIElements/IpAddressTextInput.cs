@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using Andavies.MonoGame.Input.InputListeners;
+using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
 

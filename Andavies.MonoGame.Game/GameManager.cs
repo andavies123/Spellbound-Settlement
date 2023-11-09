@@ -1,6 +1,6 @@
 ﻿using System;
 using Andavies.MonoGame.Game.Client;
-using Andavies.MonoGame.Input;
+using Andavies.MonoGame.Inputs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;

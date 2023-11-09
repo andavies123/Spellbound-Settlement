@@ -1,5 +1,6 @@
 ﻿using System.Text;
-using Andavies.MonoGame.Input.InputListeners;
+using Andavies.MonoGame.Inputs;
+using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.UI.Core;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
@@ -11,9 +12,14 @@ namespace Andavies.MonoGame.UI.UIElements;
 
 public class TextInput : UIElement
 {
+	private const float TimeBetweenBackspaces = 0.1f;
+	private const float InitialTimeBetweenBackspaces = 0.5f;
+	
 	private readonly StringBuilder _stringBuilder = new();
 	private KeyboardState? _currentKeyboardState;
 	private KeyboardState? _previousKeyboardState;
+	private float _timeSinceLastBackspace = 0f;
+	private bool _isWaitingForInitialPause = false;
 
 	public TextInput(Point position, Point size, TextInputStyle style, ITextListener textListener) : 
 		base(position, size)
@@ -70,14 +76,10 @@ public class TextInput : UIElement
 
 		_previousKeyboardState = _currentKeyboardState;
 		_currentKeyboardState = Keyboard.GetState();
+		_timeSinceLastBackspace += deltaTimeSeconds;
 		
-		// Backspace
-		if (_stringBuilder.Length > 0 && Input.Input.WasKeyPressed(Keys.Back))
-			_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
-		
-		// Enter
-		if (Input.Input.WasKeyPressed(Keys.Enter))
-			_stringBuilder.Clear();
+		HandleBackspaceKey();
+		HandleEnterKey();
 
 		if (_stringBuilder.Length >= MaxLength)
 			return;
@@ -95,5 +97,38 @@ public class TextInput : UIElement
 	protected virtual void CheckValidity()
 	{
 		ContainsValidString = true;
+	}
+
+	private void HandleBackspaceKey()
+	{
+		if (_stringBuilder.Length == 0) // Can't backspace if there are no characters
+			return;
+
+		if (Input.WasKeyPressed(Keys.Back)) // Initial key press
+		{
+			_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
+			_timeSinceLastBackspace = 0f;
+			_isWaitingForInitialPause = true;
+		}
+		else if (Input.IsKeyDown(Keys.Back))
+		{
+			if (_isWaitingForInitialPause && _timeSinceLastBackspace >= InitialTimeBetweenBackspaces)
+			{
+				_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
+				_timeSinceLastBackspace = 0f;
+				_isWaitingForInitialPause = false;
+			}
+			else if (!_isWaitingForInitialPause && _timeSinceLastBackspace >= TimeBetweenBackspaces)
+			{
+				_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
+				_timeSinceLastBackspace = 0f;
+			}
+		}
+	}
+
+	private void HandleEnterKey()
+	{
+		if (Inputs.Input.WasKeyPressed(Keys.Enter))
+			_stringBuilder.Clear();
 	}
 }

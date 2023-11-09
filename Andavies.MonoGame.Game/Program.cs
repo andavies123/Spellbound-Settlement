@@ -1,4 +1,4 @@
-﻿using Andavies.MonoGame.Input.InputListeners;
+﻿using Andavies.MonoGame.Inputs.InputListeners;
 using Autofac;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;

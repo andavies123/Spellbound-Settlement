@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Input;
 
-namespace Andavies.MonoGame.Input;
+namespace Andavies.MonoGame.Inputs;
 
 public class KeyAction
 {

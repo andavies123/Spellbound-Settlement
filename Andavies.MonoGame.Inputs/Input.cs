@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace Andavies.MonoGame.Input;
+namespace Andavies.MonoGame.Inputs;
 
 /// <summary>
 /// Static class that handles the main functions of listening for inputs.

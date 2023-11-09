@@ -1,5 +1,5 @@
 ﻿using System;
-using Andavies.MonoGame.Input.InputListeners;
+using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;

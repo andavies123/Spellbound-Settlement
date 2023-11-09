@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace Andavies.MonoGame.Input.InputListeners;
+namespace Andavies.MonoGame.Inputs.InputListeners;
 
 public class NumbersOnlyTextListener : TextListener
 {
