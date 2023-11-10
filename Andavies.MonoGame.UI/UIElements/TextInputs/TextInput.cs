@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Andavies.MonoGame.UI.UIElements;
+namespace Andavies.MonoGame.UI.UIElements.TextInputs;
 
 public class TextInput : UIElement
 {

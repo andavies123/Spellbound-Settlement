@@ -13,6 +13,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Andavies.MonoGame.Inputs\Andavies.MonoGame.Inputs.csproj" />
 
+
     </ItemGroup>
 
 
