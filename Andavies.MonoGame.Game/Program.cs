@@ -58,6 +58,7 @@ public static class Program
 		builder.RegisterType<MainMenuMainUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<MainMenuConnectToServerUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<MainMenuCreateServerUIState>().As<IUIState>().AsSelf().SingleInstance();
+		builder.RegisterType<MainMenuOptionsUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<GameplayUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<PauseMenuUIState>().As<IUIState>().AsSelf().SingleInstance();
 		
