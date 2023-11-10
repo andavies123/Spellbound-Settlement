@@ -1,7 +1,6 @@
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
-using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +12,13 @@ public class PauseMenuUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(125, 75);
 
+	private readonly IUIStyleCollection _uiStyleCollection;
 	private VerticalLayoutGroup _verticalLayoutGroup;
+
+	public PauseMenuUIState(IUIStyleCollection uiStyleCollection)
+	{
+		_uiStyleCollection = uiStyleCollection;
+	}
 
 	public Button ResumeButton { get; private set; }
 	public Button OptionsButton { get; private set; }
@@ -30,20 +35,10 @@ public class PauseMenuUIState : IUIState
 			ForceExpandChildWidth = false,
 			Spacing = 200
 		};
-		
-		ButtonStyle buttonStyle = new()
-		{
-			Font = GlobalFonts.DefaultFont,
-			BackgroundColor = Color.LightSlateGray,
-			HoverBackgroundColor = Color.SlateGray,
-			MousePressedBackgroundColor = Color.DarkSlateGray,
-			DisabledBackgroundColor = Color.Red,
-			BackgroundTexture = GameManager.Texture
-		};
 
-		ResumeButton = new Button(ButtonSize, "Resume", buttonStyle);
-		OptionsButton = new Button(ButtonSize, "Options", buttonStyle);
-		MainMenuButton = new Button(ButtonSize, "Main Menu", buttonStyle);
+		ResumeButton = new Button(ButtonSize, "Resume", _uiStyleCollection.DefaultButtonStyle);
+		OptionsButton = new Button(ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
+		MainMenuButton = new Button(ButtonSize, "Main Menu", _uiStyleCollection.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			ResumeButton, 

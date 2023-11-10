@@ -3,7 +3,6 @@ using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
-using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
 using Autofac.Features.AttributeFilters;
 using Microsoft.Xna.Framework;
@@ -17,14 +16,16 @@ public class MainMenuCreateServerUIState : IUIState
 	private static readonly Point ButtonSize = new(175, 60);
 
 	private readonly ITextListener _numbersOnlyTextListener;
+	private readonly IUIStyleCollection _uiStyleCollection;
 	private IUIElement _focusedUIElement;
 
 	private VerticalLayoutGroup _verticalGroup;
 	private HorizontalLayoutGroup _horizontalGroup;
 
-	public MainMenuCreateServerUIState(
+	public MainMenuCreateServerUIState(IUIStyleCollection uiStyleCollection,
 		[KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
 	{
+		_uiStyleCollection = uiStyleCollection;
 		_numbersOnlyTextListener = numbersOnlyTextListener;
 	}
 
@@ -51,45 +52,20 @@ public class MainMenuCreateServerUIState : IUIState
 			ChildAnchor = VerticalAnchor.Center,
 			ForceExpandChildHeight = false
 		};
-		
-		ButtonStyle buttonStyle = new()
-		{
-			Font = GlobalFonts.DefaultFont,
-			BackgroundColor = Color.LightSlateGray,
-			HoverBackgroundColor = Color.SlateGray,
-			MousePressedBackgroundColor = Color.DarkSlateGray,
-			DisabledBackgroundColor = new Color(.3f, .3f, .3f),
-			BackgroundTexture = GameManager.Texture
-		};
 
-		LabelStyle labelStyle = new()
-		{
-			Font = GlobalFonts.DefaultFont,
-			BackgroundColor = Color.Transparent,
-			BackgroundTexture = GameManager.Texture
-		};
-
-		TextInputStyle textInputStyle = new()
-		{
-			Font = GlobalFonts.DefaultFont,
-			HintTextFont = GlobalFonts.HintFont,
-			BackgroundColor = Color.LightGray,
-			BackgroundTexture = GameManager.Texture
-		};
-
-		EnterIpLabel = new Label(ButtonSize, "IP Address:", labelStyle);
-		IpInput = new IpAddressTextInput(ButtonSize, textInputStyle)
+		EnterIpLabel = new Label(ButtonSize, "IP Address:", _uiStyleCollection.DefaultLabelStyle);
+		IpInput = new IpAddressTextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle)
 		{
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};
-		ServerPortInput = new TextInput(ButtonSize, textInputStyle, _numbersOnlyTextListener)
+		ServerPortInput = new TextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle, _numbersOnlyTextListener)
 		{
 			MaxLength = 5, // Max port length
 			HintText = "Ip Port"
 		};
-		CreateButton = new Button(ButtonSize, "Create", buttonStyle);
-		BackButton = new Button(ButtonSize, "Back", buttonStyle);
+		CreateButton = new Button(ButtonSize, "Create", _uiStyleCollection.DefaultButtonStyle);
+		BackButton = new Button(ButtonSize, "Back", _uiStyleCollection.DefaultButtonStyle);
 		
 		_horizontalGroup.AddChildren(EnterIpLabel, IpInput, ServerPortInput);
 		_verticalGroup.AddChildren(_horizontalGroup, CreateButton, BackButton);

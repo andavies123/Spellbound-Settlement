@@ -6,6 +6,7 @@ using SpellboundSettlement.GameStates;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates;
 using Andavies.MonoGame.UI.StateMachines;
+using SpellboundSettlement.Globals;
 using SpellboundSettlement.UIStates.Gameplay;
 using SpellboundSettlement.UIStates.MainMenu;
 using SpellboundSettlement.UIStates.PauseMenu;
@@ -32,6 +33,9 @@ public static class Program
 	{
 		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
+		
+		// Collections
+		builder.RegisterType<UIStyleCollection>().As<IUIStyleCollection>().SingleInstance();
 
 		// Game States
 		builder.RegisterType<GameStateManager>().As<IGameStateManager>().SingleInstance();

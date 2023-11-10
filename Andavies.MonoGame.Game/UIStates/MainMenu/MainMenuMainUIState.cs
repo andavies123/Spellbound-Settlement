@@ -1,7 +1,6 @@
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
-using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +12,13 @@ public class MainMenuMainUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
+	private readonly IUIStyleCollection _uiStyleCollection;
 	private VerticalLayoutGroup _verticalLayoutGroup;
+
+	public MainMenuMainUIState(IUIStyleCollection uiStyleCollection)
+	{
+		_uiStyleCollection = uiStyleCollection;
+	}
 
 	public Button PlayButton { get; private set; }
 	public Button ConnectToServerButton { get; private set; }
@@ -31,22 +36,12 @@ public class MainMenuMainUIState : IUIState
 			ChildAnchor = HorizontalAnchor.Center,
 			ForceExpandChildWidth = false
 		};
-		
-		ButtonStyle buttonStyle = new()
-		{
-			Font = GlobalFonts.DefaultFont,
-			BackgroundColor = Color.LightSlateGray,
-			HoverBackgroundColor = Color.SlateGray,
-			MousePressedBackgroundColor = Color.DarkSlateGray,
-			DisabledBackgroundColor = Color.Red,
-			BackgroundTexture = GameManager.Texture
-		};
 
-		PlayButton = new Button(ButtonSize, "Play", buttonStyle);
-		ConnectToServerButton = new Button(ButtonSize, "Connect to Server", buttonStyle);
-		CreateServerButton = new Button(ButtonSize, "Create Server", buttonStyle);
-		OptionsButton = new Button(ButtonSize, "Options", buttonStyle);
-		QuitButton = new Button(ButtonSize, "Quit", buttonStyle);
+		PlayButton = new Button(ButtonSize, "Play", _uiStyleCollection.DefaultButtonStyle);
+		ConnectToServerButton = new Button(ButtonSize, "Connect to Server", _uiStyleCollection.DefaultButtonStyle);
+		CreateServerButton = new Button(ButtonSize, "Create Server", _uiStyleCollection.DefaultButtonStyle);
+		OptionsButton = new Button(ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
+		QuitButton = new Button(ButtonSize, "Quit", _uiStyleCollection.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			PlayButton,

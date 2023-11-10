@@ -2,7 +2,6 @@
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
-using Andavies.MonoGame.UI.Styles;
 using Andavies.MonoGame.UI.UIElements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,8 +14,14 @@ public class MainMenuConnectToServerUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
+	private readonly IUIStyleCollection _uiStyleCollection;
 	private VerticalLayoutGroup _verticalGroup;
 	private IUIElement _focusedUIElement;
+
+	public MainMenuConnectToServerUIState(IUIStyleCollection uiStyleCollection)
+	{
+		_uiStyleCollection = uiStyleCollection;
+	}
 
 	public Label IpLabel { get; private set; }
 	public TextInput IpInput { get; private set; }
@@ -33,40 +38,15 @@ public class MainMenuConnectToServerUIState : IUIState
 			ChildAnchor = HorizontalAnchor.Center,
 			ForceExpandChildWidth = false
 		};
-		
-		ButtonStyle buttonStyle = new()
-		{
-			Font = GlobalFonts.DefaultFont,
-			BackgroundColor = Color.LightSlateGray,
-			HoverBackgroundColor = Color.SlateGray,
-			MousePressedBackgroundColor = Color.DarkSlateGray,
-			DisabledBackgroundColor = new Color(.3f, .3f, .3f),
-			BackgroundTexture = GameManager.Texture
-		};
 
-		LabelStyle labelStyle = new()
-		{
-			Font = GlobalFonts.DefaultFont,
-			BackgroundColor = Color.Transparent,
-			BackgroundTexture = GameManager.Texture
-		};
-
-		TextInputStyle textInputStyle = new()
-		{
-			Font = GlobalFonts.DefaultFont,
-			HintTextFont = GlobalFonts.HintFont,
-			BackgroundColor = Color.LightGray,
-			BackgroundTexture = GameManager.Texture
-		};
-
-		IpLabel = new Label(ButtonSize, "IP Address:", labelStyle);
-		IpInput = new IpAddressTextInput(ButtonSize, textInputStyle)
+		IpLabel = new Label(ButtonSize, "IP Address:", _uiStyleCollection.DefaultLabelStyle);
+		IpInput = new IpAddressTextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle)
 		{
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};
-		ConnectButton = new Button(ButtonSize, "Connect", buttonStyle);
-		BackButton = new Button(ButtonSize, "Back", buttonStyle);
+		ConnectButton = new Button(ButtonSize, "Connect", _uiStyleCollection.DefaultButtonStyle);
+		BackButton = new Button(ButtonSize, "Back", _uiStyleCollection.DefaultButtonStyle);
 		
 		_verticalGroup.AddChildren(IpLabel, IpInput, ConnectButton, BackButton);
 

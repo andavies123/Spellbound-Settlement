@@ -1,6 +1,7 @@
 ﻿using System;
 using Andavies.MonoGame.Game.Client;
 using Andavies.MonoGame.Inputs;
+using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
@@ -13,6 +14,7 @@ public class GameManager : Game
 {
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
+	private readonly IUIStyleCollection _uiStyleCollection;
 	private readonly LiteNetClient _client;
 	
 	// Update Times
@@ -27,12 +29,14 @@ public class GameManager : Game
 
 	public GameManager(
 		IGameStateManager gameStateManager,
-		ICameraController cameraController)
+		ICameraController cameraController,
+		IUIStyleCollection uiStyleCollection)
 	{
 		Global.GameManager = this;
 		
 		_gameStateManager = gameStateManager;
 		_cameraController = cameraController;
+		_uiStyleCollection = uiStyleCollection;
 		
 		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -64,6 +68,8 @@ public class GameManager : Game
 		base.Initialize(); // Calls LoadContent
 		
 		Global.SpriteBatch = new SpriteBatch(GraphicsDevice);
+		InitializeUIStyleCollection();
+		
 		_gameStateManager.LateInit();
 		
 		//_client.Start();
@@ -107,5 +113,33 @@ public class GameManager : Game
 		GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 		
 		base.Draw(gameTime);
+	}
+
+	private void InitializeUIStyleCollection()
+	{
+		_uiStyleCollection.DefaultButtonStyle = new ButtonStyle
+		{
+			Font = GlobalFonts.DefaultFont,
+			BackgroundColor = Color.LightSlateGray,
+			HoverBackgroundColor = Color.SlateGray,
+			MousePressedBackgroundColor = Color.DarkSlateGray,
+			DisabledBackgroundColor = new Color(.4f, .3f, .3f),
+			BackgroundTexture = Texture
+		};
+
+		_uiStyleCollection.DefaultLabelStyle = new LabelStyle
+		{
+			Font = GlobalFonts.DefaultFont,
+			BackgroundColor = Color.Transparent,
+			BackgroundTexture = Texture
+		};
+
+		_uiStyleCollection.DefaultTextInputStyle = new TextInputStyle
+		{
+			Font = GlobalFonts.DefaultFont,
+			HintTextFont = GlobalFonts.HintFont,
+			BackgroundColor = Color.LightGray,
+			BackgroundTexture = Texture
+		};
 	}
 }
