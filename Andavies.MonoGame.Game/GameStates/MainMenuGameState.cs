@@ -49,17 +49,17 @@ public class MainMenuGameState : GameState
 	{
 		base.Start();
 
-		_mainUIState.ConnectToServerButton.MouseReleased += OnConnectToServerButtonPressed;
-		_mainUIState.CreateServerButton.MouseReleased += OnCreateServerButtonPressed;
-		_mainUIState.OptionsButton.MouseReleased += OnOptionsButtonPressed;
+		_mainUIState.ConnectToServerButton.MouseClicked += OnConnectToServerButtonPressed;
+		_mainUIState.CreateServerButton.MouseClicked += OnCreateServerButtonPressed;
+		_mainUIState.OptionsButton.MouseClicked += OnOptionsButtonPressed;
 		
-		_connectToServerUIState.ConnectButton.MouseReleased += OnConnectToServerConnectButtonPressed;
-		_connectToServerUIState.BackButton.MouseReleased += OnConnectToServerBackButtonPressed;
+		_connectToServerUIState.ConnectButton.MouseClicked += OnConnectToServerConnectButtonPressed;
+		_connectToServerUIState.BackButton.MouseClicked += OnConnectToServerBackButtonPressed;
 
-		_createServerUIState.CreateButton.MouseReleased += OnCreateServerCreateButtonPressed;
-		_createServerUIState.BackButton.MouseReleased += OnCreateServerBackButtonPressed;
+		_createServerUIState.CreateButton.MouseClicked += OnCreateServerCreateButtonPressed;
+		_createServerUIState.BackButton.MouseClicked += OnCreateServerBackButtonPressed;
 		
-		_optionsUIState.BackButton.MouseReleased += OnOptionsBackButtonPressed;
+		_optionsUIState.BackButton.MouseClicked += OnOptionsBackButtonPressed;
 		
 		UIStateMachine.ChangeUIState(_mainUIState);
 	}
@@ -68,17 +68,17 @@ public class MainMenuGameState : GameState
 	{
 		base.End();
 		
-		_mainUIState.ConnectToServerButton.MouseReleased -= OnConnectToServerButtonPressed;
-		_mainUIState.CreateServerButton.MouseReleased -= OnCreateServerButtonPressed;
-		_mainUIState.OptionsButton.MouseReleased -= OnOptionsButtonPressed;
+		_mainUIState.ConnectToServerButton.MouseClicked -= OnConnectToServerButtonPressed;
+		_mainUIState.CreateServerButton.MouseClicked -= OnCreateServerButtonPressed;
+		_mainUIState.OptionsButton.MouseClicked -= OnOptionsButtonPressed;
 
-		_connectToServerUIState.ConnectButton.MouseReleased -= OnConnectToServerConnectButtonPressed;
-		_connectToServerUIState.BackButton.MouseReleased -= OnConnectToServerBackButtonPressed;
+		_connectToServerUIState.ConnectButton.MouseClicked -= OnConnectToServerConnectButtonPressed;
+		_connectToServerUIState.BackButton.MouseClicked -= OnConnectToServerBackButtonPressed;
 
-		_createServerUIState.CreateButton.MouseReleased -= OnCreateServerCreateButtonPressed;
-		_createServerUIState.BackButton.MouseReleased -= OnCreateServerBackButtonPressed;
+		_createServerUIState.CreateButton.MouseClicked -= OnCreateServerCreateButtonPressed;
+		_createServerUIState.BackButton.MouseClicked -= OnCreateServerBackButtonPressed;
 
-		_optionsUIState.BackButton.MouseReleased -= OnOptionsBackButtonPressed;
+		_optionsUIState.BackButton.MouseClicked -= OnOptionsBackButtonPressed;
 	}
 
 	// MainUI Actions

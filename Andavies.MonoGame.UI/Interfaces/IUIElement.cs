@@ -24,6 +24,11 @@ public interface IUIElement
 	/// Raised when the mouse is first released inside the bounds of this element
 	/// </summary>
 	event Action<IUIElement>? MouseReleased;
+
+	/// <summary>
+	/// Raised when the mouse is pressed and released inside the bounds of this element
+	/// </summary>
+	event Action<IUIElement>? MouseClicked;
 	
 	/// <summary>
 	/// Raised when this UIElement has gained focus

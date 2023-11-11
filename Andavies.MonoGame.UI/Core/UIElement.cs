@@ -1,28 +1,24 @@
+using Andavies.MonoGame.Inputs;
+using Andavies.MonoGame.Inputs.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Andavies.MonoGame.UI.Core;
 
 public abstract class UIElement : IUIElement
 {
 	private Rectangle _bounds = Rectangle.Empty;
-	private bool _isMouseDown = false;
-	private bool _hasFocus = false; // Backing variable for HasFocus
+	private bool _hasFocus; // Backing variable for HasFocus
 	
-	/// <summary>
-	/// Use this constructor when the bounds are already defined as a Rectangle
-	/// </summary>
+	/// <summary>Use this constructor when the bounds are already defined as a Rectangle</summary>
 	/// <param name="bounds">The bounds of this UI Element</param>
 	protected UIElement(Rectangle bounds)
 	{
 		Bounds = bounds;
 	}
 
-	/// <summary>
-	/// Use this constructor when a rectangle object has not already been created
-	/// </summary>
+	/// <summary>Use this constructor when a rectangle object has not already been created</summary>
 	/// <param name="location">The location/position of the top left corner of the bounds</param>
 	/// <param name="size">The size (width/height) of the bounds</param>
 	protected UIElement(Point location, Point size) : 
@@ -40,6 +36,7 @@ public abstract class UIElement : IUIElement
 	public event Action<IUIElement>? MouseExited;
 	public event Action<IUIElement>? MousePressed;
 	public event Action<IUIElement>? MouseReleased;
+	public event Action<IUIElement>? MouseClicked;
 	public event Action<IUIElement>? ReceivedFocus;
 
 	public Rectangle Bounds
@@ -82,11 +79,6 @@ public abstract class UIElement : IUIElement
 	/// False = Mouse was not pressed inside the bounds or the mouse was released after being pressed in the bounds
 	/// </summary>
 	protected bool IsElementPressed { get; set; } = false;
-	
-	//Todo: Find someplace else for these static properties
-	protected static Point CurrentMousePosition => Mouse.GetState().Position;
-	protected static bool IsMousePressed => Mouse.GetState().LeftButton == ButtonState.Pressed;
-	protected static bool IsMouseReleased => Mouse.GetState().LeftButton == ButtonState.Released;
 
 	public abstract void Draw(SpriteBatch spriteBatch);
 
@@ -95,10 +87,8 @@ public abstract class UIElement : IUIElement
 		if (!IsInteractable)
 			return;
 		
-		CheckMouseEntered();
-		CheckMouseExited();
-		CheckMousePressed();
-		CheckMouseReleased();
+		CheckMousePosition();
+		CheckMouseActions();
 	}
 	
 	/// <summary>
@@ -106,59 +96,44 @@ public abstract class UIElement : IUIElement
 	/// recalculating any children elements
 	/// </summary>
 	protected virtual void OnBoundsChanged() { }
-	
-	/// <summary>
-	/// Checks to see if the mouse has entered the bounds of this element whether it is pressed or not
-	/// </summary>
-	protected virtual void CheckMouseEntered()
+
+	/// <summary>Checks for and raises mouse position events</summary>
+	private void CheckMousePosition()
 	{
-		if (IsElementHovered || !Bounds.Contains(CurrentMousePosition)) 
-			return;
-		
-		IsElementHovered = true;
-		MouseEntered?.Invoke(this);
-	}
-	
-	/// <summary>
-	/// Checks to see if the mouse has exited the bounds of this element whether it is pressed or not
-	/// </summary>
-	protected virtual void CheckMouseExited()
-	{
-		if (!IsElementHovered || Bounds.Contains(CurrentMousePosition)) 
-			return;
-		
-		IsElementHovered = false;
-		MouseExited?.Invoke(this);
+		// Mouse Enter
+		if (!IsElementHovered && Bounds.Contains(Input.CurrentMousePosition))
+		{
+			IsElementHovered = true;
+			MouseEntered?.Invoke(this);
+		}
+		// Mouse Exit
+		else if (IsElementHovered && !Bounds.Contains(Input.CurrentMousePosition))
+		{
+			IsElementHovered = false;
+			MouseExited?.Invoke(this);
+		}
 	}
 
-	/// <summary>
-	/// Checks to see if the mouse was pressed inside the bounds of this element
-	/// </summary>
-	protected virtual void CheckMousePressed()
+	/// <summary>Checks for and raises mouse press events</summary>
+	private void CheckMouseActions()
 	{
-		if (_isMouseDown || !IsMousePressed) 
-			return;
-		
-		_isMouseDown = true;
+		// Mouse Pressed
+		if (Input.WasMousePressed(MouseButton.Left) && Bounds.Contains(Input.CurrentMousePosition))
+		{
+			IsElementPressed = true;
+			MousePressed?.Invoke(this);
+		}
+		// Mouse Released
+		else if (Input.WasMouseReleased(MouseButton.Left))
+		{
+			if (Bounds.Contains(Input.CurrentMousePosition))
+			{
+				if (IsElementPressed)
+					MouseClicked?.Invoke(this);
+				MouseReleased?.Invoke(this);
+			}
 
-		if (!Bounds.Contains(CurrentMousePosition)) 
-			return;
-		
-		IsElementPressed = true;
-		MousePressed?.Invoke(this);
-	}
-
-	/// <summary>
-	/// Checks to see if the mouse was released inside the bounds of this element
-	/// </summary>
-	protected virtual void CheckMouseReleased()
-	{
-		if (!_isMouseDown || !IsMouseReleased) 
-			return;
-		
-		_isMouseDown = false;
-		IsElementPressed = false;
-		if (Bounds.Contains(CurrentMousePosition))
-			MouseReleased?.Invoke(this);
+			IsElementPressed = false;
+		}
 	}
 }

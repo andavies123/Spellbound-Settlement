@@ -45,7 +45,7 @@ public class GameplayGameState : GameState
 		
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
 		
-		_gameplayGameplayUIState.PauseButton.MousePressed += RaisePauseGame;
+		_gameplayGameplayUIState.PauseButton.MouseClicked += RaisePauseGame;
 		InputState.PauseGame.OnKeyUp += RaiseKeyPressPauseGame;
 	}
 
@@ -62,7 +62,7 @@ public class GameplayGameState : GameState
 	{
 		base.End();
 		
-		_gameplayGameplayUIState.PauseButton.MousePressed -= RaisePauseGame;
+		_gameplayGameplayUIState.PauseButton.MouseClicked -= RaisePauseGame;
 		InputState.PauseGame.OnKeyUp -= RaiseKeyPressPauseGame;
 	}
 
