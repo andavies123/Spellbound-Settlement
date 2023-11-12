@@ -10,6 +10,7 @@ public class UIStateMachine : IUIStateMachine
 	{
 		_currentUIState?.Exit();
 		_currentUIState = nextUIState;
+		_currentUIState?.Start();
 	}
 	public void Update(float deltaTimeSeconds) => _currentUIState?.Update(deltaTimeSeconds);
 	public void Draw(SpriteBatch spriteBatch) => _currentUIState?.Draw(spriteBatch);

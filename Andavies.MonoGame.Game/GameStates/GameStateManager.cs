@@ -1,5 +1,4 @@
-﻿using Andavies.MonoGame.UI.Interfaces;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
 
 namespace SpellboundSettlement.GameStates;
@@ -36,30 +35,20 @@ public class GameStateManager : IGameStateManager
 		_pauseMenuGameState.LateInit();
 
 		// Todo: Move these events elsewhere since there will probably be a lot of them
-		_mainMenuGameState.PlayGame += OnPlayGame;
-		_mainMenuGameState.QuitGame += OnQuitGame;
-		_gameplayGameState.PauseGame += OnPauseGame;
-		_pauseMenuGameState.ResumeGame += OnResumeGame;
-		_pauseMenuGameState.MainMenu += OnMainMenu;
+		_mainMenuGameState.PlayGameRequested += OnPlayGameRequested;
+		_mainMenuGameState.QuitGameRequested += OnQuitGameRequested;
+		_gameplayGameState.PauseGameRequested += OnPauseGameRequested;
+		_pauseMenuGameState.ResumeGameRequested += OnResumeGameRequested;
+		_pauseMenuGameState.OptionsMenuRequested += OnOptionsMenuRequested;
+		_pauseMenuGameState.MainMenuRequested += OnMainMenuRequested;
 		
 		// Set initial state
 		SetState(_mainMenuGameState);
 	}
 
-	public void Update(float deltaTimeSeconds)
-	{
-		CurrentGameState.Update(deltaTimeSeconds);
-	}
-
-	public void Draw3D(GraphicsDevice graphicsDevice)
-	{
-		CurrentGameState.Draw3D(graphicsDevice);
-	}
-
-	public void DrawUI(SpriteBatch spriteBatch)
-	{
-		CurrentGameState.DrawUI(spriteBatch);
-	}
+	public void Update(float deltaTimeSeconds) => CurrentGameState.Update(deltaTimeSeconds);
+	public void Draw3D(GraphicsDevice graphicsDevice) => CurrentGameState.Draw3D(graphicsDevice);
+	public void DrawUI(SpriteBatch spriteBatch) => CurrentGameState.DrawUI(spriteBatch);
 
 	public void SetState(IGameState nextState)
 	{
@@ -68,9 +57,12 @@ public class GameStateManager : IGameStateManager
 		CurrentGameState?.Start();
 	}
 
-	private void OnPauseGame() => SetState(_pauseMenuGameState);
-	private void OnResumeGame() => SetState(_gameplayGameState);
-	private void OnMainMenu() => SetState(_mainMenuGameState);
-	private void OnPlayGame(IUIElement uiElement) => SetState(_gameplayGameState);
-	private void OnQuitGame(IUIElement uiElement) => Global.QuitGame();
+	private void OnPauseGameRequested() => SetState(_pauseMenuGameState);
+	private void OnPlayGameRequested() => SetState(_gameplayGameState);
+	private void OnQuitGameRequested() => Global.QuitGame();
+	
+	// Pause Menu Game State
+	private void OnResumeGameRequested() => SetState(_gameplayGameState);
+	private void OnOptionsMenuRequested() => SetState(_mainMenuGameState);
+	private void OnMainMenuRequested() => SetState(_mainMenuGameState);
 }

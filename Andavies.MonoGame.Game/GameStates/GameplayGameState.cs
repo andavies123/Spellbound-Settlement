@@ -1,6 +1,5 @@
 ﻿using System;
 using Andavies.MonoGame.Meshes;
-using Andavies.MonoGame.UI.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Inputs;
@@ -28,7 +27,7 @@ public class GameplayGameState : GameState
 		UIStates.Add(gameplayUIState);
 	}
 	
-	public event Action PauseGame;
+	public event Action PauseGameRequested;
 
 	public override GameplayInputManager InputState { get; }
 
@@ -44,9 +43,9 @@ public class GameplayGameState : GameState
 		base.Start();
 		
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
-		
-		_gameplayGameplayUIState.PauseButton.MouseClicked += RaisePauseGame;
-		InputState.PauseGame.OnKeyUp += RaiseKeyPressPauseGame;
+
+		_gameplayGameplayUIState.PauseButtonClicked += OnPauseGameClicked;
+		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;
 	}
 
 	public override void Draw3D(GraphicsDevice graphicsDevice)
@@ -62,19 +61,12 @@ public class GameplayGameState : GameState
 	{
 		base.End();
 		
-		_gameplayGameplayUIState.PauseButton.MouseClicked -= RaisePauseGame;
-		InputState.PauseGame.OnKeyUp -= RaiseKeyPressPauseGame;
+		_gameplayGameplayUIState.PauseButtonClicked -= OnPauseGameClicked;
+		InputState.PauseGame.OnKeyUp -= OnPauseGameKeyReleased;
 	}
-
-	private void RaiseKeyPressPauseGame()
-	{
-		PauseGame?.Invoke();
-	}
-
-	private void RaisePauseGame(IUIElement uiElement)
-	{
-		PauseGame?.Invoke();
-	}
+	
+	private void OnPauseGameKeyReleased() => PauseGameRequested?.Invoke();
+	private void OnPauseGameClicked() => PauseGameRequested?.Invoke();
 	
 	private void DrawMesh(GraphicsDevice graphicsDevice, IMesh mesh)
 	{

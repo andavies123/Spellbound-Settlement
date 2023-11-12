@@ -1,4 +1,6 @@
+using System;
 using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.UIElements;
@@ -14,13 +16,14 @@ public class MainMenuOptionsUIState : IUIState
 	
 	private readonly IUIStyleCollection _uiStyleCollection;
 	private VerticalLayoutGroup _mainLayoutGroup;
+	private Button _backButton;
 
 	public MainMenuOptionsUIState(IUIStyleCollection uiStyleCollection)
 	{
 		_uiStyleCollection = uiStyleCollection;
 	}
-	
-	public Button BackButton { get; private set; }
+
+	public event Action BackButtonClicked;
 	
 	public void Init() { }
 
@@ -33,13 +36,23 @@ public class MainMenuOptionsUIState : IUIState
 			ForceExpandChildWidth = false
 		};
 		
-		BackButton = new Button(ButtonSize, "Back", _uiStyleCollection.DefaultButtonStyle);
+		_backButton = new Button(ButtonSize, "Back", _uiStyleCollection.DefaultButtonStyle);
 		
-		_mainLayoutGroup.AddChildren(BackButton);
+		_mainLayoutGroup.AddChildren(_backButton);
+	}
+
+	public void Start()
+	{
+		_backButton.MouseClicked += OnBackButtonMouseClicked;
 	}
 
 	public void Update(float deltaTimeSeconds) => _mainLayoutGroup.Update(deltaTimeSeconds);
 	public void Draw(SpriteBatch spriteBatch) => _mainLayoutGroup.Draw(spriteBatch);
-	
-	public void Exit() { }
+
+	public void Exit()
+	{
+		_backButton.MouseClicked -= OnBackButtonMouseClicked;
+	}
+
+	private void OnBackButtonMouseClicked(IUIElement _) => BackButtonClicked?.Invoke();
 }

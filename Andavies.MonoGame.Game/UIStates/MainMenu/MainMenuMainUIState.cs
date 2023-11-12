@@ -1,4 +1,6 @@
+using System;
 using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.UIElements;
@@ -14,17 +16,22 @@ public class MainMenuMainUIState : IUIState
 
 	private readonly IUIStyleCollection _uiStyleCollection;
 	private VerticalLayoutGroup _verticalLayoutGroup;
-
+	private Button _playButton;
+	private Button _joinServerButton;
+	private Button _createServerButton;
+	private Button _optionsButton;
+	private Button _quitButton;
+	
 	public MainMenuMainUIState(IUIStyleCollection uiStyleCollection)
 	{
 		_uiStyleCollection = uiStyleCollection;
 	}
 
-	public Button PlayButton { get; private set; }
-	public Button ConnectToServerButton { get; private set; }
-	public Button CreateServerButton { get; private set; }
-	public Button OptionsButton { get; private set; }
-	public Button QuitButton { get; private set; }
+	public event Action PlayButtonClicked;
+	public event Action JoinServerButtonClicked;
+	public event Action CreateServerButtonClicked;
+	public event Action OptionsButtonClicked;
+	public event Action QuitButtonClicked;
 
 	public void Init() { }
 
@@ -37,18 +44,27 @@ public class MainMenuMainUIState : IUIState
 			ForceExpandChildWidth = false
 		};
 
-		PlayButton = new Button(ButtonSize, "Play", _uiStyleCollection.DefaultButtonStyle);
-		ConnectToServerButton = new Button(ButtonSize, "Connect to Server", _uiStyleCollection.DefaultButtonStyle);
-		CreateServerButton = new Button(ButtonSize, "Create Server", _uiStyleCollection.DefaultButtonStyle);
-		OptionsButton = new Button(ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
-		QuitButton = new Button(ButtonSize, "Quit", _uiStyleCollection.DefaultButtonStyle);
+		_playButton = new Button(ButtonSize, "Play", _uiStyleCollection.DefaultButtonStyle);
+		_joinServerButton = new Button(ButtonSize, "Join Server", _uiStyleCollection.DefaultButtonStyle);
+		_createServerButton = new Button(ButtonSize, "Create Server", _uiStyleCollection.DefaultButtonStyle);
+		_optionsButton = new Button(ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
+		_quitButton = new Button(ButtonSize, "Quit", _uiStyleCollection.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
-			PlayButton,
-			ConnectToServerButton,
-			CreateServerButton,
-			OptionsButton, 
-			QuitButton);
+			_playButton,
+			_joinServerButton,
+			_createServerButton,
+			_optionsButton,
+			_quitButton);
+	}
+
+	public void Start()
+	{
+		_playButton.MouseClicked += OnPlayButtonMouseClicked;
+		_joinServerButton.MouseClicked += OnJoinServerButtonMouseClicked;
+		_createServerButton.MouseClicked += OnCreateServerButtonMouseClicked;
+		_optionsButton.MouseClicked += OnOptionsButtonMouseClicked;
+		_quitButton.MouseClicked += OnQuitButtonMouseClicked;
 	}
 
 	public void Update(float deltaTimeSeconds)
@@ -61,5 +77,18 @@ public class MainMenuMainUIState : IUIState
 		_verticalLayoutGroup.Draw(spriteBatch);
 	}
 
-	public void Exit() { }
+	public void Exit() 
+	{
+		_playButton.MouseClicked -= OnPlayButtonMouseClicked;
+		_joinServerButton.MouseClicked -= OnJoinServerButtonMouseClicked;
+		_createServerButton.MouseClicked -= OnCreateServerButtonMouseClicked;
+		_optionsButton.MouseClicked -= OnOptionsButtonMouseClicked;
+		_quitButton.MouseClicked -= OnQuitButtonMouseClicked;
+	}
+
+	private void OnPlayButtonMouseClicked(IUIElement _) => PlayButtonClicked?.Invoke();
+	private void OnJoinServerButtonMouseClicked(IUIElement _) => JoinServerButtonClicked?.Invoke();
+	private void OnCreateServerButtonMouseClicked(IUIElement _) => CreateServerButtonClicked?.Invoke();
+	private void OnOptionsButtonMouseClicked(IUIElement _) => OptionsButtonClicked?.Invoke();
+	private void OnQuitButtonMouseClicked(IUIElement _) => QuitButtonClicked?.Invoke();
 }

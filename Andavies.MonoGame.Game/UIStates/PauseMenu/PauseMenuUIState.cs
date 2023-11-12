@@ -1,4 +1,6 @@
+using System;
 using Andavies.MonoGame.UI.Enums;
+using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.UIElements;
@@ -15,14 +17,18 @@ public class PauseMenuUIState : IUIState
 	private readonly IUIStyleCollection _uiStyleCollection;
 	private VerticalLayoutGroup _verticalLayoutGroup;
 
+	private Button _resumeButton;
+	private Button _optionsButton;
+	private Button _mainMenuButton;
+
 	public PauseMenuUIState(IUIStyleCollection uiStyleCollection)
 	{
 		_uiStyleCollection = uiStyleCollection;
 	}
 
-	public Button ResumeButton { get; private set; }
-	public Button OptionsButton { get; private set; }
-	public Button MainMenuButton { get; private set; }
+	public event Action ResumeButtonClicked;
+	public event Action OptionsButtonClicked;
+	public event Action MainMenuButtonClicked;
 	
 	public void Init() { }
 
@@ -36,14 +42,21 @@ public class PauseMenuUIState : IUIState
 			Spacing = 200
 		};
 
-		ResumeButton = new Button(ButtonSize, "Resume", _uiStyleCollection.DefaultButtonStyle);
-		OptionsButton = new Button(ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
-		MainMenuButton = new Button(ButtonSize, "Main Menu", _uiStyleCollection.DefaultButtonStyle);
+		_resumeButton = new Button(ButtonSize, "Resume", _uiStyleCollection.DefaultButtonStyle);
+		_optionsButton = new Button(ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
+		_mainMenuButton = new Button(ButtonSize, "Main Menu", _uiStyleCollection.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
-			ResumeButton, 
-			OptionsButton, 
-			MainMenuButton);
+			_resumeButton, 
+			_optionsButton, 
+			_mainMenuButton);
+	}
+
+	public void Start()
+	{
+		_resumeButton.MouseClicked += OnResumeButtonMouseClicked;
+		_optionsButton.MouseClicked += OnOptionsButtonMouseClicked;
+		_mainMenuButton.MouseClicked += OnMainMenuButtonMouseClicked;
 	}
 
 	public void Update(float deltaTimeSeconds)
@@ -56,5 +69,14 @@ public class PauseMenuUIState : IUIState
 		_verticalLayoutGroup.Draw(spriteBatch);
 	}
 
-	public void Exit() { }
+	public void Exit()
+	{
+		_resumeButton.MouseClicked -= OnResumeButtonMouseClicked;
+		_optionsButton.MouseClicked -= OnOptionsButtonMouseClicked;
+		_mainMenuButton.MouseClicked -= OnMainMenuButtonMouseClicked;
+	}
+
+	private void OnResumeButtonMouseClicked(IUIElement uiElement) => ResumeButtonClicked?.Invoke();
+	private void OnOptionsButtonMouseClicked(IUIElement uiElement) => OptionsButtonClicked?.Invoke();
+	private void OnMainMenuButtonMouseClicked(IUIElement uiElement) => MainMenuButtonClicked?.Invoke();
 }

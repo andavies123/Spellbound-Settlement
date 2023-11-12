@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.Inputs.InputListeners;
+﻿using System;
+using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
@@ -23,6 +24,12 @@ public class MainMenuCreateServerUIState : IUIState
 	private VerticalLayoutGroup _verticalGroup;
 	private HorizontalLayoutGroup _horizontalGroup;
 
+	private Label _enterIpLabel;
+	private TextInput _ipAddressInput;
+	private TextInput _portInput;
+	private Button _createServerButton;
+	private Button _backButton;
+
 	public MainMenuCreateServerUIState(IUIStyleCollection uiStyleCollection,
 		[KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
 	{
@@ -30,11 +37,8 @@ public class MainMenuCreateServerUIState : IUIState
 		_numbersOnlyTextListener = numbersOnlyTextListener;
 	}
 
-	public Label EnterIpLabel { get; private set; }
-	public TextInput IpInput { get; private set; }
-	public TextInput ServerPortInput { get; private set; }
-	public Button CreateButton { get; private set; }
-	public Button BackButton { get; private set; }
+	public event Action CreateServerButtonClicked;
+	public event Action BackButtonClicked;
 	
 	public void Init() { }
 
@@ -54,33 +58,42 @@ public class MainMenuCreateServerUIState : IUIState
 			ForceExpandChildHeight = false
 		};
 
-		EnterIpLabel = new Label(ButtonSize, "IP Address:", _uiStyleCollection.DefaultLabelStyle);
-		IpInput = new IpAddressTextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle)
+		_enterIpLabel = new Label(ButtonSize, "IP Address:", _uiStyleCollection.DefaultLabelStyle);
+		_ipAddressInput = new IpAddressTextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle)
 		{
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};
-		ServerPortInput = new TextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle, _numbersOnlyTextListener)
+		_portInput = new TextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle, _numbersOnlyTextListener)
 		{
 			MaxLength = 5, // Max port length
 			HintText = "Ip Port"
 		};
-		CreateButton = new Button(ButtonSize, "Create", _uiStyleCollection.DefaultButtonStyle);
-		BackButton = new Button(ButtonSize, "Back", _uiStyleCollection.DefaultButtonStyle);
+		_createServerButton = new Button(ButtonSize, "Create", _uiStyleCollection.DefaultButtonStyle);
+		_backButton = new Button(ButtonSize, "Back", _uiStyleCollection.DefaultButtonStyle);
 		
-		_horizontalGroup.AddChildren(EnterIpLabel, IpInput, ServerPortInput);
-		_verticalGroup.AddChildren(_horizontalGroup, CreateButton, BackButton);
+		_horizontalGroup.AddChildren(_enterIpLabel, _ipAddressInput, _portInput);
+		_verticalGroup.AddChildren(_horizontalGroup, _createServerButton, _backButton);
 		
-		IpInput.MouseReleased += SetFocusedElement;
-		ServerPortInput.MouseReleased += SetFocusedElement;
+		_ipAddressInput.MouseClicked += SetFocusedElement;
+		_createServerButton.MouseClicked += SetFocusedElement;
 
-		SetFocusedElement(IpInput);
+		SetFocusedElement(_ipAddressInput);
+	}
+
+	public void Start()
+	{
+		_createServerButton.MouseClicked += OnCreateServerButtonMouseClicked;
+		_backButton.MouseClicked += OnBackButtonMouseClicked;
+		
+		_ipAddressInput.MouseClicked += SetFocusedElement;
+		_createServerButton.MouseClicked += SetFocusedElement;
 	}
 
 	public void Update(float deltaTimeSeconds)
 	{
 		_verticalGroup.Update(deltaTimeSeconds);
-		CreateButton.IsInteractable = IpInput.ContainsValidString;
+		_createServerButton.IsInteractable = _ipAddressInput.ContainsValidString;
 	}
 
 	public void Draw(SpriteBatch spriteBatch)
@@ -90,9 +103,18 @@ public class MainMenuCreateServerUIState : IUIState
 
 	public void Exit()
 	{
-		IpInput.Clear();
-		ServerPortInput.Clear();
+		_createServerButton.MouseClicked -= OnCreateServerButtonMouseClicked;
+		_backButton.MouseClicked -= OnBackButtonMouseClicked;
+		
+		_ipAddressInput.MouseClicked -= SetFocusedElement;
+		_createServerButton.MouseClicked -= SetFocusedElement;
+		
+		_ipAddressInput.Clear();
+		_portInput.Clear();
 	}
+
+	private void OnCreateServerButtonMouseClicked(IUIElement _) => CreateServerButtonClicked?.Invoke();
+	private void OnBackButtonMouseClicked(IUIElement _) => BackButtonClicked?.Invoke();
 
 	private void SetFocusedElement(IUIElement uiElement)
 	{
