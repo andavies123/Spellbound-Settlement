@@ -1,5 +1,4 @@
 using System;
-using Andavies.MonoGame.UI.Interfaces;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.UIStates.MainMenu;
 
@@ -10,41 +9,31 @@ public class MainMenuGameState : GameState
 	public override IInputManager InputState { get; }
 
 	private readonly MainMenuMainUIState _mainUIState;
-	private readonly MainMenuConnectToServerUIState _connectToServerUIState;
+	private readonly MainMenuJoinServerUIState _joinServerUIState;
 	private readonly MainMenuCreateServerUIState _createServerUIState;
 	private readonly MainMenuOptionsUIState _optionsUIState;
-	
-	public event Action<IUIElement> PlayGame
-	{
-		add => _mainUIState.PlayButton.MouseReleased += value;
-		remove => _mainUIState.PlayButton.MouseReleased -= value;
-	}
-
-	public event Action<IUIElement> QuitGame
-	{
-		add => _mainUIState.QuitButton.MouseReleased += value;
-		remove => _mainUIState.QuitButton.MouseReleased -= value;
-	}
 
 	public MainMenuGameState(
 		MainMenuMainUIState mainUIState, 
-		MainMenuConnectToServerUIState connectToServerUIState,
+		MainMenuJoinServerUIState joinServerUIState,
 		MainMenuCreateServerUIState createServerUIState,
 		MainMenuOptionsUIState optionsUIState,
 		IInputManager inputManager)
 	{
 		_mainUIState = mainUIState;
-		_connectToServerUIState = connectToServerUIState;
+		_joinServerUIState = joinServerUIState;
 		_createServerUIState = createServerUIState;
 		_optionsUIState = optionsUIState;
 		InputState = inputManager;
 		
 		UIStates.Add(_mainUIState);
-		UIStates.Add(_connectToServerUIState);
+		UIStates.Add(_joinServerUIState);
 		UIStates.Add(_createServerUIState);
 		UIStates.Add(_optionsUIState);
 	}
 
+	public event Action PlayGameRequested;
+	public event Action QuitGameRequested;
 	public event Action<string> StartServerRequested;
 	public event Action<string> JoinServerRequested;
 
@@ -52,17 +41,19 @@ public class MainMenuGameState : GameState
 	{
 		base.Start();
 
-		_mainUIState.ConnectToServerButton.MouseClicked += OnConnectToServerButtonPressed;
-		_mainUIState.CreateServerButton.MouseClicked += OnCreateServerButtonPressed;
-		_mainUIState.OptionsButton.MouseClicked += OnOptionsButtonPressed;
+		_mainUIState.PlayButtonClicked += OnPlayButtonClicked;
+		_mainUIState.JoinServerButtonClicked += OnJoinServerButtonClicked;
+		_mainUIState.CreateServerButtonClicked += OnCreateServerButtonClicked;
+		_mainUIState.OptionsButtonClicked += OnOptionsButtonClicked;
+		_mainUIState.QuitButtonClicked += OnQuitButtonClicked;
 		
-		_connectToServerUIState.ConnectButton.MouseClicked += OnConnectToServerConnectButtonPressed;
-		_connectToServerUIState.BackButton.MouseClicked += OnConnectToServerBackButtonPressed;
+		_joinServerUIState.ConnectButtonClicked += OnJoinServerConnectButtonClicked;
+		_joinServerUIState.BackButtonClicked += OnJoinServerBackButtonClicked;
 
-		_createServerUIState.CreateButton.MouseClicked += OnCreateServerCreateButtonPressed;
-		_createServerUIState.BackButton.MouseClicked += OnCreateServerBackButtonPressed;
+		_createServerUIState.CreateServerButtonClicked += OnCreateServerCreateButtonClicked;
+		_createServerUIState.BackButtonClicked += OnCreateServerBackButtonClicked;
 		
-		_optionsUIState.BackButton.MouseClicked += OnOptionsBackButtonPressed;
+		_optionsUIState.BackButtonClicked += OnOptionsBackButtonClicked;
 		
 		UIStateMachine.ChangeUIState(_mainUIState);
 	}
@@ -70,33 +61,37 @@ public class MainMenuGameState : GameState
 	public override void End()
 	{
 		base.End();
+
+		_mainUIState.PlayButtonClicked -= OnPlayButtonClicked;
+		_mainUIState.JoinServerButtonClicked -= OnJoinServerButtonClicked;
+		_mainUIState.CreateServerButtonClicked -= OnCreateServerButtonClicked;
+		_mainUIState.OptionsButtonClicked -= OnOptionsButtonClicked;
+		_mainUIState.QuitButtonClicked -= OnQuitButtonClicked;
 		
-		_mainUIState.ConnectToServerButton.MouseClicked -= OnConnectToServerButtonPressed;
-		_mainUIState.CreateServerButton.MouseClicked -= OnCreateServerButtonPressed;
-		_mainUIState.OptionsButton.MouseClicked -= OnOptionsButtonPressed;
+		_joinServerUIState.ConnectButtonClicked -= OnJoinServerConnectButtonClicked;
+		_joinServerUIState.BackButtonClicked -= OnJoinServerBackButtonClicked;
 
-		_connectToServerUIState.ConnectButton.MouseClicked -= OnConnectToServerConnectButtonPressed;
-		_connectToServerUIState.BackButton.MouseClicked -= OnConnectToServerBackButtonPressed;
-
-		_createServerUIState.CreateButton.MouseClicked -= OnCreateServerCreateButtonPressed;
-		_createServerUIState.BackButton.MouseClicked -= OnCreateServerBackButtonPressed;
-
-		_optionsUIState.BackButton.MouseClicked -= OnOptionsBackButtonPressed;
+		_createServerUIState.CreateServerButtonClicked -= OnCreateServerCreateButtonClicked;
+		_createServerUIState.BackButtonClicked -= OnCreateServerBackButtonClicked;
+		
+		_optionsUIState.BackButtonClicked -= OnOptionsBackButtonClicked;
 	}
 
 	// MainUI Actions
-	private void OnConnectToServerButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_connectToServerUIState);
-	private void OnCreateServerButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_createServerUIState);
-	private void OnOptionsButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_optionsUIState);
+	private void OnPlayButtonClicked() => PlayGameRequested?.Invoke();
+	private void OnJoinServerButtonClicked() => UIStateMachine.ChangeUIState(_joinServerUIState);
+	private void OnCreateServerButtonClicked() => UIStateMachine.ChangeUIState(_createServerUIState);
+	private void OnOptionsButtonClicked() => UIStateMachine.ChangeUIState(_optionsUIState);
+	private void OnQuitButtonClicked() => QuitGameRequested?.Invoke();
 	
 	// ConnectToServerUI Actions
-	private void OnConnectToServerConnectButtonPressed(IUIElement uiElement) => JoinServerRequested?.Invoke("192.1.1.1");
-	private void OnConnectToServerBackButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnJoinServerConnectButtonClicked() => JoinServerRequested?.Invoke("192.1.1.1");
+	private void OnJoinServerBackButtonClicked() => UIStateMachine.ChangeUIState(_mainUIState);
 	
 	// CreateServerUI Actions
-	private void OnCreateServerCreateButtonPressed(IUIElement uiElement) => StartServerRequested?.Invoke("192.1.1.1");
-	private void OnCreateServerBackButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnCreateServerCreateButtonClicked() => StartServerRequested?.Invoke("192.1.1.1");
+	private void OnCreateServerBackButtonClicked() => UIStateMachine.ChangeUIState(_mainUIState);
 
 	// OptionsUI Actions
-	private void OnOptionsBackButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnOptionsBackButtonClicked() => UIStateMachine.ChangeUIState(_mainUIState);
 }

@@ -7,7 +7,7 @@ public class PauseMenuInputManager : IInputManager
 {
 	private const Keys ExitMenuKey = Keys.Escape;
 
-	public KeyAction ExitMenu = new(ExitMenuKey);
+	public readonly KeyAction ExitMenu = new(ExitMenuKey);
 	
 	public void UpdateInput()
 	{

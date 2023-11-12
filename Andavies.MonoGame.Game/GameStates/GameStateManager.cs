@@ -1,5 +1,3 @@
-﻿using Andavies.MonoGame.Game.Server;
-using Andavies.MonoGame.UI.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
 
@@ -38,27 +36,22 @@ public class GameStateManager : IGameStateManager
 		_mainMenuGameState.LateInit();
 		_gameplayGameState.LateInit();
 		_pauseMenuGameState.LateInit();
-		
-		SubscribeToEvents();
+
+		// Todo: Move these events elsewhere since there will probably be a lot of them
+		_mainMenuGameState.PlayGameRequested += OnPlayGameRequested;
+		_mainMenuGameState.QuitGameRequested += OnQuitGameRequested;
+		_gameplayGameState.PauseGameRequested += OnPauseGameRequested;
+		_pauseMenuGameState.ResumeGameRequested += OnResumeGameRequested;
+		_pauseMenuGameState.OptionsMenuRequested += OnOptionsMenuRequested;
+		_pauseMenuGameState.MainMenuRequested += OnMainMenuRequested;
 		
 		// Set initial state
 		SetState(_mainMenuGameState);
 	}
 
-	public void Update(float deltaTimeSeconds)
-	{
-		CurrentGameState.Update(deltaTimeSeconds);
-	}
-
-	public void Draw3D(GraphicsDevice graphicsDevice)
-	{
-		CurrentGameState.Draw3D(graphicsDevice);
-	}
-
-	public void DrawUI(SpriteBatch spriteBatch)
-	{
-		CurrentGameState.DrawUI(spriteBatch);
-	}
+	public void Update(float deltaTimeSeconds) => CurrentGameState.Update(deltaTimeSeconds);
+	public void Draw3D(GraphicsDevice graphicsDevice) => CurrentGameState.Draw3D(graphicsDevice);
+	public void DrawUI(SpriteBatch spriteBatch) => CurrentGameState.DrawUI(spriteBatch);
 
 	public void SetState(IGameState nextState)
 	{
@@ -67,48 +60,12 @@ public class GameStateManager : IGameStateManager
 		CurrentGameState?.Start();
 	}
 
-	private void SubscribeToEvents()
-	{
-		// Main Menu Events
-		_mainMenuGameState.PlayGame += OnPlayGame;
-		_mainMenuGameState.QuitGame += OnQuitGame;
-		_mainMenuGameState.StartServerRequested += OnStartServerRequested;
-		_mainMenuGameState.JoinServerRequested += OnJoinServerRequested;
-		
-		// Gameplay Events
-		_gameplayGameState.PauseGame += OnPauseGame;
-		
-		// Pause Menu Events
-		_pauseMenuGameState.ResumeGame += OnResumeGame;
-		_pauseMenuGameState.MainMenu += OnMainMenu;
-	}
-
-	/*
-	 * Todo: This needs to be called somewhere
-	 * Todo: Possibly find a way to add these to a loop as there might be a lot
-	 */
-	private void UnsubscribeFromEvents()
-	{
-		// Main Menu Events
-		_mainMenuGameState.PlayGame -= OnPlayGame;
-		_mainMenuGameState.QuitGame -= OnQuitGame;
-		_mainMenuGameState.StartServerRequested -= OnStartServerRequested;
-		_mainMenuGameState.JoinServerRequested -= OnJoinServerRequested;
-		
-		// Gameplay Events
-		_gameplayGameState.PauseGame -= OnPauseGame;
-		
-		// Pause Menu Events
-		_pauseMenuGameState.ResumeGame -= OnResumeGame;
-		_pauseMenuGameState.MainMenu -= OnMainMenu;
-	}
-
-	private void OnPauseGame() => SetState(_pauseMenuGameState);
-	private void OnResumeGame() => SetState(_gameplayGameState);
-	private void OnStartServerRequested(string ipAddress) => _serverManager.StartServer(ipAddress);
-	private void OnJoinServerRequested(string ipAddress) { }
+	private void OnPauseGameRequested() => SetState(_pauseMenuGameState);
+	private void OnPlayGameRequested() => SetState(_gameplayGameState);
+	private void OnQuitGameRequested() => Global.QuitGame();
 	
-	private void OnMainMenu() => SetState(_mainMenuGameState);
-	private void OnPlayGame(IUIElement uiElement) => SetState(_gameplayGameState);
-	private void OnQuitGame(IUIElement uiElement) => Global.QuitGame();
+	// Pause Menu Game State
+	private void OnResumeGameRequested() => SetState(_gameplayGameState);
+	private void OnOptionsMenuRequested() => SetState(_mainMenuGameState);
+	private void OnMainMenuRequested() => SetState(_mainMenuGameState);
 }
