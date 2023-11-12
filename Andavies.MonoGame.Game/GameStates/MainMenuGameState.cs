@@ -45,6 +45,9 @@ public class MainMenuGameState : GameState
 		UIStates.Add(_optionsUIState);
 	}
 
+	public event Action<string> StartServerRequested;
+	public event Action<string> JoinServerRequested;
+
 	public override void Start()
 	{
 		base.Start();
@@ -87,11 +90,11 @@ public class MainMenuGameState : GameState
 	private void OnOptionsButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_optionsUIState);
 	
 	// ConnectToServerUI Actions
-	private void OnConnectToServerConnectButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnConnectToServerConnectButtonPressed(IUIElement uiElement) => JoinServerRequested?.Invoke("192.1.1.1");
 	private void OnConnectToServerBackButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
 	
 	// CreateServerUI Actions
-	private void OnCreateServerCreateButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
+	private void OnCreateServerCreateButtonPressed(IUIElement uiElement) => StartServerRequested?.Invoke("192.1.1.1");
 	private void OnCreateServerBackButtonPressed(IUIElement uiElement) => UIStateMachine.ChangeUIState(_mainUIState);
 
 	// OptionsUI Actions

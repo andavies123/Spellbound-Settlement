@@ -1,10 +1,10 @@
-﻿using Andavies.MonoGame.Inputs.InputListeners;
+﻿using Andavies.MonoGame.Game.Server;
+using Andavies.MonoGame.Inputs.InputListeners;
 using Autofac;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.GameStates;
 using SpellboundSettlement.Inputs;
-using SpellboundSettlement.UIStates;
 using Andavies.MonoGame.UI.StateMachines;
 using SpellboundSettlement.Globals;
 using SpellboundSettlement.UIStates.Gameplay;
@@ -33,6 +33,9 @@ public static class Program
 	{
 		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
+		
+		// Server
+		builder.RegisterType<ServerManager>().As<IServerManager>().SingleInstance();
 		
 		// Collections
 		builder.RegisterType<UIStyleCollection>().As<IUIStyleCollection>().SingleInstance();
