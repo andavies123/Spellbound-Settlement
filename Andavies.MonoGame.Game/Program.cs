@@ -35,7 +35,7 @@ public static class Program
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
 		
 		// Server
-		builder.RegisterType<ServerManager>().As<IServerManager>().SingleInstance();
+		builder.RegisterType<ServerStarter>().As<IServerStarter>().SingleInstance();
 		
 		// Collections
 		builder.RegisterType<UIStyleCollection>().As<IUIStyleCollection>().SingleInstance();

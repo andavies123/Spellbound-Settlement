@@ -29,18 +29,20 @@ public class LiteNetServer
 
 		while (!Console.KeyAvailable)
 		{
-			_server.PollEvents();
-			UpdateAllClients();
+			_server.PollEvents(); // Unsure what this does
+			ProcessClientMessages();
+			UpdateGame();
+			SendUpdatesToClients();
 			Thread.Sleep(15);
 		}
 		
-		Console.WriteLine("Stopping server");
-		_server.Stop();
+		Stop();
 	}
 
-	private void UpdateAllClients()
+	public void Stop()
 	{
-		
+		Console.WriteLine("Stopping server");
+		_server.Stop();
 	}
 
 	private void OnConnectionRequest(ConnectionRequest request)
@@ -71,5 +73,23 @@ public class LiteNetServer
 		
 		// Send with reliability
 		peer.Send(writer, DeliveryMethod.ReliableOrdered);
+	}
+
+	private void ProcessClientMessages()
+	{
+		
+	}
+
+	private void UpdateGame()
+	{
+		
+	}
+	
+	private void SendUpdatesToClients()
+	{
+		foreach (NetPeer peer in _server.ConnectedPeerList)
+		{
+			// Send updates to the peer
+		}
 	}
 }

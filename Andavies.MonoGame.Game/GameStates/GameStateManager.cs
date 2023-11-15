@@ -6,18 +6,18 @@ namespace SpellboundSettlement.GameStates;
 
 public class GameStateManager : IGameStateManager
 {
-	private readonly IServerManager _serverManager;
+	private readonly IServerStarter _serverStarter;
 	private readonly MainMenuGameState _mainMenuGameState;
 	private readonly GameplayGameState _gameplayGameState;
 	private readonly PauseMenuGameState _pauseMenuGameState;
 
 	public GameStateManager(
-		IServerManager serverManager,
+		IServerStarter serverStarter,
 		MainMenuGameState mainMenuGameState,
 		GameplayGameState gameplayGameState,
 		PauseMenuGameState pauseMenuGameState)
 	{
-		_serverManager = serverManager;
+		_serverStarter = serverStarter;
 		_mainMenuGameState = mainMenuGameState;
 		_gameplayGameState = gameplayGameState;
 		_pauseMenuGameState = pauseMenuGameState;
