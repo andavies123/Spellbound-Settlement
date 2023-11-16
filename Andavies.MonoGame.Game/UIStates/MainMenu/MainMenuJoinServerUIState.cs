@@ -16,7 +16,7 @@ public class MainMenuJoinServerUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
-	private readonly IUIStyleCollection _uiStyleCollection;
+	private readonly IUIStyleRepository _uiStyleCollection;
 	private VerticalLayoutGroup _verticalGroup;
 	private IUIElement _focusedUIElement;
 
@@ -25,7 +25,7 @@ public class MainMenuJoinServerUIState : IUIState
 	private Button _connectButton;
 	private Button _backButton;
 
-	public MainMenuJoinServerUIState(IUIStyleCollection uiStyleCollection)
+	public MainMenuJoinServerUIState(IUIStyleRepository uiStyleCollection)
 	{
 		_uiStyleCollection = uiStyleCollection;
 	}

@@ -38,11 +38,12 @@ public static class Program
 		builder.RegisterType<ServerStarter>().As<IServerStarter>().SingleInstance();
 		
 		// Collections
-		builder.RegisterType<UIStyleCollection>().As<IUIStyleCollection>().SingleInstance();
+		builder.RegisterType<UIStyleRepository>().As<IUIStyleRepository>().SingleInstance();
 
 		// Game States
 		builder.RegisterType<GameStateManager>().As<IGameStateManager>().SingleInstance();
 		builder.RegisterType<MainMenuGameState>().As<IGameState>().AsSelf().SingleInstance();
+		builder.RegisterType<LoadGameState>().As<IGameState>().AsSelf().SingleInstance();
 		builder.RegisterType<GameplayGameState>().As<IGameState>().AsSelf().SingleInstance();
 		builder.RegisterType<PauseMenuGameState>().As<IGameState>().AsSelf().SingleInstance();
 		
@@ -59,6 +60,8 @@ public static class Program
 		
 		// UI States
 		builder.RegisterType<MainMenuMainUIState>().As<IUIState>().AsSelf().SingleInstance();
+		builder.RegisterType<MainMenuPlayUIState>().As<IUIState>().AsSelf().SingleInstance();
+		builder.RegisterType<MainMenuNewGameUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<MainMenuJoinServerUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<MainMenuCreateServerUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<MainMenuOptionsUIState>().As<IUIState>().AsSelf().SingleInstance();

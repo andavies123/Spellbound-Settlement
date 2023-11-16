@@ -14,14 +14,14 @@ public class PauseMenuUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(125, 75);
 
-	private readonly IUIStyleCollection _uiStyleCollection;
+	private readonly IUIStyleRepository _uiStyleCollection;
 	private VerticalLayoutGroup _verticalLayoutGroup;
 
 	private Button _resumeButton;
 	private Button _optionsButton;
 	private Button _mainMenuButton;
 
-	public PauseMenuUIState(IUIStyleCollection uiStyleCollection)
+	public PauseMenuUIState(IUIStyleRepository uiStyleCollection)
 	{
 		_uiStyleCollection = uiStyleCollection;
 	}

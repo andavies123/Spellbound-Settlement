@@ -14,7 +14,7 @@ public class MainMenuMainUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
-	private readonly IUIStyleCollection _uiStyleCollection;
+	private readonly IUIStyleRepository _uiStyleRepository;
 	private VerticalLayoutGroup _verticalLayoutGroup;
 	private Button _playButton;
 	private Button _joinServerButton;
@@ -22,9 +22,9 @@ public class MainMenuMainUIState : IUIState
 	private Button _optionsButton;
 	private Button _quitButton;
 	
-	public MainMenuMainUIState(IUIStyleCollection uiStyleCollection)
+	public MainMenuMainUIState(IUIStyleRepository uiStyleRepository)
 	{
-		_uiStyleCollection = uiStyleCollection;
+		_uiStyleRepository = uiStyleRepository;
 	}
 
 	public event Action PlayButtonClicked;
@@ -44,11 +44,11 @@ public class MainMenuMainUIState : IUIState
 			ForceExpandChildWidth = false
 		};
 
-		_playButton = new Button(ButtonSize, "Play", _uiStyleCollection.DefaultButtonStyle);
-		_joinServerButton = new Button(ButtonSize, "Join Server", _uiStyleCollection.DefaultButtonStyle);
-		_createServerButton = new Button(ButtonSize, "Create Server", _uiStyleCollection.DefaultButtonStyle);
-		_optionsButton = new Button(ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
-		_quitButton = new Button(ButtonSize, "Quit", _uiStyleCollection.DefaultButtonStyle);
+		_playButton = new Button(ButtonSize, "Play", _uiStyleRepository.DefaultButtonStyle);
+		_joinServerButton = new Button(ButtonSize, "Join Server", _uiStyleRepository.DefaultButtonStyle);
+		_createServerButton = new Button(ButtonSize, "Create Server", _uiStyleRepository.DefaultButtonStyle);
+		_optionsButton = new Button(ButtonSize, "Options", _uiStyleRepository.DefaultButtonStyle);
+		_quitButton = new Button(ButtonSize, "Quit", _uiStyleRepository.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			_playButton,

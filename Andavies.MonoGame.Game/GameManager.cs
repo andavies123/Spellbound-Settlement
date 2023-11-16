@@ -14,8 +14,8 @@ public class GameManager : Game
 {
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
-	private readonly IUIStyleCollection _uiStyleCollection;
-	private readonly LiteNetClient _client;
+	private readonly IUIStyleRepository _uiStyleCollection;
+	private readonly NetworkClient _networkClient;
 	
 	// Update Times
 	private DateTime _currentTime;
@@ -30,7 +30,7 @@ public class GameManager : Game
 	public GameManager(
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
-		IUIStyleCollection uiStyleCollection)
+		IUIStyleRepository uiStyleCollection)
 	{
 		Global.GameManager = this;
 		

@@ -17,13 +17,14 @@ public class ServerManager : IServerManager
 	
 	public void Start(int port, int maxUsersAllowed)
 	{
-		Console.WriteLine($"Starting Server on port {port}");
+		Console.WriteLine($"Starting Server\nPort: {port}");
 		_maxUsersAllowed = maxUsersAllowed;
 		_isRunning = true;
 		_server.Start(port);
 
 		_listener.ConnectionRequestEvent += OnConnectionRequest;
 		_listener.PeerConnectedEvent += OnPeerConnected;
+		_listener.PeerDisconnectedEvent += OnPeerDisconnected;
 		_listener.NetworkReceiveEvent += OnNetworkReceived;
 
 		Thread loopThread = new(GameLoop);
@@ -62,10 +63,11 @@ public class ServerManager : IServerManager
 
 	private void EndServer()
 	{
-		Console.WriteLine($"Stopping server");
+		Console.WriteLine("Stopping server...");
 		
 		_listener.ConnectionRequestEvent -= OnConnectionRequest;
 		_listener.PeerConnectedEvent -= OnPeerConnected;
+		_listener.PeerDisconnectedEvent -= OnPeerDisconnected;
 		_listener.NetworkReceiveEvent -= OnNetworkReceived;
 		
 		_server.Stop();
@@ -83,6 +85,14 @@ public class ServerManager : IServerManager
 	private void OnPeerConnected(NetPeer peer)
 	{
 		Console.WriteLine($"New peer connected: {peer.EndPoint}");
+		// Add any initialization code for the peer here
+	}
+
+	private void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
+	{
+		Console.WriteLine($"Peer disconnected: {peer.EndPoint}");
+		Console.WriteLine($"Reason: {disconnectInfo.Reason.ToString()}");
+		// Add any cleanup code for the peer here
 	}
 
 	private void OnNetworkReceived(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)

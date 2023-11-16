@@ -37,7 +37,7 @@ public abstract class GameState : IGameState
 	// Called once per frame to update any logic
 	public virtual void Update(float deltaTimeSeconds)
 	{
-		InputState.UpdateInput();
+		InputState?.UpdateInput();
 		UIStateMachine.Update(deltaTimeSeconds);
 	}
 

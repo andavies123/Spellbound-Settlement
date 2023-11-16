@@ -10,10 +10,10 @@ namespace SpellboundSettlement.UIStates.Gameplay;
 
 public class GameplayUIState : IUIState
 {
-	private readonly IUIStyleCollection _uiStyleCollection;
+	private readonly IUIStyleRepository _uiStyleCollection;
 	private Button _pauseButton;
 	
-	public GameplayUIState(IUIStyleCollection uiStyleCollection)
+	public GameplayUIState(IUIStyleRepository uiStyleCollection)
 	{
 		_uiStyleCollection = uiStyleCollection;
 	}

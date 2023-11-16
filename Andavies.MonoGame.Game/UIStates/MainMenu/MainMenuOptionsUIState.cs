@@ -14,11 +14,11 @@ public class MainMenuOptionsUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 	
-	private readonly IUIStyleCollection _uiStyleCollection;
+	private readonly IUIStyleRepository _uiStyleCollection;
 	private VerticalLayoutGroup _mainLayoutGroup;
 	private Button _backButton;
 
-	public MainMenuOptionsUIState(IUIStyleCollection uiStyleCollection)
+	public MainMenuOptionsUIState(IUIStyleRepository uiStyleCollection)
 	{
 		_uiStyleCollection = uiStyleCollection;
 	}

@@ -18,7 +18,7 @@ public class MainMenuCreateServerUIState : IUIState
 	private static readonly Point ButtonSize = new(175, 60);
 
 	private readonly ITextListener _numbersOnlyTextListener;
-	private readonly IUIStyleCollection _uiStyleCollection;
+	private readonly IUIStyleRepository _uiStyleCollection;
 	private IUIElement _focusedUIElement;
 
 	private VerticalLayoutGroup _verticalGroup;
@@ -30,7 +30,7 @@ public class MainMenuCreateServerUIState : IUIState
 	private Button _createServerButton;
 	private Button _backButton;
 
-	public MainMenuCreateServerUIState(IUIStyleCollection uiStyleCollection,
+	public MainMenuCreateServerUIState(IUIStyleRepository uiStyleCollection,
 		[KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
 	{
 		_uiStyleCollection = uiStyleCollection;
