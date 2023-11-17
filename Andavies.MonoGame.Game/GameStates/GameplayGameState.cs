@@ -1,4 +1,5 @@
 ﻿using System;
+using Andavies.MonoGame.Game.Client;
 using Andavies.MonoGame.Meshes;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
@@ -11,6 +12,7 @@ namespace SpellboundSettlement.GameStates;
 
 public class GameplayGameState : GameState
 {
+	private readonly INetworkClient _networkClient;
 	private readonly Camera _camera;
 	private readonly World _world = new((0, 0), 5);
 
@@ -18,8 +20,13 @@ public class GameplayGameState : GameState
 	
 	private WorldMesh _worldMesh;
     
-	public GameplayGameState(GameplayUIState gameplayUIState, GameplayInputManager inputManager, Camera camera)
+	public GameplayGameState(
+		INetworkClient networkClient,
+		GameplayUIState gameplayUIState, 
+		GameplayInputManager inputManager,
+		Camera camera)
 	{
+		_networkClient = networkClient;
 		_gameplayGameplayUIState = gameplayUIState;
 		InputState = inputManager;
 		_camera = camera;
@@ -46,6 +53,11 @@ public class GameplayGameState : GameState
 
 		_gameplayGameplayUIState.PauseButtonClicked += OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;
+	}
+	
+	public override void Update(float deltaTimeSeconds)
+	{
+		_networkClient.Update();
 	}
 
 	public override void Draw3D(GraphicsDevice graphicsDevice)

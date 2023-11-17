@@ -1,5 +1,7 @@
 using Andavies.MonoGame.Game.Server.Interfaces;
+using Andavies.MonoGame.Game.Server.Messages;
 using LiteNetLib;
+using LiteNetLib.Utils;
 
 namespace Andavies.MonoGame.Game.Server;
 
@@ -7,8 +9,9 @@ public class ServerManager : IServerManager
 {
 	private readonly NetManager _server;
 	private readonly EventBasedNetListener _listener = new();
+	private readonly NetPacketProcessor _packetProcessor = new();
 	private int _maxUsersAllowed;
-	private bool _isRunning = false;
+	private bool _isRunning;
 
 	public ServerManager()
 	{
@@ -17,10 +20,13 @@ public class ServerManager : IServerManager
 	
 	public void Start(int port, int maxUsersAllowed)
 	{
-		Console.WriteLine($"Starting Server\nPort: {port}");
+		Console.WriteLine($"Server: Starting Server...\n" +
+		                  $"\tPort: {port}");
 		_maxUsersAllowed = maxUsersAllowed;
 		_isRunning = true;
 		_server.Start(port);
+		
+		//_packetProcessor.RegisterNestedType<WelcomePacket>();
 
 		_listener.ConnectionRequestEvent += OnConnectionRequest;
 		_listener.PeerConnectedEvent += OnPeerConnected;
@@ -63,7 +69,7 @@ public class ServerManager : IServerManager
 
 	private void EndServer()
 	{
-		Console.WriteLine("Stopping server...");
+		Console.WriteLine("Server: Stopping server...");
 		
 		_listener.ConnectionRequestEvent -= OnConnectionRequest;
 		_listener.PeerConnectedEvent -= OnPeerConnected;
@@ -75,28 +81,35 @@ public class ServerManager : IServerManager
 
 	private void OnConnectionRequest(ConnectionRequest connectionRequest)
 	{
-		Console.WriteLine($"Connection request received: {connectionRequest.RemoteEndPoint}");
+		Console.WriteLine($"Server: Connection request received: {connectionRequest.RemoteEndPoint}");
 		if (_server.ConnectedPeersCount < _maxUsersAllowed)
 			connectionRequest.Accept();
 		else
 			connectionRequest.Reject();
 	}
 
-	private void OnPeerConnected(NetPeer peer)
+	private void OnPeerConnected(NetPeer client)
 	{
-		Console.WriteLine($"New peer connected: {peer.EndPoint}");
-		// Add any initialization code for the peer here
+		Console.WriteLine($"Server: New client connected: {client.EndPoint}");
+		
+		NetDataWriter writer = new();
+		writer.Put(new WelcomePacket
+		{
+			WelcomeMessage = "Welcome to this Spellbound Settlement server"
+		});
+		_packetProcessor.Wri
+		client.Send(writer, DeliveryMethod.ReliableOrdered);
 	}
 
 	private void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
 	{
-		Console.WriteLine($"Peer disconnected: {peer.EndPoint}");
-		Console.WriteLine($"Reason: {disconnectInfo.Reason.ToString()}");
-		// Add any cleanup code for the peer here
+		Console.WriteLine($"Server: Peer disconnected\n" +
+		                  $"\tIP: {peer.EndPoint}\n" +
+		                  $"\tReason: {disconnectInfo.Reason}");
 	}
 
 	private void OnNetworkReceived(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
 	{
-		Console.WriteLine($"Received message from {peer.EndPoint}");
+		Console.WriteLine($"Server: Received message from {peer.EndPoint}");
 	}
 }

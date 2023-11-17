@@ -45,7 +45,7 @@ public class GameManager : Game
 		Global.GraphicsDeviceManager.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
 		Global.GraphicsDeviceManager.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 		
-		Global.GraphicsDeviceManager.IsFullScreen = true;
+		Global.GraphicsDeviceManager.IsFullScreen = false;
 		Global.GraphicsDeviceManager.ApplyChanges();
 		Viewport = GraphicsDevice.Viewport;
 	}

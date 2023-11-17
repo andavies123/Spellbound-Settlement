@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.Game.Server;
+﻿using Andavies.MonoGame.Game.Client;
+using Andavies.MonoGame.Game.Server;
 using Andavies.MonoGame.Inputs.InputListeners;
 using Autofac;
 using Microsoft.Xna.Framework;
@@ -36,6 +37,7 @@ public static class Program
 		
 		// Server
 		builder.RegisterType<ServerStarter>().As<IServerStarter>().SingleInstance();
+		builder.RegisterType<NetworkClient>().As<INetworkClient>().SingleInstance();
 		
 		// Collections
 		builder.RegisterType<UIStyleRepository>().As<IUIStyleRepository>().SingleInstance();

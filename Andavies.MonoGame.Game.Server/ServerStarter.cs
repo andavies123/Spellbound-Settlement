@@ -1,20 +1,26 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 
 namespace Andavies.MonoGame.Game.Server;
 
 public class ServerStarter : IServerStarter
 {
-	private const string ServerExePath = @"C:\Users\Andrew Davies\Desktop\Spellbound Settlement\Andavies.MonoGame.Game.Server\bin\Debug\net6.0\Andavies.MonoGame.Game.Server.exe";
-	
 	public void StartServer(string ipAddress)
 	{
 		ProcessStartInfo startInfo = new()
 		{
-			FileName = ServerExePath,
+			FileName = GetServerExePath(),
 			UseShellExecute = true,
 			CreateNoWindow = false
 		};
 
 		Process.Start(startInfo);
+	}
+
+	private static string GetServerExePath()
+	{
+		string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+		string assemblyDirectory = Path.GetDirectoryName(assemblyLocation) ?? string.Empty;
+		return Path.Combine(assemblyDirectory, "Andavies.MonoGame.Game.Server");
 	}
 }

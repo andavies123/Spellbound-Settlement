@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using Andavies.MonoGame.Game.Server;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.Globals;
 
@@ -9,21 +9,17 @@ public class GameStateManager : IGameStateManager
 {
 	private readonly List<IGameState> _gameStates;
 	
-	private readonly IServerStarter _serverStarter;
 	private readonly MainMenuGameState _mainMenuGameState;
 	private readonly LoadGameState _loadGameState;
 	private readonly GameplayGameState _gameplayGameState;
 	private readonly PauseMenuGameState _pauseMenuGameState;
 
 	public GameStateManager(
-		IServerStarter serverStarter,
 		MainMenuGameState mainMenuGameState,
 		LoadGameState loadGameState,
 		GameplayGameState gameplayGameState,
 		PauseMenuGameState pauseMenuGameState)
 	{
-		_serverStarter = serverStarter;
-		
 		_mainMenuGameState = mainMenuGameState;
 		_loadGameState = loadGameState;
 		_gameplayGameState = gameplayGameState;
@@ -74,6 +70,7 @@ public class GameStateManager : IGameStateManager
 		
 		// Load Game Game State
 		_loadGameState.GameLoaded += OnGameLoaded;
+		_loadGameState.UnableToLoadGame += OnUnableToLoadGame;
 		
 		// Gameplay Game State
 		_gameplayGameState.PauseGameRequested += OnPauseGameRequested;
@@ -92,6 +89,7 @@ public class GameStateManager : IGameStateManager
 		
 		// Load Game Game State
 		_loadGameState.GameLoaded -= OnGameLoaded;
+		_loadGameState.UnableToLoadGame -= OnUnableToLoadGame;
 		
 		// Gameplay Game State
 		_gameplayGameState.PauseGameRequested -= OnPauseGameRequested;
@@ -108,6 +106,7 @@ public class GameStateManager : IGameStateManager
 	
 	// Load Game Game State
 	private void OnGameLoaded() => SetState(_gameplayGameState);
+	private void OnUnableToLoadGame() => Console.WriteLine("Unable to Load Game");
 	
 	// Gameplay Game State
 	private void OnPauseGameRequested() => SetState(_pauseMenuGameState);

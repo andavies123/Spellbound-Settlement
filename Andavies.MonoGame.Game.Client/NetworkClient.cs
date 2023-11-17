@@ -1,56 +1,72 @@
-﻿using LiteNetLib;
+﻿using Andavies.MonoGame.Game.Server.Messages;
+using LiteNetLib;
 
 namespace Andavies.MonoGame.Game.Client;
 
-public interface INetworkClient
+public class NetworkClient : INetworkClient
 {
-	void Start();
-	void Stop();
-}
-
-public class NetworkClient
-{
+	private const int ConnectTimeoutMSec = 5000;
+	
 	private readonly EventBasedNetListener _listener = new();
 	private readonly NetManager _client;
 	private NetPeer? _server;
-	private bool _isConnected = false;
 	
 	public NetworkClient()
 	{
 		_client = new NetManager(_listener);
 	}
+
+	public bool IsConnected => _server?.ConnectionState == ConnectionState.Connected;
 	
 	public void Start()
 	{
 		_listener.NetworkReceiveEvent += OnNetworkReceived;
 		
 		_client.Start();
-		_isConnected = TryConnect();
+	}
+
+	public void Update()
+	{
+		_client.PollEvents();
 	}
 
 	public void Stop()
 	{
 		_listener.NetworkReceiveEvent -= OnNetworkReceived;
 		
-		_server.Disconnect();
+		_server?.Disconnect();
 		_client.Stop();
-		_isConnected = false;
 	}
 
-	private bool TryConnect()
+	public void TryConnect()
 	{
-		_server = _client.Connect("localhost", 9050, "Sample Key");
+		Console.WriteLine("Client: Attempting to connect to server");
+		_server = _client.Connect("localhost", 9580, "test key");
 
-		if (_server == null)
-			return false;
+		DateTime start = DateTime.Now;
+		DateTime now = DateTime.Now;
 		
-		Console.WriteLine($"Connected to server - ID: {_server.Id}");
-		return true;
+		while (!IsConnected || now.Subtract(start).Milliseconds >= ConnectTimeoutMSec)
+		{
+			Thread.Sleep(100);
+			now = DateTime.Now;
+		}
+        
+		if (!IsConnected)
+		{
+			Console.WriteLine("Client: Could not connect to the server");
+			return;
+		}
+
+		Console.WriteLine($"Client: Connected to server: {_server.EndPoint}");
 	}
 	
 	private void OnNetworkReceived(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
 	{
-		Console.WriteLine($"Received: {reader.GetString(100)}");
+		var message = new WelcomePacket();
+		message.Deserialize(reader);
+		Console.WriteLine($"Client: Received message\n" +
+		                  $"\t{message.WelcomeMessage}");
 		reader.Recycle();
 	}
 }
