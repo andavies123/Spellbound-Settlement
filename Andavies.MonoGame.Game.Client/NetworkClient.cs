@@ -22,7 +22,7 @@ public class NetworkClient : INetworkClient
 	
 	public void Start()
 	{
-		_packetProcessor.SubscribeReusable<WelcomePacket>(OnWelcomeMessageReceived);
+		_packetProcessor.SubscribeReusable<WelcomePacket>(OnWelcomePacketReceived);
 		_listener.NetworkReceiveEvent += OnNetworkReceived;
 		
 		_client.Start();
@@ -67,13 +67,9 @@ public class NetworkClient : INetworkClient
 	private void OnNetworkReceived(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
 	{
 		_packetProcessor.ReadAllPackets(reader, peer);
-		
-		// var message = new WelcomePacket();
-		// message.Deserialize(reader);
-		// reader.Recycle();
 	}
 
-	private void OnWelcomeMessageReceived(WelcomePacket packet)
+	private void OnWelcomePacketReceived(WelcomePacket packet)
 	{
 		Console.WriteLine($"Client: Received message\n" +
 		                  $"\t{packet.WelcomeMessage}");
