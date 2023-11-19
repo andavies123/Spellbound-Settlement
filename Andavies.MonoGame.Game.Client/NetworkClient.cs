@@ -1,5 +1,6 @@
 ﻿using Andavies.MonoGame.Game.Server.Messages;
 using LiteNetLib;
+using LiteNetLib.Utils;
 
 namespace Andavies.MonoGame.Game.Client;
 
@@ -8,6 +9,7 @@ public class NetworkClient : INetworkClient
 	private const int ConnectTimeoutMSec = 5000;
 	
 	private readonly EventBasedNetListener _listener = new();
+	private readonly NetPacketProcessor _packetProcessor = new();
 	private readonly NetManager _client;
 	private NetPeer? _server;
 	
@@ -20,6 +22,7 @@ public class NetworkClient : INetworkClient
 	
 	public void Start()
 	{
+		_packetProcessor.SubscribeReusable<WelcomePacket>(OnWelcomeMessageReceived);
 		_listener.NetworkReceiveEvent += OnNetworkReceived;
 		
 		_client.Start();
@@ -63,10 +66,16 @@ public class NetworkClient : INetworkClient
 	
 	private void OnNetworkReceived(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
 	{
-		var message = new WelcomePacket();
-		message.Deserialize(reader);
+		_packetProcessor.ReadAllPackets(reader, peer);
+		
+		// var message = new WelcomePacket();
+		// message.Deserialize(reader);
+		// reader.Recycle();
+	}
+
+	private void OnWelcomeMessageReceived(WelcomePacket packet)
+	{
 		Console.WriteLine($"Client: Received message\n" +
-		                  $"\t{message.WelcomeMessage}");
-		reader.Recycle();
+		                  $"\t{packet.WelcomeMessage}");
 	}
 }

@@ -26,7 +26,7 @@ public class ServerManager : IServerManager
 		_isRunning = true;
 		_server.Start(port);
 		
-		//_packetProcessor.RegisterNestedType<WelcomePacket>();
+		_packetProcessor.RegisterNestedType(() => new WelcomePacket());
 
 		_listener.ConnectionRequestEvent += OnConnectionRequest;
 		_listener.PeerConnectedEvent += OnPeerConnected;
@@ -93,11 +93,11 @@ public class ServerManager : IServerManager
 		Console.WriteLine($"Server: New client connected: {client.EndPoint}");
 		
 		NetDataWriter writer = new();
-		writer.Put(new WelcomePacket
+		_packetProcessor.Write(writer, new WelcomePacket
 		{
 			WelcomeMessage = "Welcome to this Spellbound Settlement server"
 		});
-		_packetProcessor.Wri
+		
 		client.Send(writer, DeliveryMethod.ReliableOrdered);
 	}
 

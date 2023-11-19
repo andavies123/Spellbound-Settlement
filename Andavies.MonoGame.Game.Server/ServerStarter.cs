@@ -7,6 +7,7 @@ public class ServerStarter : IServerStarter
 {
 	public void StartServer(string ipAddress)
 	{
+		Console.WriteLine(GetServerExePath());
 		ProcessStartInfo startInfo = new()
 		{
 			FileName = GetServerExePath(),
@@ -21,6 +22,6 @@ public class ServerStarter : IServerStarter
 	{
 		string assemblyLocation = Assembly.GetExecutingAssembly().Location;
 		string assemblyDirectory = Path.GetDirectoryName(assemblyLocation) ?? string.Empty;
-		return Path.Combine(assemblyDirectory, "Andavies.MonoGame.Game.Server");
+		return Path.Combine(assemblyDirectory, "Andavies.MonoGame.Game.Server.exe");
 	}
 }
