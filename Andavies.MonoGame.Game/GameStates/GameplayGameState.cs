@@ -1,7 +1,7 @@
 ﻿using System;
 using Andavies.MonoGame.Game.Client;
-using Andavies.MonoGame.Game.Server.Messages;
 using Andavies.MonoGame.Meshes;
+using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;

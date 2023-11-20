@@ -1,6 +1,6 @@
 using LiteNetLib.Utils;
 
-namespace Andavies.MonoGame.Game.Server.Messages;
+namespace Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 
 /// <summary>
 /// Message that is forwarded to a client when they first connect to the server

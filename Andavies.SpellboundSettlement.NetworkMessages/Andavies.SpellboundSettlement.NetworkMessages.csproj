@@ -4,19 +4,14 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <OutputType>Exe</OutputType>
+        <RootNamespace>Andavies.SpellboundSettlement.NetworkMessages</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="7.1.0" />
       <PackageReference Include="LiteNetLib" Version="1.1.0" />
       <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     </ItemGroup>
 
 
-
-    <ItemGroup>
-      <ProjectReference Include="..\Andavies.SpellboundSettlement.NetworkMessages\Andavies.SpellboundSettlement.NetworkMessages.csproj" />
-    </ItemGroup>
 
 </Project>

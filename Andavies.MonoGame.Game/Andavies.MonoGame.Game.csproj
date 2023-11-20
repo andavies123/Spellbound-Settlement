@@ -32,6 +32,7 @@
     <ProjectReference Include="..\Andavies.MonoGame.Game.Server\Andavies.MonoGame.Game.Server.csproj" />
     <ProjectReference Include="..\Andavies.MonoGame.Inputs\Andavies.MonoGame.Inputs.csproj" />
     <ProjectReference Include="..\Andavies.MonoGame.Meshes\Andavies.MonoGame.Meshes.csproj" />
+    <ProjectReference Include="..\Andavies.SpellboundSettlement.NetworkMessages\Andavies.SpellboundSettlement.NetworkMessages.csproj" />
     <ProjectReference Include="..\Andavies.MonoGame.UI\Andavies.MonoGame.UI.csproj" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

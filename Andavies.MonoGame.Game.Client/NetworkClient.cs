@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.Game.Server.Messages;
+﻿using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
+using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
 

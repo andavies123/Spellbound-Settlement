@@ -1,7 +1,7 @@
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
 
-namespace Andavies.MonoGame.Game.Server.Messages;
+namespace Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 
 /// <summary>
 /// A packet from the client to server to request world chunk information
