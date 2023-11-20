@@ -5,15 +5,16 @@ using LiteNetLib.Utils;
 
 namespace Andavies.MonoGame.Game.Server;
 
-public class ServerManager : IServerManager
+public class NetworkServer : INetworkServer
 {
 	private readonly NetManager _server;
 	private readonly EventBasedNetListener _listener = new();
 	private readonly NetPacketProcessor _packetProcessor = new();
+	private readonly NetDataWriter _dataWriter = new();
 	private int _maxUsersAllowed;
 	private bool _isRunning;
 
-	public ServerManager()
+	public NetworkServer()
 	{
 		_server = new NetManager(_listener);
 	}
@@ -27,6 +28,9 @@ public class ServerManager : IServerManager
 		_server.Start(port);
 		
 		_packetProcessor.RegisterNestedType(() => new WelcomePacket());
+		_packetProcessor.RegisterNestedType(() => new WorldChunkResponsePacket());
+		
+		_packetProcessor.SubscribeNetSerializable<WorldChunkRequestPacket, NetPeer>(OnWorldChunkRequestPacketReceived);
 
 		_listener.ConnectionRequestEvent += OnConnectionRequest;
 		_listener.PeerConnectedEvent += OnPeerConnected;
@@ -40,6 +44,13 @@ public class ServerManager : IServerManager
 	public void Stop()
 	{
 		_isRunning = false;
+	}
+
+	public void SendMessage<T>(NetPeer client, T packet) where T : INetSerializable
+	{
+		_dataWriter.Reset();
+		_packetProcessor.WriteNetSerializable(_dataWriter, ref packet);
+		client.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
 	}
 
 	private void GameLoop()
@@ -92,13 +103,7 @@ public class ServerManager : IServerManager
 	{
 		Console.WriteLine($"Server: New client connected: {client.EndPoint}");
 		
-		NetDataWriter writer = new();
-		_packetProcessor.Write(writer, new WelcomePacket
-		{
-			WelcomeMessage = "Welcome to this Spellbound Settlement server"
-		});
-		
-		client.Send(writer, DeliveryMethod.ReliableOrdered);
+		SendMessage(client, new WelcomePacket {WelcomeMessage = "Welcome to this Spellbound Settlement server"});
 	}
 
 	private void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
@@ -108,8 +113,21 @@ public class ServerManager : IServerManager
 		                  $"\tReason: {disconnectInfo.Reason}");
 	}
 
-	private void OnNetworkReceived(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
+	private void OnNetworkReceived(NetPeer client, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
 	{
-		Console.WriteLine($"Server: Received message from {peer.EndPoint}");
+		_packetProcessor.ReadAllPackets(reader, client);
+	}
+
+	private void OnWorldChunkRequestPacketReceived(WorldChunkRequestPacket packet, NetPeer client)
+	{
+		Console.WriteLine($"Server: Received Packet - \n" +
+		                  $"\tType: {nameof(WorldChunkRequestPacket)}\n" +
+		                  $"\tFrom: {client.EndPoint}\n" +
+		                  $"\tData: {packet}");
+		
+		SendMessage(client, new WorldChunkResponsePacket
+		{
+			ChunkPosition = packet.ChunkPosition
+		});
 	}
 }

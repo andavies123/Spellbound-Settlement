@@ -10,6 +10,7 @@ public class NetworkClient : INetworkClient
 	
 	private readonly EventBasedNetListener _listener = new();
 	private readonly NetPacketProcessor _packetProcessor = new();
+	private readonly NetDataWriter _dataWriter = new();
 	private readonly NetManager _client;
 	private NetPeer? _server;
 	
@@ -23,6 +24,8 @@ public class NetworkClient : INetworkClient
 	public void Start()
 	{
 		_packetProcessor.SubscribeReusable<WelcomePacket>(OnWelcomePacketReceived);
+		_packetProcessor.SubscribeNetSerializable<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
+		
 		_listener.NetworkReceiveEvent += OnNetworkReceived;
 		
 		_client.Start();
@@ -71,7 +74,26 @@ public class NetworkClient : INetworkClient
 
 	private void OnWelcomePacketReceived(WelcomePacket packet)
 	{
-		Console.WriteLine($"Client: Received message\n" +
-		                  $"\t{packet.WelcomeMessage}");
+		LogNetworkPacketEvent("Received message", packet);
+	}
+
+	private void OnWorldChunkResponsePacketReceived(WorldChunkResponsePacket packet)
+	{
+		LogNetworkPacketEvent("Received message", packet);
+	}
+
+	public void SendMessage<T>(T packet) where T : INetSerializable
+	{
+		LogNetworkPacketEvent("Sending message", packet);
+		_dataWriter.Reset();
+		_packetProcessor.WriteNetSerializable(_dataWriter, ref packet);
+		_server?.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
+	}
+
+	public static void LogNetworkPacketEvent(string baseMessage, INetSerializable packet)
+	{
+		Console.WriteLine($"Client: {baseMessage}\n" +
+		                  $"\tType: {packet.GetType().Name}\n" +
+		                  $"\tContents: {packet}");
 	}
 }

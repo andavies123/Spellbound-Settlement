@@ -1,3 +1,5 @@
+using LiteNetLib.Utils;
+
 namespace Andavies.MonoGame.Game.Client;
 
 public interface INetworkClient
@@ -8,4 +10,5 @@ public interface INetworkClient
 	void Update();
 	void Stop();
 	void TryConnect();
+	void SendMessage<T>(T packet) where T : INetSerializable;
 }

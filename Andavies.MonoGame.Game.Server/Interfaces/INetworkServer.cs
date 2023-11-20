@@ -1,6 +1,6 @@
 namespace Andavies.MonoGame.Game.Server.Interfaces;
 
-public interface IServerManager
+public interface INetworkServer
 {
 	/// <summary>Call this to create the server and start the current server loop</summary>
 	/// <param name="port">The port the server will run on</param>

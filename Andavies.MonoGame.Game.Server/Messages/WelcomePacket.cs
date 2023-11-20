@@ -18,4 +18,9 @@ public class WelcomePacket : INetSerializable
 	{
 		reader.GetString();
 	}
+
+	public override string ToString()
+	{
+		return WelcomeMessage;
+	}
 }

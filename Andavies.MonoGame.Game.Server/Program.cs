@@ -15,12 +15,12 @@ public static class Program
 		Container = builder.Build();
 		
 		using ILifetimeScope scope = Container.BeginLifetimeScope();
-		IServerManager serverManager = Container.Resolve<IServerManager>();
-		serverManager.Start(9580, 10);
+		INetworkServer networkServer = Container.Resolve<INetworkServer>();
+		networkServer.Start(9580, 10);
 	}
 
 	private static void RegisterTypes(ContainerBuilder container)
 	{
-		container.RegisterType<ServerManager>().As<IServerManager>().SingleInstance();
+		container.RegisterType<NetworkServer>().As<INetworkServer>().SingleInstance();
 	}
 }

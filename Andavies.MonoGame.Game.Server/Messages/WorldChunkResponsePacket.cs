@@ -1,4 +1,5 @@
 using LiteNetLib.Utils;
+using Microsoft.Xna.Framework;
 
 namespace Andavies.MonoGame.Game.Server.Messages;
 
@@ -7,13 +8,26 @@ namespace Andavies.MonoGame.Game.Server.Messages;
 /// </summary>
 public class WorldChunkResponsePacket : INetSerializable
 {
+	/// <summary>
+	/// The position of the chunk this data belongs to
+	/// </summary>
+	public Vector2 ChunkPosition { get; set; }
+	
 	public void Serialize(NetDataWriter writer)
 	{
-		
+		writer.Put(ChunkPosition.X);
+		writer.Put(ChunkPosition.Y);
 	}
 
 	public void Deserialize(NetDataReader reader)
 	{
-		
+		float x = reader.GetFloat();
+		float y = reader.GetFloat();
+		ChunkPosition = new Vector2(x, y);
+	}
+
+	public override string ToString()
+	{
+		return $"{nameof(ChunkPosition)}: {ChunkPosition}";
 	}
 }

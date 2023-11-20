@@ -1,6 +1,8 @@
 ﻿using System;
 using Andavies.MonoGame.Game.Client;
+using Andavies.MonoGame.Game.Server.Messages;
 using Andavies.MonoGame.Meshes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Inputs;
@@ -50,6 +52,11 @@ public class GameplayGameState : GameState
 		base.Start();
 		
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
+		
+		_networkClient.SendMessage(new WorldChunkRequestPacket
+		{
+			ChunkPosition = new Vector2(5, 10)
+		});
 
 		_gameplayGameplayUIState.PauseButtonClicked += OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;
