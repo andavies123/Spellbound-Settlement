@@ -1,4 +1,5 @@
-﻿using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
+﻿using System.Collections.Concurrent;
+using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -13,6 +14,8 @@ public class NetworkClient : INetworkClient
 	private readonly NetPacketProcessor _packetProcessor = new();
 	private readonly NetDataWriter _dataWriter = new();
 	private readonly NetManager _client;
+	private readonly ConcurrentDictionary<Type, List<Action>> _subscriptions = new();
+	
 	private NetPeer? _server;
 	
 	public NetworkClient()
@@ -66,6 +69,16 @@ public class NetworkClient : INetworkClient
 		}
 
 		Console.WriteLine($"Client: Connected to server: {_server.EndPoint}");
+	}
+
+	public void AddSubscription<T>(Action<T> onReceivedCallback) where T : INetSerializable, new()
+	{
+		_packetProcessor.SubscribeNetSerializable(onReceivedCallback);
+	}
+
+	public void RemoveSubscription<T>()
+	{
+		_packetProcessor.RemoveSubscription<T>();
 	}
 	
 	private void OnNetworkReceived(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)

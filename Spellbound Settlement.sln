@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Game.Clie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.NetworkMessages", "Andavies.SpellboundSettlement.NetworkMessages\Andavies.SpellboundSettlement.NetworkMessages.csproj", "{34B0BEDF-852F-4440-949F-D590843FBADB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.World", "Andavies.SpellboundSettlement.World\Andavies.SpellboundSettlement.World.csproj", "{7D55867E-68C1-43C2-A05A-DC037C0172D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Utilities", "Andavies.MonoGame.Utilities\Andavies.MonoGame.Utilities.csproj", "{96635287-7F2D-4BA1-9583-E2AB143C8D1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{34B0BEDF-852F-4440-949F-D590843FBADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34B0BEDF-852F-4440-949F-D590843FBADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34B0BEDF-852F-4440-949F-D590843FBADB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D55867E-68C1-43C2-A05A-DC037C0172D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D55867E-68C1-43C2-A05A-DC037C0172D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D55867E-68C1-43C2-A05A-DC037C0172D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D55867E-68C1-43C2-A05A-DC037C0172D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96635287-7F2D-4BA1-9583-E2AB143C8D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96635287-7F2D-4BA1-9583-E2AB143C8D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96635287-7F2D-4BA1-9583-E2AB143C8D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96635287-7F2D-4BA1-9583-E2AB143C8D1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

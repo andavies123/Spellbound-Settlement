@@ -1,9 +1,8 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+using Andavies.MonoGame.Utilities;
 using Microsoft.Xna.Framework;
-using SpellboundSettlement.Globals;
 
-namespace SpellboundSettlement.WorldObjects;
+namespace Andavies.SpellboundSettlement.World;
 
 public class World
 {
@@ -40,7 +39,7 @@ public class World
 		{
 			for (int z = 0; z < chunk.TileCount.z; z++)
 			{
-				float noise = GlobalRandom.GetPerlinNoise(100, .5f, (
+				float noise = RandomUtility.GetPerlinNoise(100, .5f, (
 					chunkPosition.X + ((float)x / ChunkTileCount) + float.Epsilon,
 					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
 				int height = GetHeightFromNoise(noise, 0, ChunkTileCount);

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Andavies.MonoGame.Meshes;
+using Andavies.SpellboundSettlement.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpellboundSettlement.WorldObjects;
 
 namespace SpellboundSettlement.Meshes;
 

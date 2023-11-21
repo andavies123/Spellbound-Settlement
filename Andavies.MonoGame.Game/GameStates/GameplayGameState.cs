@@ -16,11 +16,10 @@ public class GameplayGameState : GameState
 {
 	private readonly INetworkClient _networkClient;
 	private readonly Camera _camera;
-	private readonly World _world = new((0, 0), 5);
+	private readonly WorldMesh _worldMesh = new();
 
 	private readonly GameplayUIState _gameplayGameplayUIState;
 	
-	private WorldMesh _worldMesh;
     
 	public GameplayGameState(
 		INetworkClient networkClient,
@@ -43,8 +42,14 @@ public class GameplayGameState : GameState
 	public override void Init()
 	{
 		base.Init();
-		
-		_worldMesh = new WorldMesh(_world);
+
+		for (int x = 0; x < 5; x++)
+		{
+			for (int y = 0; y < 5; y++)
+			{
+				_networkClient.SendMessage(new WorldChunkRequestPacket { ChunkPosition = new Vector2(x, y) });
+			}
+		}
 	}
 
 	public override void Start()

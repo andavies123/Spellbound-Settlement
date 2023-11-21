@@ -1,26 +1,20 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Andavies.SpellboundSettlement.World;
 using Microsoft.Xna.Framework;
-using SpellboundSettlement.WorldObjects;
 
 namespace SpellboundSettlement.Meshes;
 
 public class WorldMesh
 {
-	private readonly World _world;
 	private readonly ConcurrentDictionary<Vector2, ChunkMesh> _chunkMeshes = new();
 	
-	public WorldMesh(World world)
-	{
-		_world = world;
-
-		foreach (Chunk chunk in _world.Chunks.Values)
-		{
-			_chunkMeshes.TryAdd(chunk.ChunkPosition, GenerateChunkMesh(chunk));
-		}
-	}
-
 	public IReadOnlyDictionary<Vector2, ChunkMesh> ChunkMeshes => _chunkMeshes;
+
+	public void SetChunk(Chunk chunk)
+	{
+		_chunkMeshes.TryAdd(chunk.ChunkPosition, GenerateChunkMesh(chunk));
+	}
 
 	private ChunkMesh GenerateChunkMesh(Chunk chunk)
 	{

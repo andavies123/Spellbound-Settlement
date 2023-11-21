@@ -47,13 +47,12 @@
 // VERSION: 1.0.1
 // https://github.com/Auburn/FastNoise
 
-using System;
 using System.Runtime.CompilerServices;
 // Switch between using floats or doubles for input position
 using FNLfloat = System.Single;
 //using FNLfloat = System.Double;
 
-namespace SpellboundSettlement.Noise;
+namespace Andavies.MonoGame.Utilities.Noise;
 
 public class FastNoiseLite
 {

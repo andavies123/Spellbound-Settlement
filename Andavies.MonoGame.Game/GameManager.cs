@@ -1,5 +1,4 @@
 ﻿using System;
-using Andavies.MonoGame.Game.Client;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
@@ -15,7 +14,6 @@ public class GameManager : Game
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
 	private readonly IUIStyleRepository _uiStyleCollection;
-	private readonly NetworkClient _networkClient;
 	
 	// Update Times
 	private DateTime _currentTime;
