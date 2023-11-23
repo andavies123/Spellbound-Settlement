@@ -1,6 +1,6 @@
 ﻿using System;
-using Andavies.MonoGame.Game.Client;
 using Andavies.MonoGame.Meshes;
+using Andavies.MonoGame.Network.Client;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;

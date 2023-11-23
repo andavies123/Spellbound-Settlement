@@ -1,6 +1,6 @@
 using LiteNetLib.Utils;
 
-namespace Andavies.MonoGame.Game.Client;
+namespace Andavies.MonoGame.Network.Client;
 
 public interface INetworkClient
 {

@@ -1,6 +1,6 @@
 ﻿using System;
-using Andavies.MonoGame.Game.Client;
 using Andavies.MonoGame.Game.Server;
+using Andavies.MonoGame.Network.Client;
 using SpellboundSettlement.Inputs;
 
 namespace SpellboundSettlement.GameStates;

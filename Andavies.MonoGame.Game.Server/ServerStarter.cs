@@ -5,12 +5,12 @@ namespace Andavies.MonoGame.Game.Server;
 
 public class ServerStarter : IServerStarter
 {
-	private const string WindowsServerPath = "Andavies.MonoGame.Game.Server.exe";
-	private const string MacServerPath = "Andavies.MonoGame.Game.Server";
+	private const string WindowsServerPath = "Andavies.SpellboundSettlement.Server.exe";
+	private const string MacServerPath = "Andavies.SpellboundSettlement.Server";
 	
 	public void StartServer(string ipAddress)
 	{
-		foreach (Process process in Process.GetProcessesByName("Andavies.MonoGame.Game.Server"))
+		foreach (Process process in Process.GetProcessesByName("Andavies.SpellboundSettlement.Server"))
 		{
 			Console.WriteLine($"Stopping: {process.ProcessName}");
 			process.Kill();

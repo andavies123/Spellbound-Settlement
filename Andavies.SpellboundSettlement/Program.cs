@@ -1,6 +1,6 @@
-﻿using Andavies.MonoGame.Game.Client;
-using Andavies.MonoGame.Game.Server;
+﻿using Andavies.MonoGame.Game.Server;
 using Andavies.MonoGame.Inputs.InputListeners;
+using Andavies.MonoGame.Network.Client;
 using Autofac;
 using Microsoft.Xna.Framework;
 using SpellboundSettlement.CameraObjects;

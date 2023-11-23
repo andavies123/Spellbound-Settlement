@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andavies.MonoGame.Game", "Andavies.MonoGame.Game\Andavies.MonoGame.Game.csproj", "{711C54C1-AC7C-40DA-9A53-4A009C0C8014}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andavies.SpellboundSettlement", "Andavies.SpellboundSettlement\Andavies.SpellboundSettlement.csproj", "{711C54C1-AC7C-40DA-9A53-4A009C0C8014}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.UI", "Andavies.MonoGame.UI\Andavies.MonoGame.UI.csproj", "{F33C267E-3E88-484D-96CD-9D05B044F6FA}"
 EndProject
@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Meshes", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Game.Server", "Andavies.MonoGame.Game.Server\Andavies.MonoGame.Game.Server.csproj", "{20F17342-0C13-4CE7-84F0-5D172D9ECD45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Game.Client", "Andavies.MonoGame.Game.Client\Andavies.MonoGame.Game.Client.csproj", "{A6322C36-1179-4E67-B7FA-CF526715FB2E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.NetworkMessages", "Andavies.SpellboundSettlement.NetworkMessages\Andavies.SpellboundSettlement.NetworkMessages.csproj", "{34B0BEDF-852F-4440-949F-D590843FBADB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.World", "Andavies.SpellboundSettlement.World\Andavies.SpellboundSettlement.World.csproj", "{7D55867E-68C1-43C2-A05A-DC037C0172D6}"
@@ -22,6 +20,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Utilities", "Andavies.MonoGame.Utilities\Andavies.MonoGame.Utilities.csproj", "{96635287-7F2D-4BA1-9583-E2AB143C8D1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.NetworkUtilities", "Andavies.MonoGame.NetworkUtilities\Andavies.MonoGame.NetworkUtilities.csproj", "{610117BD-55AF-437E-8441-173869E74E64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Network", "Andavies.MonoGame.Network\Andavies.MonoGame.Network.csproj", "{4499E130-895D-40AF-A652-04CDA55586A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.Server", "Andavies.SpellboundSettlement.Server\Andavies.SpellboundSettlement.Server.csproj", "{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +51,6 @@ Global
 		{20F17342-0C13-4CE7-84F0-5D172D9ECD45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20F17342-0C13-4CE7-84F0-5D172D9ECD45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20F17342-0C13-4CE7-84F0-5D172D9ECD45}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6322C36-1179-4E67-B7FA-CF526715FB2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6322C36-1179-4E67-B7FA-CF526715FB2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6322C36-1179-4E67-B7FA-CF526715FB2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6322C36-1179-4E67-B7FA-CF526715FB2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{34B0BEDF-852F-4440-949F-D590843FBADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{34B0BEDF-852F-4440-949F-D590843FBADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34B0BEDF-852F-4440-949F-D590843FBADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,6 +67,14 @@ Global
 		{610117BD-55AF-437E-8441-173869E74E64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{610117BD-55AF-437E-8441-173869E74E64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{610117BD-55AF-437E-8441-173869E74E64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4499E130-895D-40AF-A652-04CDA55586A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4499E130-895D-40AF-A652-04CDA55586A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4499E130-895D-40AF-A652-04CDA55586A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4499E130-895D-40AF-A652-04CDA55586A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
