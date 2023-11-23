@@ -130,7 +130,7 @@ public class NetworkServer : INetworkServer
 		
 		SendMessage(client, new WorldChunkResponsePacket
 		{
-			ChunkPosition = packet.ChunkPosition
+			Chunk = _world.GetChunk(packet.ChunkPosition)
 		});
 	}
 }

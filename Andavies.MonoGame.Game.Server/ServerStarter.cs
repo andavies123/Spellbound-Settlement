@@ -10,7 +10,14 @@ public class ServerStarter : IServerStarter
 	
 	public void StartServer(string ipAddress)
 	{
-		Console.WriteLine(GetServerExecutablePath());
+		foreach (Process process in Process.GetProcessesByName("Andavies.MonoGame.Game.Server"))
+		{
+			Console.WriteLine($"Stopping: {process.ProcessName}");
+			process.Kill();
+			process.WaitForExit();
+			process.Dispose();
+		}
+		
 		ProcessStartInfo startInfo = new()
 		{
 			FileName = GetServerExecutablePath(),
@@ -18,6 +25,7 @@ public class ServerStarter : IServerStarter
 			CreateNoWindow = false
 		};
 
+		Console.WriteLine("Client: Attempting to start server");
 		Process.Start(startInfo);
 	}
 

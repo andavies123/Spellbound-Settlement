@@ -2,13 +2,13 @@
 using Andavies.MonoGame.Game.Client;
 using Andavies.MonoGame.Meshes;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
+using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpellboundSettlement.CameraObjects;
 using SpellboundSettlement.Inputs;
 using SpellboundSettlement.Meshes;
 using SpellboundSettlement.UIStates.Gameplay;
-using SpellboundSettlement.WorldObjects;
 
 namespace SpellboundSettlement.GameStates;
 
@@ -39,9 +39,13 @@ public class GameplayGameState : GameState
 
 	public override GameplayInputManager InputState { get; }
 
-	public override void Init()
+	public override void Start()
 	{
-		base.Init();
+		base.Start();
+		
+		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
+		
+		_networkClient.AddSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
 
 		for (int x = 0; x < 5; x++)
 		{
@@ -50,18 +54,6 @@ public class GameplayGameState : GameState
 				_networkClient.SendMessage(new WorldChunkRequestPacket { ChunkPosition = new Vector2(x, y) });
 			}
 		}
-	}
-
-	public override void Start()
-	{
-		base.Start();
-		
-		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
-		
-		_networkClient.SendMessage(new WorldChunkRequestPacket
-		{
-			ChunkPosition = new Vector2(5, 10)
-		});
 
 		_gameplayGameplayUIState.PauseButtonClicked += OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;
@@ -69,6 +61,7 @@ public class GameplayGameState : GameState
 	
 	public override void Update(float deltaTimeSeconds)
 	{
+		base.Update(deltaTimeSeconds);
 		_networkClient.Update();
 	}
 
@@ -85,6 +78,8 @@ public class GameplayGameState : GameState
 	{
 		base.End();
 		
+		_networkClient.RemoveSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
+		
 		_gameplayGameplayUIState.PauseButtonClicked -= OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp -= OnPauseGameKeyReleased;
 	}
@@ -94,6 +89,9 @@ public class GameplayGameState : GameState
 	
 	private void DrawMesh(GraphicsDevice graphicsDevice, IMesh mesh)
 	{
+		if (mesh.Vertices.Length == 0 || mesh.Indices.Length == 0)
+			return;
+		
 		VertexPositionColor[] vertices = mesh.Vertices;
 		int[] indices = mesh.Indices;
 		
@@ -114,5 +112,13 @@ public class GameplayGameState : GameState
 			0,
 			0,
 			indexBuffer.IndexCount / 3);
+	}
+
+	private void OnWorldChunkResponsePacketReceived(INetSerializable packet)
+	{
+		if (packet is not WorldChunkResponsePacket response)
+			return;
+		
+		_worldMesh.SetChunk(response.Chunk);
 	}
 }

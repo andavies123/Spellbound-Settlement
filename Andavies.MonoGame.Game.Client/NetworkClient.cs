@@ -1,6 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
-using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -14,7 +12,7 @@ public class NetworkClient : INetworkClient
 	private readonly NetPacketProcessor _packetProcessor = new();
 	private readonly NetDataWriter _dataWriter = new();
 	private readonly NetManager _client;
-	private readonly ConcurrentDictionary<Type, List<Action>> _subscriptions = new();
+	private readonly ConcurrentDictionary<Type, List<Action<INetSerializable>>> _subscriptions = new();
 	
 	private NetPeer? _server;
 	
@@ -27,9 +25,6 @@ public class NetworkClient : INetworkClient
 	
 	public void Start()
 	{
-		_packetProcessor.SubscribeReusable<WelcomePacket>(OnWelcomePacketReceived);
-		_packetProcessor.SubscribeNetSerializable<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
-		
 		_listener.NetworkReceiveEvent += OnNetworkReceived;
 		
 		_client.Start();
@@ -71,29 +66,58 @@ public class NetworkClient : INetworkClient
 		Console.WriteLine($"Client: Connected to server: {_server.EndPoint}");
 	}
 
-	public void AddSubscription<T>(Action<T> onReceivedCallback) where T : INetSerializable, new()
+	public void AddSubscription<T>(Action<INetSerializable> onReceivedCallback) where T : INetSerializable, new()
 	{
-		_packetProcessor.SubscribeNetSerializable(onReceivedCallback);
+		if (!_subscriptions.TryGetValue(typeof(T), out List<Action<INetSerializable>>? actions))
+		{
+			actions = new List<Action<INetSerializable>>();
+			_subscriptions.TryAdd(typeof(T), actions);
+			_packetProcessor.SubscribeNetSerializable<T>(OnMessageReceived);
+		}
+		
+		actions.Add(onReceivedCallback);
 	}
 
-	public void RemoveSubscription<T>()
+	public void RemoveSubscription<T>(Action<INetSerializable> onReceivedCallback) where T : INetSerializable, new()
 	{
+		if (!_subscriptions.TryGetValue(typeof(T), out List<Action<INetSerializable>>? actions)) 
+			return;
+		
+		actions.Remove(onReceivedCallback);
+
+		if (actions.Count != 0) 
+			return;
+		
+		_subscriptions.TryRemove(typeof(T), out _);
 		_packetProcessor.RemoveSubscription<T>();
+	}
+
+	private void OnMessageReceived<T>(T packet) where T : INetSerializable
+	{
+		LogNetworkPacketEvent("Received message", packet);
+		
+		if (!_subscriptions.TryGetValue(typeof(T), out List<Action<INetSerializable>>? actions))
+			return;
+		
+		foreach (Action<INetSerializable> action in actions)
+		{
+			action.Invoke(packet);
+		}
 	}
 	
 	private void OnNetworkReceived(NetPeer peer, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
 	{
-		_packetProcessor.ReadAllPackets(reader, peer);
-	}
-
-	private void OnWelcomePacketReceived(WelcomePacket packet)
-	{
-		LogNetworkPacketEvent("Received message", packet);
-	}
-
-	private void OnWorldChunkResponsePacketReceived(WorldChunkResponsePacket packet)
-	{
-		LogNetworkPacketEvent("Received message", packet);
+		// When receiving a packet that we are not currently subscribed to
+		// a ParseException error is thrown, so here we are handling that
+		// in the case a packet is received that we are not subscribed to 
+		try
+		{
+			_packetProcessor.ReadAllPackets(reader, peer);
+		}
+		catch (ParseException parseException)
+		{
+			Console.WriteLine($"Client: ParseException - {parseException.Message}");
+		}
 	}
 
 	public void SendMessage<T>(T packet) where T : INetSerializable

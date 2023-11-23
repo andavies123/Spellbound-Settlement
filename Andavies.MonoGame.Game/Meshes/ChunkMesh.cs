@@ -74,6 +74,9 @@ public class ChunkMesh : IMesh
 		
 		foreach (CubeMesh cubeMesh in _cubeMeshes)
 		{
+			if (cubeMesh == null)
+				continue;
+			
 			if (!cubeMesh.IsVisible)
 				continue;
 			

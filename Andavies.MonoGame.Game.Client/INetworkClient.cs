@@ -11,4 +11,6 @@ public interface INetworkClient
 	void Stop();
 	void TryConnect();
 	void SendMessage<T>(T packet) where T : INetSerializable;
+	void AddSubscription<T>(Action<INetSerializable> onReceivedCallback) where T : INetSerializable, new();
+	void RemoveSubscription<T>(Action<INetSerializable> onReceivedCallback) where T : INetSerializable, new();
 }
