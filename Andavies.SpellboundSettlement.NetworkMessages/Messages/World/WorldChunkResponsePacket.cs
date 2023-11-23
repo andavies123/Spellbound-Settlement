@@ -1,3 +1,4 @@
+using Andavies.MonoGame.NetworkUtilities.Extensions;
 using Andavies.SpellboundSettlement.World;
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
@@ -19,67 +20,27 @@ public class WorldChunkResponsePacket : INetSerializable
 		if (Chunk == null)
 			return;
 	
-		// Chunk Position
-		writer.Put(Chunk.ChunkPosition.X);
-		writer.Put(Chunk.ChunkPosition.Y);
-		
-		// World Offset
-		writer.Put(Chunk.WorldOffset.X);
-		writer.Put(Chunk.WorldOffset.Y);
-		
-		// Tile Count
-		writer.Put(Chunk.TileCount.x);
-		writer.Put(Chunk.TileCount.y);
-		writer.Put(Chunk.TileCount.z);
-		
-		// Tiles
-		for (int x = 0; x < Chunk.TileCount.x; x++)
-		{
-			for (int y = 0; y < Chunk.TileCount.y; y++)
-			{
-				for (int z = 0; z < Chunk.TileCount.z; z++)
-				{
-					writer.Put(Chunk.Tiles[x, y, z]);
-				}
-			}
-		}
+		writer.Put(Chunk.ChunkPosition);
+		writer.Put(Chunk.WorldOffset);
+		writer.Put(Chunk.TileCount);
+		writer.Put(Chunk.Tiles);
 	}
 
 	public void Deserialize(NetDataReader reader)
 	{
-		// Chunk Position
-		float chunkPositionX = reader.GetFloat();
-		float chunkPositionY = reader.GetFloat();
-		Vector2 chunkPosition = new(chunkPositionX, chunkPositionY);
+		Vector2 chunkPosition = reader.GetVector2();
+		Vector2 worldOffset = reader.GetVector2();
+		(int x, int y, int z) tileCount = reader.GetIntTuple3();
+		int[,,] tiles = reader.GetInt3DArray(tileCount.x, tileCount.y, tileCount.z);
 		
-		// World Offset
-		float worldOffsetX = reader.GetFloat();
-		float worldOffsetY = reader.GetFloat();
-		Vector2 worldOffset = new(worldOffsetX, worldOffsetY);
-		
-		// Tile Count
-		int tileCountX = reader.GetInt();
-		int tileCountY = reader.GetInt();
-		int tileCountZ = reader.GetInt();
-		
-		Chunk = new Chunk(chunkPosition, worldOffset, (tileCountX, tileCountY, tileCountZ));
-		
-		// Tiles
-		for (int x = 0; x < tileCountX; x++)
-		{
-			for (int y = 0; y < tileCountY; y++)
-			{
-				for (int z = 0; z < tileCountZ; z++)
-				{
-					Chunk.Tiles[x, y, z] = reader.GetInt();
-				}
-			}
-		}
-
+		Chunk = new Chunk(chunkPosition, worldOffset, tiles);
 	}
 
 	public override string ToString()
 	{
+		if (Chunk == null)
+			return "Null Chunk";
+		
 		return $"{nameof(Chunk.ChunkPosition)}: {Chunk.ChunkPosition}\n" +
 		       $"{nameof(Chunk.TileCount)}: {Chunk.TileCount}";
 	}

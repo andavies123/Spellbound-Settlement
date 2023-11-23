@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettleme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Utilities", "Andavies.MonoGame.Utilities\Andavies.MonoGame.Utilities.csproj", "{96635287-7F2D-4BA1-9583-E2AB143C8D1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.NetworkUtilities", "Andavies.MonoGame.NetworkUtilities\Andavies.MonoGame.NetworkUtilities.csproj", "{610117BD-55AF-437E-8441-173869E74E64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{96635287-7F2D-4BA1-9583-E2AB143C8D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96635287-7F2D-4BA1-9583-E2AB143C8D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96635287-7F2D-4BA1-9583-E2AB143C8D1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{610117BD-55AF-437E-8441-173869E74E64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{610117BD-55AF-437E-8441-173869E74E64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{610117BD-55AF-437E-8441-173869E74E64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{610117BD-55AF-437E-8441-173869E74E64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

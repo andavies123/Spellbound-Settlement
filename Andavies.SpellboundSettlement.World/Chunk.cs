@@ -11,6 +11,14 @@ public class Chunk
 		TileCount = tileCount;
 		Tiles = new int[TileCount.x, TileCount.y, TileCount.z];
 	}
+
+	public Chunk(Vector2 chunkPosition, Vector2 worldOffset, int[,,] tiles)
+	{
+		ChunkPosition = chunkPosition;
+		WorldOffset = worldOffset;
+		TileCount = (tiles.GetLength(0), tiles.GetLength(1), tiles.GetLength(2));
+		Tiles = tiles;
+	}
 	
 	public Vector2 ChunkPosition { get; }
 	public Vector2 WorldOffset { get; }
