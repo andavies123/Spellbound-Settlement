@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using Andavies.SpellboundSettlement.Server.Interfaces;
+using Serilog;
 
 namespace Andavies.SpellboundSettlement.Server;
 
@@ -7,12 +9,19 @@ public class ServerStarter : IServerStarter
 {
 	private const string WindowsServerPath = "Andavies.SpellboundSettlement.Server.exe";
 	private const string MacServerPath = "Andavies.SpellboundSettlement.Server";
+
+	private readonly ILogger _logger;
+
+	public ServerStarter(ILogger logger)
+	{
+		_logger = logger;
+	}
 	
 	public void StartServer(string ipAddress)
 	{
 		foreach (Process process in Process.GetProcessesByName("Andavies.SpellboundSettlement.Server"))
 		{
-			Console.WriteLine($"Stopping: {process.ProcessName}");
+			_logger.Debug("Stopping: {processName}", process.ProcessName);
 			process.Kill();
 			process.WaitForExit();
 			process.Dispose();
@@ -25,7 +34,7 @@ public class ServerStarter : IServerStarter
 			CreateNoWindow = false
 		};
 
-		Console.WriteLine("Client: Attempting to start server");
+		_logger.Information("Starting server...");
 		Process.Start(startInfo);
 	}
 

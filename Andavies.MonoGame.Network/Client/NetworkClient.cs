@@ -130,6 +130,7 @@ public class NetworkClient : INetworkClient
 
 	public static void LogNetworkPacketEvent(string baseMessage, INetSerializable packet)
 	{
+		return;
 		Console.WriteLine($"Client: {baseMessage}\n" +
 		                  $"\tType: {packet.GetType().Name}\n" +
 		                  $"\tContents: {packet}");

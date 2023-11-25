@@ -6,6 +6,7 @@ using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.Server.Interfaces;
 using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using Andavies.SpellboundSettlement.UIStates.MainMenu;
 using Andavies.SpellboundSettlement.UIStates.PauseMenu;
@@ -26,6 +27,7 @@ public static class Program
 		// Init Logger
 		Log.Logger = new LoggerConfiguration()
 			.Enrich.WithProperty("SourceContext", null)
+			.MinimumLevel.Verbose()
 			.WriteTo.Console(
 				outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContext:l}){NewLine}{Exception}", 
 				theme: AnsiConsoleTheme.Code)

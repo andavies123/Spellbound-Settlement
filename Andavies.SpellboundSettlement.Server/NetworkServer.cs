@@ -1,14 +1,15 @@
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using Andavies.SpellboundSettlement.Server.Interfaces;
-using Andavies.SpellboundSettlement.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Serilog;
 
 namespace Andavies.SpellboundSettlement.Server;
 
 public class NetworkServer : INetworkServer
 {
+	private readonly ILogger _logger;
 	private readonly NetManager _server;
 	private readonly EventBasedNetListener _listener = new();
 	private readonly NetPacketProcessor _packetProcessor = new();
@@ -17,15 +18,15 @@ public class NetworkServer : INetworkServer
 	private int _maxUsersAllowed;
 	private bool _isRunning;
 
-	public NetworkServer()
+	public NetworkServer(ILogger logger)
 	{
+		_logger = logger;
 		_server = new NetManager(_listener);
 	}
 	
 	public void Start(int port, int maxUsersAllowed)
 	{
-		Console.WriteLine($"Server: Starting Server...\n" +
-		                  $"\tPort: {port}");
+		_logger.Information("Starting server on port {port}", port);
 		_maxUsersAllowed = maxUsersAllowed;
 		_isRunning = true;
 		_server.Start(port);
@@ -83,7 +84,7 @@ public class NetworkServer : INetworkServer
 
 	private void EndServer()
 	{
-		Console.WriteLine("Server: Stopping server...");
+		_logger.Information("Stopping server...");
 		
 		_listener.ConnectionRequestEvent -= OnConnectionRequest;
 		_listener.PeerConnectedEvent -= OnPeerConnected;
@@ -95,7 +96,7 @@ public class NetworkServer : INetworkServer
 
 	private void OnConnectionRequest(ConnectionRequest connectionRequest)
 	{
-		Console.WriteLine($"Server: Connection request received: {connectionRequest.RemoteEndPoint}");
+		_logger.Information("Connection request received from {endpoint}", connectionRequest.RemoteEndPoint);
 		if (_server.ConnectedPeersCount < _maxUsersAllowed)
 			connectionRequest.Accept();
 		else
@@ -104,16 +105,14 @@ public class NetworkServer : INetworkServer
 
 	private void OnPeerConnected(NetPeer client)
 	{
-		Console.WriteLine($"Server: New client connected: {client.EndPoint}");
+		_logger.Information("New client connected from {endpoint}", client.EndPoint);
 		
 		SendMessage(client, new WelcomePacket {WelcomeMessage = "Welcome to this Spellbound Settlement server"});
 	}
 
 	private void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
 	{
-		Console.WriteLine($"Server: Peer disconnected\n" +
-		                  $"\tIP: {peer.EndPoint}\n" +
-		                  $"\tReason: {disconnectInfo.Reason}");
+		_logger.Information("Client disconnected from {endpoint}. Reason: {reason}", peer.EndPoint, disconnectInfo.Reason);
 	}
 
 	private void OnNetworkReceived(NetPeer client, NetPacketReader reader, byte channel, DeliveryMethod deliveryMethod)
@@ -123,10 +122,8 @@ public class NetworkServer : INetworkServer
 
 	private void OnWorldChunkRequestPacketReceived(WorldChunkRequestPacket packet, NetPeer client)
 	{
-		Console.WriteLine($"Server: Received Packet - \n" +
-		                  $"\tType: {nameof(WorldChunkRequestPacket)}\n" +
-		                  $"\tFrom: {client.EndPoint}\n" +
-		                  $"\tData: {packet}");
+		_logger.Debug("Received {type} packet from {endpoint}",
+			nameof(WorldChunkRequestPacket), client.EndPoint);
 		
 		SendMessage(client, new WorldChunkResponsePacket
 		{

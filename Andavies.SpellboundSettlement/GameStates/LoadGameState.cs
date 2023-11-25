@@ -2,6 +2,7 @@
 using Andavies.SpellboundSettlement.Server;
 using Andavies.MonoGame.Network.Client;
 using Andavies.SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.Server.Interfaces;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 

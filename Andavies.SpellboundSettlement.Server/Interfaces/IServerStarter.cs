@@ -1,4 +1,4 @@
-﻿namespace Andavies.SpellboundSettlement.Server;
+﻿namespace Andavies.SpellboundSettlement.Server.Interfaces;
 
 public interface IServerStarter
 {

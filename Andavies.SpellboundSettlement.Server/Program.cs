@@ -15,6 +15,7 @@ public static class Program
         // Init logger
         Log.Logger = new LoggerConfiguration()
 	        .Enrich.WithProperty("SourceContext", null)
+	        .MinimumLevel.Verbose()
 	        .WriteTo.Console(
 		        outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContext:l}){NewLine}{Exception}", 
 		        theme: AnsiConsoleTheme.Code)
