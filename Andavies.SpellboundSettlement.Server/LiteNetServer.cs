@@ -2,7 +2,7 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace Andavies.MonoGame.Game.Server;
+namespace Andavies.SpellboundSettlement.Server;
 
 public class LiteNetServer
 {

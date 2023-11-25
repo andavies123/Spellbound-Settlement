@@ -4,11 +4,11 @@ using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.UIElements;
+using Andavies.SpellboundSettlement.Globals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpellboundSettlement.Globals;
 
-namespace SpellboundSettlement.UIStates.MainMenu;
+namespace Andavies.SpellboundSettlement.UIStates.MainMenu;
 
 public class MainMenuMainUIState : IUIState
 {

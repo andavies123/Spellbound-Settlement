@@ -5,7 +5,7 @@ using Andavies.SpellboundSettlement.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SpellboundSettlement.Meshes;
+namespace Andavies.SpellboundSettlement.Meshes;
 
 public class ChunkMesh : IMesh
 {

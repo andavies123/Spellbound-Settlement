@@ -1,4 +1,4 @@
-﻿namespace SpellboundSettlement.StateMachines;
+﻿namespace Andavies.SpellboundSettlement.StateMachines;
 
 public interface IState
 {

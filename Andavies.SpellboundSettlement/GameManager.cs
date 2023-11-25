@@ -1,13 +1,13 @@
 ﻿using System;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Styles;
+using Andavies.SpellboundSettlement.CameraObjects;
+using Andavies.SpellboundSettlement.GameStates;
+using Andavies.SpellboundSettlement.Globals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpellboundSettlement.CameraObjects;
-using SpellboundSettlement.GameStates;
-using SpellboundSettlement.Globals;
 
-namespace SpellboundSettlement;
+namespace Andavies.SpellboundSettlement;
 
 public class GameManager : Game
 {

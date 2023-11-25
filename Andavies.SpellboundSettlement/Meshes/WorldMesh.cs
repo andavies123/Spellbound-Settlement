@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Andavies.SpellboundSettlement.World;
 using Microsoft.Xna.Framework;
 
-namespace SpellboundSettlement.Meshes;
+namespace Andavies.SpellboundSettlement.Meshes;
 
 public class WorldMesh
 {

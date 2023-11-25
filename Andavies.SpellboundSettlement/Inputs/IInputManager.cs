@@ -1,4 +1,4 @@
-﻿namespace SpellboundSettlement.Inputs;
+﻿namespace Andavies.SpellboundSettlement.Inputs;
 
 public interface IInputManager
 {

@@ -6,12 +6,12 @@ using Andavies.MonoGame.UI.LayoutGroups;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.UI.UIElements;
 using Andavies.MonoGame.UI.UIElements.TextInputs;
+using Andavies.SpellboundSettlement.Globals;
 using Autofac.Features.AttributeFilters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpellboundSettlement.Globals;
 
-namespace SpellboundSettlement.UIStates.MainMenu;
+namespace Andavies.SpellboundSettlement.UIStates.MainMenu;
 
 public class MainMenuCreateServerUIState : IUIState
 {

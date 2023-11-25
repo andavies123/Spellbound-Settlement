@@ -1,16 +1,16 @@
 ﻿using System;
 using Andavies.MonoGame.Meshes;
 using Andavies.MonoGame.Network.Client;
+using Andavies.SpellboundSettlement.CameraObjects;
+using Andavies.SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.Meshes;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
+using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpellboundSettlement.CameraObjects;
-using SpellboundSettlement.Inputs;
-using SpellboundSettlement.Meshes;
-using SpellboundSettlement.UIStates.Gameplay;
 
-namespace SpellboundSettlement.GameStates;
+namespace Andavies.SpellboundSettlement.GameStates;
 
 public class GameplayGameState : GameState
 {

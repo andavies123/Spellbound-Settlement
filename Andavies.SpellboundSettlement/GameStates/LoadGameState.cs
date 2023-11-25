@@ -1,9 +1,9 @@
 ﻿using System;
-using Andavies.MonoGame.Game.Server;
+using Andavies.SpellboundSettlement.Server;
 using Andavies.MonoGame.Network.Client;
-using SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.Inputs;
 
-namespace SpellboundSettlement.GameStates;
+namespace Andavies.SpellboundSettlement.GameStates;
 
 public class LoadGameState : GameState
 {

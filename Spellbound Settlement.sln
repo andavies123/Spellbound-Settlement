@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Inputs", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Meshes", "Andavies.MonoGame.Meshes\Andavies.MonoGame.Meshes.csproj", "{B656533D-D522-402E-AA7B-E71ED0023526}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Game.Server", "Andavies.MonoGame.Game.Server\Andavies.MonoGame.Game.Server.csproj", "{20F17342-0C13-4CE7-84F0-5D172D9ECD45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.Server", "Andavies.SpellboundSettlement.Server\Andavies.SpellboundSettlement.Server.csproj", "{20F17342-0C13-4CE7-84F0-5D172D9ECD45}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.NetworkMessages", "Andavies.SpellboundSettlement.NetworkMessages\Andavies.SpellboundSettlement.NetworkMessages.csproj", "{34B0BEDF-852F-4440-949F-D590843FBADB}"
 EndProject
@@ -22,8 +22,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.NetworkUtilities", "Andavies.MonoGame.NetworkUtilities\Andavies.MonoGame.NetworkUtilities.csproj", "{610117BD-55AF-437E-8441-173869E74E64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Network", "Andavies.MonoGame.Network\Andavies.MonoGame.Network.csproj", "{4499E130-895D-40AF-A652-04CDA55586A2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.Server", "Andavies.SpellboundSettlement.Server\Andavies.SpellboundSettlement.Server.csproj", "{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,10 +69,6 @@ Global
 		{4499E130-895D-40AF-A652-04CDA55586A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4499E130-895D-40AF-A652-04CDA55586A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4499E130-895D-40AF-A652-04CDA55586A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4CC6096-5282-4DA9-A05C-9FFF2A9D15A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
-﻿using Andavies.MonoGame.Game.Server.Interfaces;
+﻿using Andavies.SpellboundSettlement.Server.Interfaces;
 using Autofac;
 
-namespace Andavies.MonoGame.Game.Server;
+namespace Andavies.SpellboundSettlement.Server;
 
 public static class Program
 {

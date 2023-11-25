@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 
-namespace SpellboundSettlement.Meshes;
+namespace Andavies.SpellboundSettlement.Meshes;
 
 public static class WorldMeshConstants
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace SpellboundSettlement.Globals;
+namespace Andavies.SpellboundSettlement.Globals;
 
 public static class GlobalFonts
 {

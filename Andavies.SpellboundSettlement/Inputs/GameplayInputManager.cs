@@ -1,10 +1,10 @@
 ﻿using System;
 using Andavies.MonoGame.Inputs;
+using Andavies.SpellboundSettlement.Globals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SpellboundSettlement.Globals;
 
-namespace SpellboundSettlement.Inputs;
+namespace Andavies.SpellboundSettlement.Inputs;
 
 public class GameplayInputManager : IInputManager
 {

@@ -2,9 +2,9 @@
 using Andavies.MonoGame.Meshes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static SpellboundSettlement.Meshes.WorldMeshConstants;
+using static Andavies.SpellboundSettlement.Meshes.WorldMeshConstants;
 
-namespace SpellboundSettlement.Meshes;
+namespace Andavies.SpellboundSettlement.Meshes;
 
 public class CubeMesh : IMesh
 {

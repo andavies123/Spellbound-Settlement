@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace SpellboundSettlement.GameStates;
+namespace Andavies.SpellboundSettlement.GameStates;
 
 public interface IGameStateManager
 {

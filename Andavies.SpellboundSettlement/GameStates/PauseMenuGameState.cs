@@ -1,8 +1,8 @@
 ﻿using System;
-using SpellboundSettlement.Inputs;
-using SpellboundSettlement.UIStates.PauseMenu;
+using Andavies.SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.UIStates.PauseMenu;
 
-namespace SpellboundSettlement.GameStates;
+namespace Andavies.SpellboundSettlement.GameStates;
 
 public class PauseMenuGameState : GameState
 {

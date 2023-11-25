@@ -1,6 +1,6 @@
 using Andavies.MonoGame.UI.Styles;
 
-namespace SpellboundSettlement.Globals;
+namespace Andavies.SpellboundSettlement.Globals;
 
 public class UIStyleRepository : IUIStyleRepository
 {

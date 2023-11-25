@@ -1,9 +1,9 @@
 ﻿using System;
+using Andavies.SpellboundSettlement.Inputs;
 using Autofac;
 using Microsoft.Xna.Framework;
-using SpellboundSettlement.Inputs;
 
-namespace SpellboundSettlement.CameraObjects;
+namespace Andavies.SpellboundSettlement.CameraObjects;
 
 public class WorldViewCameraController : ICameraController
 {

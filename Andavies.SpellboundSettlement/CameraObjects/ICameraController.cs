@@ -1,4 +1,4 @@
-﻿namespace SpellboundSettlement.CameraObjects;
+﻿namespace Andavies.SpellboundSettlement.CameraObjects;
 
 public interface ICameraController
 {

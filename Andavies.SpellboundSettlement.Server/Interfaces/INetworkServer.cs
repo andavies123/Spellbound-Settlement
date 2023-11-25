@@ -1,4 +1,4 @@
-namespace Andavies.MonoGame.Game.Server.Interfaces;
+namespace Andavies.SpellboundSettlement.Server.Interfaces;
 
 public interface INetworkServer
 {

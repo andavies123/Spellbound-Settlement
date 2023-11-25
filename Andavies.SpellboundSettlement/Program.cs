@@ -1,18 +1,18 @@
-﻿using Andavies.MonoGame.Game.Server;
+﻿using Andavies.SpellboundSettlement.Server;
 using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.Network.Client;
+using Andavies.MonoGame.UI.StateMachines;
+using Andavies.SpellboundSettlement.CameraObjects;
+using Andavies.SpellboundSettlement.GameStates;
+using Andavies.SpellboundSettlement.Globals;
+using Andavies.SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.UIStates.Gameplay;
+using Andavies.SpellboundSettlement.UIStates.MainMenu;
+using Andavies.SpellboundSettlement.UIStates.PauseMenu;
 using Autofac;
 using Microsoft.Xna.Framework;
-using SpellboundSettlement.CameraObjects;
-using SpellboundSettlement.GameStates;
-using SpellboundSettlement.Inputs;
-using Andavies.MonoGame.UI.StateMachines;
-using SpellboundSettlement.Globals;
-using SpellboundSettlement.UIStates.Gameplay;
-using SpellboundSettlement.UIStates.MainMenu;
-using SpellboundSettlement.UIStates.PauseMenu;
 
-namespace SpellboundSettlement;
+namespace Andavies.SpellboundSettlement;
 
 public static class Program
 {

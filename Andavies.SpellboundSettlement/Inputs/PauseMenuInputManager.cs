@@ -1,7 +1,7 @@
 ﻿using Andavies.MonoGame.Inputs;
 using Microsoft.Xna.Framework.Input;
 
-namespace SpellboundSettlement.Inputs;
+namespace Andavies.SpellboundSettlement.Inputs;
 
 public class PauseMenuInputManager : IInputManager
 {

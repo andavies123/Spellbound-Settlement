@@ -1,4 +1,4 @@
-﻿namespace SpellboundSettlement.Meshes;
+﻿namespace Andavies.SpellboundSettlement.Meshes;
 
 public enum WorldDimension
 {

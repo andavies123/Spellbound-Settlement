@@ -1,8 +1,8 @@
 using System;
-using SpellboundSettlement.Inputs;
-using SpellboundSettlement.UIStates.MainMenu;
+using Andavies.SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.UIStates.MainMenu;
 
-namespace SpellboundSettlement.GameStates;
+namespace Andavies.SpellboundSettlement.GameStates;
 
 public class MainMenuGameState : GameState
 {

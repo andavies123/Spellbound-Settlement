@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using SpellboundSettlement.Inputs;
-using Andavies.MonoGame.UI.StateMachines;
+﻿using Andavies.MonoGame.UI.StateMachines;
+using Andavies.SpellboundSettlement.Inputs;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace SpellboundSettlement.GameStates;
+namespace Andavies.SpellboundSettlement.GameStates;
 
 public interface IGameState
 {

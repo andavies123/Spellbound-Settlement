@@ -1,11 +1,11 @@
-using Andavies.MonoGame.Game.Server.Interfaces;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
+using Andavies.SpellboundSettlement.Server.Interfaces;
 using Andavies.SpellboundSettlement.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace Andavies.MonoGame.Game.Server;
+namespace Andavies.SpellboundSettlement.Server;
 
 public class NetworkServer : INetworkServer
 {
@@ -13,7 +13,7 @@ public class NetworkServer : INetworkServer
 	private readonly EventBasedNetListener _listener = new();
 	private readonly NetPacketProcessor _packetProcessor = new();
 	private readonly NetDataWriter _dataWriter = new();
-	private readonly World _world = new((0, 0), 5);
+	private readonly World.World _world = new((0, 0), 5);
 	private int _maxUsersAllowed;
 	private bool _isRunning;
 

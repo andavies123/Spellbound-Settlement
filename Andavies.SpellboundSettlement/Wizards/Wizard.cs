@@ -1,4 +1,4 @@
-﻿namespace SpellboundSettlement.Wizards;
+﻿namespace Andavies.SpellboundSettlement.Wizards;
 
 public abstract class Wizard
 {

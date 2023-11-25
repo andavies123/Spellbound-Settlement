@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace SpellboundSettlement.CameraObjects;
+namespace Andavies.SpellboundSettlement.CameraObjects;
 
 public class Camera
 {
