@@ -122,8 +122,8 @@ public class NetworkServer : INetworkServer
 
 	private void OnWorldChunkRequestPacketReceived(WorldChunkRequestPacket packet, NetPeer client)
 	{
-		_logger.Debug("Received {type} packet from {endpoint}",
-			nameof(WorldChunkRequestPacket), client.EndPoint);
+		_logger.Debug("Received {type} packet from {endpoint}. {packet}",
+			nameof(WorldChunkRequestPacket), client.EndPoint, packet);
 		
 		SendMessage(client, new WorldChunkResponsePacket
 		{

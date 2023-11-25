@@ -1,13 +1,15 @@
 ﻿using System.Collections.Concurrent;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Serilog;
 
 namespace Andavies.MonoGame.Network.Client;
 
 public class NetworkClient : INetworkClient
 {
 	private const int ConnectTimeoutMSec = 5000;
-	
+
+	private readonly ILogger _logger;
 	private readonly EventBasedNetListener _listener = new();
 	private readonly NetPacketProcessor _packetProcessor = new();
 	private readonly NetDataWriter _dataWriter = new();
@@ -16,8 +18,9 @@ public class NetworkClient : INetworkClient
 	
 	private NetPeer? _server;
 	
-	public NetworkClient()
+	public NetworkClient(ILogger logger)
 	{
+		_logger = logger;
 		_client = new NetManager(_listener);
 	}
 
@@ -45,7 +48,7 @@ public class NetworkClient : INetworkClient
 
 	public void TryConnect()
 	{
-		Console.WriteLine("Client: Attempting to connect to server");
+		_logger.Information("Attempting to connect to server...");
 		_server = _client.Connect("localhost", 9580, "test key");
 
 		DateTime start = DateTime.Now;
@@ -59,11 +62,11 @@ public class NetworkClient : INetworkClient
         
 		if (!IsConnected)
 		{
-			Console.WriteLine("Client: Could not connect to the server");
+			_logger.Information("Could not connect to the server");
 			return;
 		}
 
-		Console.WriteLine($"Client: Connected to server: {_server.EndPoint}");
+		_logger.Information("Connected to server {server}", _server.EndPoint);
 	}
 
 	public void AddSubscription<T>(Action<INetSerializable> onReceivedCallback) where T : INetSerializable, new()
@@ -116,7 +119,7 @@ public class NetworkClient : INetworkClient
 		}
 		catch (ParseException parseException)
 		{
-			Console.WriteLine($"Client: ParseException - {parseException.Message}");
+			_logger.Warning("ParseException - {exception}", parseException.Message);
 		}
 	}
 
@@ -128,11 +131,12 @@ public class NetworkClient : INetworkClient
 		_server?.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
 	}
 
-	public static void LogNetworkPacketEvent(string baseMessage, INetSerializable packet)
+	public void LogNetworkPacketEvent(string baseMessage, INetSerializable packet)
 	{
-		return;
-		Console.WriteLine($"Client: {baseMessage}\n" +
-		                  $"\tType: {packet.GetType().Name}\n" +
-		                  $"\tContents: {packet}");
+		_logger.Debug(
+			"{message} of type {type} and contains {packet}", 
+			baseMessage, 
+			packet.GetType().Name, 
+			packet);
 	}
 }

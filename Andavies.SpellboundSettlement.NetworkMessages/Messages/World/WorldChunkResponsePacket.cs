@@ -41,7 +41,6 @@ public class WorldChunkResponsePacket : INetSerializable
 		if (Chunk == null)
 			return "Null Chunk";
 		
-		return $"{nameof(Chunk.ChunkPosition)}: {Chunk.ChunkPosition}\n" +
-		       $"{nameof(Chunk.TileCount)}: {Chunk.TileCount}";
+		return $"{nameof(Chunk.ChunkPosition)}: {Chunk.ChunkPosition}";
 	}
 }
