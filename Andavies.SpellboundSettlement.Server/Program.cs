@@ -1,5 +1,8 @@
 ﻿using Andavies.SpellboundSettlement.Server.Interfaces;
 using Autofac;
+using AutofacSerilogIntegration;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Andavies.SpellboundSettlement.Server;
 
@@ -9,6 +12,14 @@ public static class Program
 	
 	private static void Main(string[] args)
 	{
+        // Init logger
+        Log.Logger = new LoggerConfiguration()
+	        .Enrich.WithProperty("SourceContext", null)
+	        .WriteTo.Console(
+		        outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContext:l}){NewLine}{Exception}", 
+		        theme: AnsiConsoleTheme.Code)
+	        .CreateLogger();
+        
 		// Init Autofac
 		ContainerBuilder builder = new();
 		RegisterTypes(builder);
@@ -21,6 +32,7 @@ public static class Program
 
 	private static void RegisterTypes(ContainerBuilder container)
 	{
+		container.RegisterLogger(); // Registers ILogger
 		container.RegisterType<NetworkServer>().As<INetworkServer>().SingleInstance();
 	}
 }

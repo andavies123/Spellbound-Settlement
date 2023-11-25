@@ -4,13 +4,16 @@ using Andavies.MonoGame.UI.Styles;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.Globals;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Serilog;
 
 namespace Andavies.SpellboundSettlement;
 
 public class GameManager : Game
 {
+	private readonly ILogger _logger;
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
 	private readonly IUIStyleRepository _uiStyleCollection;
@@ -26,12 +29,14 @@ public class GameManager : Game
 	public static Viewport Viewport;
 
 	public GameManager(
+		ILogger logger,
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
 		IUIStyleRepository uiStyleCollection)
 	{
 		Global.GameManager = this;
-		
+
+		_logger = logger;
 		_gameStateManager = gameStateManager;
 		_cameraController = cameraController;
 		_uiStyleCollection = uiStyleCollection;
@@ -50,6 +55,7 @@ public class GameManager : Game
 
 	protected override void Initialize()
 	{
+		_logger.Debug("Initializing Game...");
 		_previousTime = DateTime.Now;
 
 		_cameraController.ResetCamera();
@@ -75,6 +81,7 @@ public class GameManager : Game
 
 	protected override void LoadContent()
 	{
+		_logger.Debug("Loading Content...");
 		Effect = Content.Load<Effect>("TestShader");
 		GlobalFonts.DefaultFont = Content.Load<SpriteFont>("TestFont");
 		GlobalFonts.HintFont = Content.Load<SpriteFont>("HintFont");

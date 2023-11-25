@@ -10,7 +10,10 @@ using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using Andavies.SpellboundSettlement.UIStates.MainMenu;
 using Andavies.SpellboundSettlement.UIStates.PauseMenu;
 using Autofac;
+using AutofacSerilogIntegration;
 using Microsoft.Xna.Framework;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Andavies.SpellboundSettlement;
 
@@ -20,6 +23,14 @@ public static class Program
 	
 	public static void Main(string[] args)
 	{
+		// Init Logger
+		Log.Logger = new LoggerConfiguration()
+			.Enrich.WithProperty("SourceContext", null)
+			.WriteTo.Console(
+				outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContext:l}){NewLine}{Exception}", 
+				theme: AnsiConsoleTheme.Code)
+			.CreateLogger();
+		
 		// Init Autofac
 		ContainerBuilder builder = new();
 		RegisterTypes(builder);
@@ -32,6 +43,7 @@ public static class Program
 
 	private static void RegisterTypes(ContainerBuilder builder)
 	{
+		builder.RegisterLogger(); // Registers ILogger
 		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
 		
