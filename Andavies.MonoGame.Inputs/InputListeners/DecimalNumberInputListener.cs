@@ -2,7 +2,7 @@
 
 namespace Andavies.MonoGame.Inputs.InputListeners;
 
-public class NumbersOnlyTextListener : TextListener
+public class DecimalNumberInputListener : InputListener
 {
 	protected override Dictionary<Keys, char> KeyMap { get; } = new()
 	{
@@ -29,4 +29,16 @@ public class NumbersOnlyTextListener : TextListener
 		{Keys.NumPad9, '9'},
 		{Keys.OemPeriod, '.'}
 	};
+
+	protected override bool IsKeyValid(Keys key, out char character)
+	{
+		if (KeyMap.TryGetValue(key, out character))
+		{
+			// Check for 2 decimals
+			if (character != '.' || !Text.Contains('.'))
+				return true;
+		}
+
+		return false;
+	}
 }

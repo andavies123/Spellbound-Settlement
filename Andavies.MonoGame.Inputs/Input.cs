@@ -12,6 +12,9 @@ public static class Input
 {
 	/// <summary>The position of the mouse on the screen during this frame</summary>
 	public static Point CurrentMousePosition => CurrentMouseState.Position;
+
+	/// <summary>Returns a list of keys that were pressed this frame. This will not return all keys currently pressed</summary>
+	public static List<Keys> KeysPressedThisFrame => CurrentKeyboardState.GetPressedKeys().Except(PreviousKeyboardState?.GetPressedKeys() ?? Array.Empty<Keys>()).ToList();
 	
 	private static KeyboardState? PreviousKeyboardState { get; set; }
 	private static KeyboardState CurrentKeyboardState { get; set; }

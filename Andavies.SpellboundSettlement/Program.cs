@@ -72,7 +72,7 @@ public static class Program
 		builder.RegisterType<PauseMenuInputState>().As<IInputState>().AsSelf().SingleInstance();
 		
 		// Text Listeners
-		builder.RegisterType<NumbersOnlyTextListener>().As<ITextListener>().Keyed<ITextListener>(nameof(NumbersOnlyTextListener)).InstancePerDependency();
+		builder.RegisterType<DecimalNumberInputListener>().As<IInputListener>().Keyed<IInputListener>(nameof(DecimalNumberInputListener)).InstancePerDependency();
 		
 		// UI States
 		builder.RegisterType<MainMenuMainUIState>().As<IUIState>().AsSelf().SingleInstance();

@@ -17,7 +17,7 @@ public class MainMenuCreateServerUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
-	private readonly ITextListener _numbersOnlyTextListener;
+	private readonly IInputListener _numbersOnlyInputListener;
 	private readonly IUIStyleRepository _uiStyleCollection;
 	private IUIElement _focusedUIElement;
 
@@ -31,10 +31,10 @@ public class MainMenuCreateServerUIState : IUIState
 	private Button _backButton;
 
 	public MainMenuCreateServerUIState(IUIStyleRepository uiStyleCollection,
-		[KeyFilter(nameof(NumbersOnlyTextListener))] ITextListener numbersOnlyTextListener)
+		[KeyFilter(nameof(DecimalNumberInputListener))] IInputListener numbersOnlyInputListener)
 	{
 		_uiStyleCollection = uiStyleCollection;
-		_numbersOnlyTextListener = numbersOnlyTextListener;
+		_numbersOnlyInputListener = numbersOnlyInputListener;
 	}
 
 	public event Action CreateServerButtonClicked;
@@ -64,7 +64,7 @@ public class MainMenuCreateServerUIState : IUIState
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};
-		_portInput = new TextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle, _numbersOnlyTextListener)
+		_portInput = new TextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle, _numbersOnlyInputListener)
 		{
 			MaxLength = 5, // Max port length
 			HintText = "Ip Port"

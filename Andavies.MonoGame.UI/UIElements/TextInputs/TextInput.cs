@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Andavies.MonoGame.Inputs;
+﻿using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.UI.Core;
 using Andavies.MonoGame.UI.Enums;
@@ -17,23 +16,20 @@ public class TextInput : UIElement
 
 	private string _text = string.Empty;
 	
-	private readonly StringBuilder _stringBuilder = new();
-	private KeyboardState? _currentKeyboardState;
-	private KeyboardState? _previousKeyboardState;
 	private float _timeSinceLastBackspace = 0f;
 	private bool _isWaitingForInitialPause = false;
 
-	public TextInput(Point position, Point size, TextInputStyle style, ITextListener textListener) : 
+	public TextInput(Point position, Point size, TextInputStyle style, IInputListener inputListener) : 
 		base(position, size)
 	{
 		Style = style;
-		TextListener = textListener;
+		InputListener = inputListener;
 	}
 
-	public TextInput(Point size, TextInputStyle style, ITextListener textListener) : base(size)
+	public TextInput(Point size, TextInputStyle style, IInputListener inputListener) : base(size)
 	{
 		Style = style;
-		TextListener = textListener;
+		InputListener = inputListener;
 	}
 
 	public string Text
@@ -51,13 +47,13 @@ public class TextInput : UIElement
 	public string HintText { get; set; } = "Enter Here";
 	public int MaxLength { get; set; } = 15;
 	public bool ContainsValidString { get; set; } = false;
-	public ITextListener TextListener { get; set; }
+	public IInputListener InputListener { get; set; }
 	public TextInputStyle Style { get; set; }
 
 	public void Clear()
 	{
-		_stringBuilder.Clear();
-		Text = _stringBuilder.ToString();
+		InputListener.ResetListener();
+		Text = InputListener.Text;
 	}
 	
 	public override void Draw(SpriteBatch spriteBatch)
@@ -87,19 +83,17 @@ public class TextInput : UIElement
 		if (!HasFocus)
 			return;
 
-		_previousKeyboardState = _currentKeyboardState;
-		_currentKeyboardState = Keyboard.GetState();
 		_timeSinceLastBackspace += deltaTimeSeconds;
 		
 		HandleBackspaceKey();
 		HandleEnterKey();
 
-		if (_stringBuilder.Length >= MaxLength)
+		if (InputListener.Length >= MaxLength)
 			return;
 
-		TextListener.Listen(_previousKeyboardState, _currentKeyboardState, _stringBuilder);
+		InputListener.Listen();
 
-		Text = _stringBuilder.ToString();
+		Text = InputListener.Text;
 	}
 
 	protected virtual void ValidateText()
@@ -109,12 +103,9 @@ public class TextInput : UIElement
 
 	private void HandleBackspaceKey()
 	{
-		if (_stringBuilder.Length == 0) // Can't backspace if there are no characters
-			return;
-
 		if (Input.WasKeyPressed(Keys.Back)) // Initial key press
 		{
-			_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
+			InputListener.RemoveLastCharacter();
 			_timeSinceLastBackspace = 0f;
 			_isWaitingForInitialPause = true;
 		}
@@ -122,13 +113,13 @@ public class TextInput : UIElement
 		{
 			if (_isWaitingForInitialPause && _timeSinceLastBackspace >= InitialTimeBetweenBackspaces)
 			{
-				_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
+				InputListener.RemoveLastCharacter();
 				_timeSinceLastBackspace = 0f;
 				_isWaitingForInitialPause = false;
 			}
 			else if (!_isWaitingForInitialPause && _timeSinceLastBackspace >= TimeBetweenBackspaces)
 			{
-				_stringBuilder.Remove(_stringBuilder.Length - 1, 1);
+				InputListener.RemoveLastCharacter();
 				_timeSinceLastBackspace = 0f;
 			}
 		}
@@ -136,7 +127,7 @@ public class TextInput : UIElement
 
 	private void HandleEnterKey()
 	{
-		if (Inputs.Input.WasKeyPressed(Keys.Enter))
-			_stringBuilder.Clear();
+		if (Input.WasKeyPressed(Keys.Enter))
+			InputListener.ResetListener();
 	}
 }

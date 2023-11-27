@@ -10,10 +10,10 @@ public class IpAddressTextInput : TextInput
 	private const string IpAddressPattern = @"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$";
 	
 	public IpAddressTextInput(Point position, Point size, TextInputStyle style) : 
-		base(position, size, style, new NumbersOnlyTextListener()) { }
+		base(position, size, style, new DecimalNumberInputListener()) { }
 
 	public IpAddressTextInput(Point size, TextInputStyle style) : 
-		base(size, style, new NumbersOnlyTextListener()) { }
+		base(size, style, new DecimalNumberInputListener()) { }
 
 	protected override void ValidateText()
 	{
