@@ -1,6 +1,6 @@
 ﻿namespace Andavies.SpellboundSettlement.Inputs;
 
-public interface IInputManager
+public interface IInputState
 {
 	/// <summary>
 	/// Handles listening for specific inputs

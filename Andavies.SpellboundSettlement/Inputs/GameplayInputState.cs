@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Andavies.SpellboundSettlement.Inputs;
 
-public class GameplayInputManager : IInputManager
+public class GameplayInputState : IInputState
 {
 	private const Keys MoveCameraForwardsKey = Keys.W;
 	private const Keys MoveCameraBackwardsKey = Keys.S;

@@ -67,9 +67,9 @@ public static class Program
 		builder.RegisterType<InputStateMachine>().As<IInputStateMachine>().AsSelf().SingleInstance();
 		builder.RegisterType<UIStateMachine>().As<IUIStateMachine>().AsSelf().SingleInstance();
 		
-		// Input Managers
-		builder.RegisterType<GameplayInputManager>().As<IInputManager>().AsSelf().SingleInstance();
-		builder.RegisterType<PauseMenuInputManager>().As<IInputManager>().AsSelf().SingleInstance();
+		// Input States
+		builder.RegisterType<GameplayInputState>().As<IInputState>().AsSelf().SingleInstance();
+		builder.RegisterType<PauseMenuInputState>().As<IInputState>().AsSelf().SingleInstance();
 		
 		// Text Listeners
 		builder.RegisterType<NumbersOnlyTextListener>().As<ITextListener>().Keyed<ITextListener>(nameof(NumbersOnlyTextListener)).InstancePerDependency();

@@ -20,7 +20,7 @@ public class LoadGameState : GameState
 	public event Action GameLoaded;
 	public event Action UnableToLoadGame;
 
-	public override IInputManager InputState { get; } = null;
+	public override IInputState InputState { get; } = null;
 
 	public override void Start()
 	{

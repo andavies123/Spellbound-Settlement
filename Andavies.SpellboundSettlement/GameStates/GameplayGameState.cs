@@ -20,16 +20,15 @@ public class GameplayGameState : GameState
 
 	private readonly GameplayUIState _gameplayGameplayUIState;
 	
-    
 	public GameplayGameState(
 		INetworkClient networkClient,
 		GameplayUIState gameplayUIState, 
-		GameplayInputManager inputManager,
+		GameplayInputState inputState,
 		Camera camera)
 	{
 		_networkClient = networkClient;
 		_gameplayGameplayUIState = gameplayUIState;
-		InputState = inputManager;
+		InputState = inputState;
 		_camera = camera;
 		
 		UIStates.Add(gameplayUIState);
@@ -37,7 +36,7 @@ public class GameplayGameState : GameState
 	
 	public event Action PauseGameRequested;
 
-	public override GameplayInputManager InputState { get; }
+	public override GameplayInputState InputState { get; }
 
 	public override void Start()
 	{

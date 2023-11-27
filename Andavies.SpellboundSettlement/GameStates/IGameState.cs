@@ -8,7 +8,7 @@ public interface IGameState
 {
 	// State machine to handle multiple UI states
 	IUIStateMachine UIStateMachine { get; }
-	IInputManager InputState { get; }
+	IInputState InputState { get; }
 
 	void Init();
 	void LateInit();

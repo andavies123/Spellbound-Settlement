@@ -2,6 +2,6 @@
 
 public interface IInputStateMachine
 {
-	void ChangeInputManager(IInputManager newInputManager);
+	void ChangeInputState(IInputState newInputState);
 	void Update();
 }

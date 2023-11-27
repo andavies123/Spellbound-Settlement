@@ -10,10 +10,10 @@ public class PauseMenuGameState : GameState
 
 	public PauseMenuGameState(
 		PauseMenuUIState pauseMenuUIState, 
-		PauseMenuInputManager pauseMenuInputManager)
+		PauseMenuInputState pauseMenuInputState)
 	{
 		_pauseMenuUIState = pauseMenuUIState;
-		InputState = pauseMenuInputManager;
+		InputState = pauseMenuInputState;
 		
 		UIStates.Add(_pauseMenuUIState);
 	}
@@ -22,7 +22,7 @@ public class PauseMenuGameState : GameState
 	public event Action MainMenuRequested;
 	public event Action OptionsMenuRequested;
 	
-	public override PauseMenuInputManager InputState { get; }
+	public override PauseMenuInputState InputState { get; }
 
 	public override void Start()
 	{

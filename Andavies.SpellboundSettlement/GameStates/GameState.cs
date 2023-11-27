@@ -8,7 +8,7 @@ namespace Andavies.SpellboundSettlement.GameStates;
 public abstract class GameState : IGameState
 {
 	// The current input state
-	public abstract IInputManager InputState { get; }
+	public abstract IInputState InputState { get; }
 	
 	// State Machine for to handle switching between related UI States
 	public IUIStateMachine UIStateMachine { get; } = new UIStateMachine();

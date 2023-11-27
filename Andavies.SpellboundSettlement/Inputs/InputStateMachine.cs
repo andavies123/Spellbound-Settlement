@@ -2,8 +2,8 @@
 
 public class InputStateMachine : IInputStateMachine
 {
-	private IInputManager _currentInputManager;
+	private IInputState _currentInputState;
 
-	public void ChangeInputManager(IInputManager newInputManager) => _currentInputManager = newInputManager;
-	public void Update() => _currentInputManager?.UpdateInput();
+	public void ChangeInputState(IInputState newInputState) => _currentInputState = newInputState;
+	public void Update() => _currentInputState?.UpdateInput();
 }

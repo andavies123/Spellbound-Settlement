@@ -13,12 +13,12 @@ public class WorldViewCameraController : ICameraController
 	private static readonly float MaxFieldOfView = MathHelper.ToRadians(110);
 	
 	private readonly Camera _camera;
-	private readonly GameplayInputManager _input;
+	private readonly GameplayInputState _input;
 	
 	private bool _moveCamera = true;
 	private int _currentZoomLevel = DefaultZoomLevel;
 	
-	public WorldViewCameraController(Camera camera, GameplayInputManager input)
+	public WorldViewCameraController(Camera camera, GameplayInputState input)
 	{
 		_camera = camera;
 		_input = input;

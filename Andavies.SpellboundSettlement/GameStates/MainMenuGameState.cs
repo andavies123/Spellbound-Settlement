@@ -6,7 +6,7 @@ namespace Andavies.SpellboundSettlement.GameStates;
 
 public class MainMenuGameState : GameState
 {
-	public override IInputManager InputState { get; }
+	public override IInputState InputState { get; }
 
 	private readonly MainMenuMainUIState _mainUIState;
 	private readonly MainMenuPlayUIState _playUIState;
@@ -22,7 +22,7 @@ public class MainMenuGameState : GameState
 		MainMenuJoinServerUIState joinServerUIState,
 		MainMenuCreateServerUIState createServerUIState,
 		MainMenuOptionsUIState optionsUIState,
-		IInputManager inputManager)
+		IInputState inputState)
 	{
 		_mainUIState = mainUIState;
 		_playUIState = playUIState;
@@ -30,7 +30,7 @@ public class MainMenuGameState : GameState
 		_joinServerUIState = joinServerUIState;
 		_createServerUIState = createServerUIState;
 		_optionsUIState = optionsUIState;
-		InputState = inputManager;
+		InputState = inputState;
 		
 		UIStates.Add(_mainUIState);
 		UIStates.Add(_playUIState);
