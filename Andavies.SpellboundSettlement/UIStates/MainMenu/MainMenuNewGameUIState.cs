@@ -43,7 +43,7 @@ public class MainMenuNewGameUIState : IUIState
 		};
 
 		_worldNameLabel = new Label(ButtonSize, "World Name:", _uiStyleRepository.DefaultLabelStyle);
-		_worldNameTextInput = new TextInput(ButtonSize, _uiStyleRepository.DefaultTextInputStyle, new DecimalNumberInputListener());
+		_worldNameTextInput = new TextInput(ButtonSize, _uiStyleRepository.DefaultTextInputStyle, new NumberDecimalInputListener());
 		_createWorldButton = new Button(ButtonSize, "Create World", _uiStyleRepository.DefaultButtonStyle);
 		_backButton = new Button(ButtonSize, "Back", _uiStyleRepository.DefaultButtonStyle);
 		

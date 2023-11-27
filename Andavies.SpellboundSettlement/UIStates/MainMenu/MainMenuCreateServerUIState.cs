@@ -31,7 +31,7 @@ public class MainMenuCreateServerUIState : IUIState
 	private Button _backButton;
 
 	public MainMenuCreateServerUIState(IUIStyleRepository uiStyleCollection,
-		[KeyFilter(nameof(DecimalNumberInputListener))] IInputListener numbersOnlyInputListener)
+		[KeyFilter(nameof(NumberDecimalInputListener))] IInputListener numbersOnlyInputListener)
 	{
 		_uiStyleCollection = uiStyleCollection;
 		_numbersOnlyInputListener = numbersOnlyInputListener;
