@@ -1,4 +1,4 @@
-﻿using Andavies.SpellboundSettlement.Server.Interfaces;
+﻿using Andavies.MonoGame.Network.Server;
 using Autofac;
 using AutofacSerilogIntegration;
 using Serilog;

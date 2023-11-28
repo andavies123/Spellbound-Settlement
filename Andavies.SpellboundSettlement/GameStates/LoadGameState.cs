@@ -1,8 +1,8 @@
 ﻿using System;
 using Andavies.SpellboundSettlement.Server;
 using Andavies.MonoGame.Network.Client;
+using Andavies.MonoGame.Network.Server;
 using Andavies.SpellboundSettlement.Inputs;
-using Andavies.SpellboundSettlement.Server.Interfaces;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 

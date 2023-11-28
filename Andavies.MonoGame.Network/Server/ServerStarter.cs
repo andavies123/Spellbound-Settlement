@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
-using Andavies.SpellboundSettlement.Server.Interfaces;
 using Serilog;
 
-namespace Andavies.SpellboundSettlement.Server;
+namespace Andavies.MonoGame.Network.Server;
 
 public class ServerStarter : IServerStarter
 {
+	// Todo: Everything in this class should be general
 	private const string WindowsServerPath = "Andavies.SpellboundSettlement.Server.exe";
 	private const string MacServerPath = "Andavies.SpellboundSettlement.Server";
 

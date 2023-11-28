@@ -1,12 +1,12 @@
 ﻿using Andavies.SpellboundSettlement.Server;
 using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.Network.Client;
+using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
-using Andavies.SpellboundSettlement.Server.Interfaces;
 using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using Andavies.SpellboundSettlement.UIStates.MainMenu;
 using Andavies.SpellboundSettlement.UIStates.PauseMenu;

@@ -19,10 +19,17 @@
 
 
     <ItemGroup>
+      <ProjectReference Include="..\Andavies.MonoGame.Network\Andavies.MonoGame.Network.csproj" />
       <ProjectReference Include="..\Andavies.SpellboundSettlement.NetworkMessages\Andavies.SpellboundSettlement.NetworkMessages.csproj" />
       <ProjectReference Include="..\Andavies.SpellboundSettlement.World\Andavies.SpellboundSettlement.World.csproj" />
     </ItemGroup>
 
+
+
+
+    <ItemGroup>
+      <Folder Include="Interfaces\" />
+    </ItemGroup>
 
 
 

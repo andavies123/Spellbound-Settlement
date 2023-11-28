@@ -1,7 +1,7 @@
+using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.NetworkUtilities.Extensions;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
-using Andavies.SpellboundSettlement.Server.Interfaces;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
