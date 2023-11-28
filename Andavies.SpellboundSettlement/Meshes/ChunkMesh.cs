@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Andavies.MonoGame.Meshes;
-using Andavies.SpellboundSettlement.World;
+using Andavies.SpellboundSettlement.GameWorld;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

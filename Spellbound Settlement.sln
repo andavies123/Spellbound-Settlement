@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettleme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.NetworkMessages", "Andavies.SpellboundSettlement.NetworkMessages\Andavies.SpellboundSettlement.NetworkMessages.csproj", "{34B0BEDF-852F-4440-949F-D590843FBADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.World", "Andavies.SpellboundSettlement.World\Andavies.SpellboundSettlement.World.csproj", "{7D55867E-68C1-43C2-A05A-DC037C0172D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.GameWorld", "Andavies.SpellboundSettlement.GameWorld\Andavies.SpellboundSettlement.GameWorld.csproj", "{7D55867E-68C1-43C2-A05A-DC037C0172D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Utilities", "Andavies.MonoGame.Utilities\Andavies.MonoGame.Utilities.csproj", "{96635287-7F2D-4BA1-9583-E2AB143C8D1E}"
 EndProject

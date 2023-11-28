@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Andavies.SpellboundSettlement.World;
+namespace Andavies.SpellboundSettlement.GameWorld;
 
 public class Chunk
 {

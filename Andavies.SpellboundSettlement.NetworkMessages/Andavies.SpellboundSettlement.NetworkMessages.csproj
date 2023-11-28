@@ -14,7 +14,7 @@
     
     <ItemGroup>
       <ProjectReference Include="..\Andavies.MonoGame.NetworkUtilities\Andavies.MonoGame.NetworkUtilities.csproj" />
-      <ProjectReference Include="..\Andavies.SpellboundSettlement.World\Andavies.SpellboundSettlement.World.csproj" />
+      <ProjectReference Include="..\Andavies.SpellboundSettlement.GameWorld\Andavies.SpellboundSettlement.GameWorld.csproj" />
     </ItemGroup>
 
 </Project>

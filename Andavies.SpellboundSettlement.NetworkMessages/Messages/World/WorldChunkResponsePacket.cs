@@ -1,5 +1,5 @@
 using Andavies.MonoGame.NetworkUtilities.Extensions;
-using Andavies.SpellboundSettlement.World;
+using Andavies.SpellboundSettlement.GameWorld;
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
 

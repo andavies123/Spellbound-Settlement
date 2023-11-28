@@ -1,5 +1,6 @@
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.NetworkUtilities.Extensions;
+using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib;
@@ -16,7 +17,7 @@ public class NetworkServer : INetworkServer
 	private readonly EventBasedNetListener _listener = new();
 	private readonly NetPacketProcessor _packetProcessor = new();
 	private readonly NetDataWriter _dataWriter = new();
-	private readonly World.World _world = new((0, 0), 5);
+	private readonly World _world = new((0, 0), 5);
 	private int _maxUsersAllowed;
 	private bool _isRunning;
 

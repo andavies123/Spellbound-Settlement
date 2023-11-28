@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Andavies.SpellboundSettlement.World;
+using Andavies.SpellboundSettlement.GameWorld;
 using Microsoft.Xna.Framework;
 
 namespace Andavies.SpellboundSettlement.Meshes;
