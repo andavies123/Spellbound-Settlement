@@ -35,12 +35,4 @@ public class WorldChunkResponsePacket : INetSerializable
 		
 		Chunk = new Chunk(chunkPosition, worldOffset, tiles);
 	}
-
-	public override string ToString()
-	{
-		if (Chunk == null)
-			return "Null Chunk";
-		
-		return $"{nameof(Chunk.ChunkPosition)}: {Chunk.ChunkPosition}";
-	}
 }

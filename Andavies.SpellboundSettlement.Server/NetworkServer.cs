@@ -3,6 +3,7 @@ using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using Andavies.SpellboundSettlement.Server.Interfaces;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Microsoft.Xna.Framework;
 using Serilog;
 
 namespace Andavies.SpellboundSettlement.Server;
@@ -124,10 +125,13 @@ public class NetworkServer : INetworkServer
 	{
 		_logger.Debug("Received {type} packet from {endpoint}. {packet}",
 			nameof(WorldChunkRequestPacket), client.EndPoint, packet);
-		
-		SendMessage(client, new WorldChunkResponsePacket
+
+		foreach (Vector2 chunkPosition in packet.ChunkPositions)
 		{
-			Chunk = _world.GetChunk(packet.ChunkPosition)
-		});
+			SendMessage(client, new WorldChunkResponsePacket
+			{
+				Chunk = _world.GetChunk(chunkPosition)
+			});	
+		}
 	}
 }

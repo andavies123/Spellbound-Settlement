@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Andavies.MonoGame.Meshes;
 using Andavies.MonoGame.Network.Client;
 using Andavies.SpellboundSettlement.CameraObjects;
@@ -46,13 +47,15 @@ public class GameplayGameState : GameState
 		
 		_networkClient.AddSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
 
-		for (int x = 0; x < 5; x++)
+		List<Vector2> chunkPositions = new();
+		for (int x = 0; x < 20; x++)
 		{
-			for (int y = 0; y < 5; y++)
+			for (int y = 0; y < 20; y++)
 			{
-				_networkClient.SendMessage(new WorldChunkRequestPacket { ChunkPosition = new Vector2(x, y) });
+				chunkPositions.Add(new Vector2(x, y));
 			}
 		}
+		_networkClient.SendMessage(new WorldChunkRequestPacket {ChunkPositions = chunkPositions });
 
 		_gameplayGameplayUIState.PauseButtonClicked += OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;

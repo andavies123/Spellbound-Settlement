@@ -32,4 +32,17 @@ public static class NetDataReaderExtensions
 
 		return array;
 	}
+
+	public static List<Vector2> GetVector2List(this NetDataReader reader)
+	{
+		int length = reader.GetInt();
+		List<Vector2> list = new();
+
+		for (int i = 0; i < length; i++)
+		{
+			list.Add(reader.GetVector2());
+		}
+
+		return list;
+	}
 }

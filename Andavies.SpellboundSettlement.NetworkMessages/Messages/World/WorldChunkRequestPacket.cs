@@ -10,22 +10,17 @@ namespace Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 public class WorldChunkRequestPacket : INetSerializable
 {
 	/// <summary>
-	/// The position of the chunk data that is being requested
+	/// Collection of chunk positions that the client is requesting data for
 	/// </summary>
-	public Vector2 ChunkPosition { get; set; }
+	public List<Vector2> ChunkPositions { get; set; } = new();
 	
 	public void Serialize(NetDataWriter writer)
 	{
-		writer.Put(ChunkPosition);
+		writer.Put(ChunkPositions);
 	}
 
 	public void Deserialize(NetDataReader reader)
 	{
-		ChunkPosition = reader.GetVector2();
-	}
-
-	public override string ToString()
-	{
-		return $"{nameof(ChunkPosition)}: {ChunkPosition}";
+		ChunkPositions = reader.GetVector2List();
 	}
 }

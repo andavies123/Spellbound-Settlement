@@ -31,4 +31,10 @@ public static class NetDataWriterExtensions
 			}
 		}
 	}
+
+	public static void Put(this NetDataWriter writer, List<Vector2> value)
+	{
+		writer.Put(value.Count);
+		value.ForEach(writer.Put);
+	}
 }
