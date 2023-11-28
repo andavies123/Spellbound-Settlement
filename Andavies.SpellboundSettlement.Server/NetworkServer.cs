@@ -1,3 +1,4 @@
+using Andavies.MonoGame.NetworkUtilities.Extensions;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using Andavies.SpellboundSettlement.Server.Interfaces;
@@ -123,8 +124,7 @@ public class NetworkServer : INetworkServer
 
 	private void OnWorldChunkRequestPacketReceived(WorldChunkRequestPacket packet, NetPeer client)
 	{
-		_logger.Debug("Received {type} packet from {endpoint}. {packet}",
-			nameof(WorldChunkRequestPacket), client.EndPoint, packet);
+		_logger.LogPacketReceived(packet);
 
 		foreach (Vector2 chunkPosition in packet.ChunkPositions)
 		{

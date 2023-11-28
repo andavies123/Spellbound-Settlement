@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using Andavies.MonoGame.NetworkUtilities.Extensions;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Serilog;
@@ -97,7 +98,7 @@ public class NetworkClient : INetworkClient
 
 	private void OnMessageReceived<T>(T packet) where T : INetSerializable
 	{
-		LogNetworkPacketEvent("Received message", packet);
+		_logger.LogPacketReceived(packet);
 		
 		if (!_subscriptions.TryGetValue(typeof(T), out List<Action<INetSerializable>>? actions))
 			return;
@@ -125,18 +126,9 @@ public class NetworkClient : INetworkClient
 
 	public void SendMessage<T>(T packet) where T : INetSerializable
 	{
-		LogNetworkPacketEvent("Sending message", packet);
 		_dataWriter.Reset();
 		_packetProcessor.WriteNetSerializable(_dataWriter, ref packet);
 		_server?.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
-	}
-
-	public void LogNetworkPacketEvent(string baseMessage, INetSerializable packet)
-	{
-		_logger.Debug(
-			"{message} of type {type} and contains {packet}", 
-			baseMessage, 
-			packet.GetType().Name, 
-			packet);
+		_logger.LogPacketSent(packet);
 	}
 }
