@@ -98,7 +98,7 @@ public class NetworkClient : INetworkClient
 
 	private void OnMessageReceived<T>(T packet) where T : INetSerializable
 	{
-		_logger.LogPacketReceived(packet);
+		_logger.LogPacketReceived(packet, "Server");
 		
 		if (!_subscriptions.TryGetValue(typeof(T), out List<Action<INetSerializable>>? actions))
 			return;
@@ -129,6 +129,6 @@ public class NetworkClient : INetworkClient
 		_dataWriter.Reset();
 		_packetProcessor.WriteNetSerializable(_dataWriter, ref packet);
 		_server?.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
-		_logger.LogPacketSent(packet);
+		_logger.LogPacketSent(packet, "Server");
 	}
 }

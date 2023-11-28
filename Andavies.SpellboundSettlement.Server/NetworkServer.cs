@@ -124,7 +124,7 @@ public class NetworkServer : INetworkServer
 
 	private void OnWorldChunkRequestPacketReceived(WorldChunkRequestPacket packet, NetPeer client)
 	{
-		_logger.LogPacketReceived(packet);
+		_logger.LogPacketReceived(packet, client.EndPoint.ToString());
 
 		foreach (Vector2 chunkPosition in packet.ChunkPositions)
 		{
