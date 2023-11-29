@@ -31,7 +31,8 @@ public class ServerStarter : IServerStarter
 		{
 			FileName = GetServerExecutablePath(),
 			UseShellExecute = true,
-			CreateNoWindow = false
+			CreateNoWindow = false,
+			Arguments = $""
 		};
 
 		_logger.Information("Starting server...");
