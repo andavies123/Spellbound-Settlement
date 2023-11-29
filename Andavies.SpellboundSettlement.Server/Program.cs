@@ -12,6 +12,8 @@ public static class Program
 	
 	private static void Main(string[] args)
 	{
+		ParseArgs(args);
+		
         // Init logger
         Log.Logger = new LoggerConfiguration()
 	        .Enrich.WithProperty("SourceContext", null)
@@ -35,5 +37,10 @@ public static class Program
 	{
 		container.RegisterLogger(); // Registers ILogger
 		container.RegisterType<NetworkServer>().As<INetworkServer>().SingleInstance();
+	}
+
+	private static void ParseArgs(string[] args)
+	{
+
 	}
 }
