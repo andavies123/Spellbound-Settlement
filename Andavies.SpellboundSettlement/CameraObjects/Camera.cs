@@ -4,10 +4,6 @@ namespace Andavies.SpellboundSettlement.CameraObjects;
 
 public class Camera
 {
-	private Matrix _worldMatrix;
-	private Matrix _viewMatrix;
-	private Matrix _projectionMatrix;
-	
 	// World Matrix Properties
 	public Vector3 WorldPosition { get; set; }
 	
@@ -30,28 +26,22 @@ public class Camera
 	public float FarClippingPlane { get; set; }
 	
 	// Combined Matrix
-	public Matrix WorldViewProjection { get; set; }
+	public Matrix WorldMatrix { get; private set; }
+	public Matrix ViewMatrix { get; private set; }
+	public Matrix ProjectionMatrix { get; private set; }
 
-	public void RecalculateWorldMatrix(bool recalculateWvpMatrix = true)
+	public void RecalculateWorldMatrix()
 	{
-		_worldMatrix = Matrix.CreateTranslation(WorldPosition);
-		if (recalculateWvpMatrix)
-			RecalculateWorldViewProjectionMatrix();
+		WorldMatrix = Matrix.CreateTranslation(WorldPosition);
 	}
 
-	public void RecalculateViewMatrix(bool recalculateWvpMatrix = true)
+	public void RecalculateViewMatrix()
 	{
-		_viewMatrix = Matrix.CreateLookAt(Position, Target, Up);
-		if (recalculateWvpMatrix) 
-			RecalculateWorldViewProjectionMatrix();
+		ViewMatrix = Matrix.CreateLookAt(Position, Target, Up);
 	}
 
-	public void RecalculateProjectionMatrix(bool recalculateWvpMatrix = true)
+	public void RecalculateProjectionMatrix()
 	{
-		_projectionMatrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearClippingPlane, FarClippingPlane);
-		if (recalculateWvpMatrix) 
-			RecalculateWorldViewProjectionMatrix();
+		ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearClippingPlane, FarClippingPlane);
 	}
-
-	public void RecalculateWorldViewProjectionMatrix() => WorldViewProjection = _worldMatrix * _viewMatrix * _projectionMatrix;
 }

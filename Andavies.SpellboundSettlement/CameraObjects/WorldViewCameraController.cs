@@ -50,10 +50,9 @@ public class WorldViewCameraController : ICameraController
 		
 		SetZoomLevel(DefaultZoomLevel, recalculateMatrices: false);
 		
-		_camera.RecalculateWorldMatrix(recalculateWvpMatrix: false);
-		_camera.RecalculateViewMatrix(recalculateWvpMatrix: false);
-		_camera.RecalculateProjectionMatrix(recalculateWvpMatrix: false);
-		_camera.RecalculateWorldViewProjectionMatrix();
+		_camera.RecalculateWorldMatrix();
+		_camera.RecalculateViewMatrix();
+		_camera.RecalculateProjectionMatrix();
 	}
 
 	public void UpdateCamera(float deltaTime)
@@ -84,7 +83,7 @@ public class WorldViewCameraController : ICameraController
 		forward.Normalize();
 		_camera.Target = _camera.Position + forward;
 		
-		_camera.RecalculateViewMatrix(recalculateWvpMatrix: true);
+		_camera.RecalculateViewMatrix();
 	}
 
 	private void SetZoomLevel(int newZoomLevel, bool recalculateMatrices = true)
@@ -92,7 +91,7 @@ public class WorldViewCameraController : ICameraController
 		_currentZoomLevel = Math.Clamp(newZoomLevel, 1, MaxZoomLevels);
 		_camera.FieldOfView = CalculateFieldOfView();
 		if (recalculateMatrices)
-			_camera.RecalculateProjectionMatrix(recalculateWvpMatrix: true);
+			_camera.RecalculateProjectionMatrix();
 	}
 
 	private float CalculateFieldOfView() => (MaxFieldOfView - MinFieldOfView) / MaxZoomLevels * _currentZoomLevel;

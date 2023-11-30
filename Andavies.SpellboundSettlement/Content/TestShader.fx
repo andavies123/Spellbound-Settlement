@@ -7,7 +7,9 @@
 	#define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-matrix WorldViewProjection;
+matrix WorldMatrix;
+matrix ViewMatrix;
+matrix ProjectionMatrix;
 
 struct VertexShaderInput
 {
@@ -25,7 +27,10 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 {
 	VertexShaderOutput output = (VertexShaderOutput)0;
 
-	output.Position = mul(input.Position, WorldViewProjection);
+	float4 worldPosition = mul(input.Position, WorldMatrix);
+	float4 viewPosition = mul(worldPosition, ViewMatrix);
+	output.Position = mul(viewPosition, ProjectionMatrix);
+	
 	output.Color = input.Color;
 
 	return output;

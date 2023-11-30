@@ -106,7 +106,9 @@ public class GameplayGameState : GameState
 		graphicsDevice.SetVertexBuffer(vertexBuffer);
 		graphicsDevice.Indices = indexBuffer;
 		
-		GameManager.Effect.Parameters["WorldViewProjection"].SetValue(_camera.WorldViewProjection);
+		GameManager.Effect.Parameters["WorldMatrix"].SetValue(_camera.WorldMatrix);
+		GameManager.Effect.Parameters["ViewMatrix"].SetValue(_camera.ViewMatrix);
+		GameManager.Effect.Parameters["ProjectionMatrix"].SetValue(_camera.ProjectionMatrix);
 		GameManager.Effect.CurrentTechnique.Passes[0].Apply();
 		
 		graphicsDevice.DrawIndexedPrimitives(
