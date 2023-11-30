@@ -18,6 +18,7 @@ public class TextInput : UIElement
 	
 	private float _timeSinceLastBackspace = 0f;
 	private bool _isWaitingForInitialPause = false;
+	private Cursor _cursor = new();
 
 	public TextInput(Point position, Point size, TextInputStyle style, IInputListener inputListener) : 
 		base(position, size)
@@ -55,6 +56,29 @@ public class TextInput : UIElement
 		InputListener.ResetListener();
 		Text = InputListener.Text;
 	}
+
+	public override void Update(float deltaTimeSeconds)
+	{
+		base.Update(deltaTimeSeconds);
+
+		_cursor.IsVisible = HasFocus;
+		
+		if (!HasFocus)
+			return;
+
+		_cursor.Update(deltaTimeSeconds);
+		_timeSinceLastBackspace += deltaTimeSeconds;
+		
+		HandleBackspaceKey();
+		HandleEnterKey();
+
+		if (InputListener.Length >= MaxLength)
+			return;
+
+		InputListener.Listen();
+
+		Text = InputListener.Text;
+	}
 	
 	public override void Draw(SpriteBatch spriteBatch)
 	{
@@ -74,26 +98,7 @@ public class TextInput : UIElement
 			_ => new Vector2(Bounds.Left, verticalCenter)
 		};
 		spriteBatch.DrawString(font, text, textPosition, Color.Black);
-	}
-
-	public override void Update(float deltaTimeSeconds)
-	{
-		base.Update(deltaTimeSeconds);
-
-		if (!HasFocus)
-			return;
-
-		_timeSinceLastBackspace += deltaTimeSeconds;
-		
-		HandleBackspaceKey();
-		HandleEnterKey();
-
-		if (InputListener.Length >= MaxLength)
-			return;
-
-		InputListener.Listen();
-
-		Text = InputListener.Text;
+		_cursor.Draw(spriteBatch, textPosition + new Vector2(textSize.X + font?.MeasureString("a").X/2 ?? 5, 0), textSize.Y);
 	}
 
 	protected virtual void ValidateText()
