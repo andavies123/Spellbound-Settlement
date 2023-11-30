@@ -1,5 +1,4 @@
 ﻿using System;
-using Andavies.SpellboundSettlement.Server;
 using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Network.Server;
 using Andavies.SpellboundSettlement.Inputs;
@@ -27,7 +26,7 @@ public class LoadGameState : GameState
 		base.Start();
 		
 		// Initialize server
-		_serverStarter.StartServer("localhost");
+		_serverStarter.StartServer("localhost", 5678, "TestWorld");
 
 		_networkClient.Start();
 	}
@@ -38,7 +37,7 @@ public class LoadGameState : GameState
 
 		while (!_networkClient.IsConnected)
 		{
-			_networkClient.TryConnect();
+			_networkClient.TryConnect("localhost", 5678);
 		}
 		
 		if (_networkClient.IsConnected)

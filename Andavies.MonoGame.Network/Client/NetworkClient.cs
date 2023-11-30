@@ -47,10 +47,10 @@ public class NetworkClient : INetworkClient
 		_client.Stop();
 	}
 
-	public void TryConnect()
+	public void TryConnect(string ipAddress, int port)
 	{
 		_logger.Information("Attempting to connect to server...");
-		_server = _client.Connect("localhost", 9580, "test key");
+		_server = _client.Connect(ipAddress, port, "test key");
 
 		DateTime start = DateTime.Now;
 		DateTime now = DateTime.Now;

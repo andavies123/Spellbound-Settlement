@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using System.Reflection;
 using Serilog;
 
@@ -17,7 +18,7 @@ public class ServerStarter : IServerStarter
 		_logger = logger;
 	}
 	
-	public void StartServer(string ipAddress)
+	public void StartServer(string ipAddress, int port, string worldName)
 	{
 		foreach (Process process in Process.GetProcessesByName("Andavies.SpellboundSettlement.Server"))
 		{
@@ -32,7 +33,7 @@ public class ServerStarter : IServerStarter
 			FileName = GetServerExecutablePath(),
 			UseShellExecute = true,
 			CreateNoWindow = false,
-			Arguments = $""
+			Arguments = $"{ipAddress} {port} {worldName}"
 		};
 
 		_logger.Information("Starting server...");

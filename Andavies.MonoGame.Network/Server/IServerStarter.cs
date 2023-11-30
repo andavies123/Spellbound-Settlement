@@ -2,5 +2,5 @@
 
 public interface IServerStarter
 {
-	void StartServer(string ipAddress);
+	void StartServer(string ipAddress, int port, string worldName);
 }

@@ -1,3 +1,4 @@
+using System.Net;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.NetworkUtilities.Extensions;
 using Andavies.SpellboundSettlement.GameWorld;
@@ -24,15 +25,18 @@ public class NetworkServer : INetworkServer
 	public NetworkServer(ILogger logger)
 	{
 		_logger = logger;
-		_server = new NetManager(_listener);
+		_server = new NetManager(_listener)
+		{
+			IPv6Enabled = false
+		};
 	}
 	
-	public void Start(int port, int maxUsersAllowed)
+	public void Start(IPAddress ipAddress, int port, int maxUsersAllowed)
 	{
-		_logger.Information("Starting server on port {port}", port);
+		_logger.Information("Starting server on IP:Port {ipAddress}:{port}", ipAddress, port);
 		_maxUsersAllowed = maxUsersAllowed;
 		_isRunning = true;
-		_server.Start(port);
+		_server.Start(5678);
 		
 		_packetProcessor.RegisterNestedType(() => new WelcomePacket());
 		_packetProcessor.RegisterNestedType(() => new WorldChunkResponsePacket());
