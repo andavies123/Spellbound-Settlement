@@ -32,6 +32,7 @@ public class Label : UIElement
 	
 	public override void Draw(SpriteBatch spriteBatch)
 	{
+		base.Draw(spriteBatch);
 		spriteBatch.Draw(Style.BackgroundTexture, Bounds, Style.BackgroundColor);
 
 		Vector2 textSize = Style.Font?.MeasureString(Text) ?? Vector2.Zero;

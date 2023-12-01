@@ -35,6 +35,7 @@ public class Button : UIElement
 
 	public override void Draw(SpriteBatch spriteBatch)
 	{
+		base.Draw(spriteBatch);
 		spriteBatch.Draw(Style.BackgroundTexture, Bounds, GetCurrentBackgroundColor());
 
 		Vector2 textSize = Style.Font?.MeasureString(Text) ?? Vector2.Zero;

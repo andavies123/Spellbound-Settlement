@@ -82,6 +82,7 @@ public class TextInput : UIElement
 	
 	public override void Draw(SpriteBatch spriteBatch)
 	{
+		base.Draw(spriteBatch);
 		bool displayHint = Text.Length == 0;
 		string text = displayHint ? HintText : Text;
 		SpriteFont? font = displayHint ? Style.HintTextFont : Style.Font;

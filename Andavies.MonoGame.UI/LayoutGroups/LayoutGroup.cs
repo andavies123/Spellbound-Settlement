@@ -24,6 +24,7 @@ public abstract class LayoutGroup : UIElement, ILayoutGroup
 
 	public override void Draw(SpriteBatch spriteBatch)
 	{
+		base.Draw(spriteBatch);
 		Children.ForEach(child => child.Draw(spriteBatch));
 	}
 	
