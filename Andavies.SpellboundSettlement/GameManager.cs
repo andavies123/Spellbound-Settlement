@@ -1,4 +1,5 @@
 ﻿using System;
+using Andavies.MonoGame.Drawing;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.SpellboundSettlement.CameraObjects;
@@ -61,11 +62,9 @@ public class GameManager : Game
 		_cameraController.ResetCamera();
 		
 		// Set default texture
-		Texture = new Texture2D(GraphicsDevice, 1, 1);
-		Color[] data = new Color[1 * 1];
-		for (int i = 0; i < data.Length; i++)
-			data[i] = Color.White;
-		Texture.SetData(data);
+		Texture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+		Texture.SetData(new[]{ Color.White });
+		SpriteBatchExtensions.InitializePixelTexture(Texture); // Initialize SpriteBatchExtensions to allow drawing
 		
 		_gameStateManager.Init();
 

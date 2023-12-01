@@ -1,3 +1,4 @@
+using Andavies.MonoGame.Drawing;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.Inputs.Enums;
 using Andavies.MonoGame.UI.Interfaces;
@@ -84,7 +85,7 @@ public abstract class UIElement : IUIElement
 	public virtual void Draw(SpriteBatch spriteBatch)
 	{
 		if (DrawDebugBounds)
-			DrawBounds(spriteBatch, Bounds, DebugBoundsColor, DebugBoundsThickness);
+			spriteBatch.DrawRectangle(Bounds, DebugBoundsColor, DebugBoundsThickness);
 	}
 
 	public virtual void Update(float deltaTimeSeconds)
@@ -140,33 +141,5 @@ public abstract class UIElement : IUIElement
 
 			IsElementPressed = false;
 		}
-	}
-
-	private static void DrawBounds(SpriteBatch spriteBatch, Rectangle bounds, Color color, float thickness)
-	{
-		// Todo: Clean this up. texture shouldn't be created every frame
-		Texture2D pixelTexture = new (spriteBatch.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-		pixelTexture.SetData(new[]{ Color.White });
-		
-		DrawLine(spriteBatch, pixelTexture, new Vector2(bounds.X, bounds.Y), new Vector2(bounds.Right, bounds.Y), color, thickness); // top
-		DrawLine(spriteBatch, pixelTexture, new Vector2(bounds.X + 1f, bounds.Y), new Vector2(bounds.X + 1f, bounds.Bottom + thickness), color, thickness); // left
-		DrawLine(spriteBatch, pixelTexture, new Vector2(bounds.X, bounds.Bottom), new Vector2(bounds.Right, bounds.Bottom), color, thickness); // bottom
-		DrawLine(spriteBatch, pixelTexture, new Vector2(bounds.Right + 1f, bounds.Y), new Vector2(bounds.Right + 1f, bounds.Bottom + thickness), color, thickness); // right
-	}
-	
-	public static void DrawLine(SpriteBatch spriteBatch, Texture2D texture, Vector2 point1, Vector2 point2, Color color, float thickness)
-	{
-		// calculate the distance between the two vectors
-		float distance = Vector2.Distance(point1, point2);
-
-		// calculate the angle between the two vectors
-		float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
-
-		DrawLine(spriteBatch, texture, point1, color, angle, distance, thickness);
-	}
-	
-	private static void DrawLine(SpriteBatch spriteBatch, Texture2D pixelTexture, Vector2 point, Color color, float angle, float length, float thickness)
-	{
-		spriteBatch.Draw(pixelTexture, point, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
 	}
 }

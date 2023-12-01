@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Andavies.MonoGame.Drawing;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Andavies.MonoGame.UI.UIElements.TextInputs;
@@ -28,16 +29,7 @@ public class Cursor
 	{
 		if (!IsVisible || !_blinkVisibility)
 			return;
-		
-		// Todo: Clean this up. texture shouldn't be created every frame
-		Texture2D pixelTexture = new (spriteBatch.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-		pixelTexture.SetData(new[]{ Color.White });
-		
-		DrawLine(spriteBatch, pixelTexture, topPoint, Color.Black, (float) (Math.PI/2), height, 2);
-	}
-
-	private static void DrawLine(SpriteBatch spriteBatch, Texture2D pixelTexture, Vector2 point, Color color, float angle, float length, float thickness)
-	{
-		spriteBatch.Draw(pixelTexture, point, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
+	
+		spriteBatch.DrawLine(topPoint, (float) (Math.PI/2), height, Color.Black, 2);
 	}
 }
