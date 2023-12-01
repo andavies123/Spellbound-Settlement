@@ -3,6 +3,7 @@ using Andavies.MonoGame.Inputs.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static Andavies.MonoGame.UI.Global.GlobalDebugSettings;
 
 namespace Andavies.MonoGame.UI.Core;
 
@@ -82,9 +83,8 @@ public abstract class UIElement : IUIElement
 
 	public virtual void Draw(SpriteBatch spriteBatch)
 	{
-		// Uncomment this if you want to debug the bounds of UIElements
-		// Todo: Add a global setting for debugging UI that will toggle this on/off
-		//DrawBounds(spriteBatch, Bounds, Color.Red, 1);
+		if (DrawDebugBounds)
+			DrawBounds(spriteBatch, Bounds, DebugBoundsColor, DebugBoundsThickness);
 	}
 
 	public virtual void Update(float deltaTimeSeconds)
