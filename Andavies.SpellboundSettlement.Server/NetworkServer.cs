@@ -103,7 +103,8 @@ public class NetworkServer : INetworkServer
 
 	private void OnConnectionRequest(ConnectionRequest connectionRequest)
 	{
-		_logger.Information("Connection request received from {endpoint}", connectionRequest.RemoteEndPoint);
+		string userName = connectionRequest.Data.GetString();
+		_logger.Information("Connection request received from {userName} at {endpoint}", userName, connectionRequest.RemoteEndPoint);
 		if (_server.ConnectedPeersCount < _maxUsersAllowed)
 			connectionRequest.Accept();
 		else

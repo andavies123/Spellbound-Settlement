@@ -49,8 +49,13 @@ public class NetworkClient : INetworkClient
 
 	public void TryConnect(string ipAddress, int port)
 	{
-		_logger.Information("Attempting to connect to server...");
-		_server = _client.Connect(ipAddress, port, "test key");
+		const string userName = "Andavies123";
+		_logger.Information("Attempting to connect {username} to the server...", userName);
+		
+		_dataWriter.Reset();
+		_dataWriter.Put(userName);
+		_server = _client.Connect(ipAddress, port, _dataWriter);
+		_dataWriter.Reset();
 
 		DateTime start = DateTime.Now;
 		DateTime now = DateTime.Now;
