@@ -2,6 +2,7 @@
 using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Network.Server;
 using Andavies.SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.Server;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 
@@ -26,7 +27,8 @@ public class LoadGameState : GameState
 		base.Start();
 		
 		// Initialize server
-		_serverStarter.StartServer("localhost", 5678, "TestWorld");
+		string arguments = $"{ServerCommandLineUtility.IpCommandLineArgKey} localhost {ServerCommandLineUtility.PortCommandLineArgKey} 5678 {ServerCommandLineUtility.WorldNameCommandLineArgKey} TestWorld";
+		_serverStarter.StartServer(arguments);
 
 		_networkClient.Start();
 	}

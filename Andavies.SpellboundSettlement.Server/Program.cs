@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using Andavies.MonoGame.Network.Server;
+using Andavies.MonoGame.Utilities;
 using Autofac;
 using AutofacSerilogIntegration;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using static System.Int32;
 
 namespace Andavies.SpellboundSettlement.Server;
 
@@ -33,40 +33,24 @@ public static class Program
 		Logger = Container.Resolve<ILogger>();
 		INetworkServer networkServer = Container.Resolve<INetworkServer>();
 
-		TryParseArgs(args, out IPAddress? ipAddress, out int port, out string worldName);
+		CommandLineParser commandLineParser = new(Logger);
+		commandLineParser.ParseArgs(args);
 
-		if (ipAddress == null)
+		commandLineParser.TryGetArg(ServerCommandLineUtility.IpCommandLineArgKey, out string? ip);
+		commandLineParser.TryGetArg(ServerCommandLineUtility.PortCommandLineArgKey, out string? port);
+		commandLineParser.TryGetArg(ServerCommandLineUtility.WorldNameCommandLineArgKey, out string? worldName);
+
+		if (!IPAddress.TryParse(ip, out IPAddress? ipAddress))
 			ipAddress = IPAddress.Any;
+		if (port == null || !int.TryParse(port, out int parsedPort))
+			parsedPort = 5555;
 		
-		networkServer.Start(ipAddress, port, 10);
+		networkServer.Start(ipAddress, parsedPort, 10);
 	}
 
 	private static void RegisterTypes(ContainerBuilder container)
 	{
 		container.RegisterLogger(); // Registers ILogger
 		container.RegisterType<NetworkServer>().As<INetworkServer>().SingleInstance();
-	}
-
-	private static bool TryParseArgs(string[] args, out IPAddress? ipAddress, out int port, out string worldName)
-	{
-		ipAddress = IPAddress.Any;
-		port = 0;
-		worldName = string.Empty;
-		
-		if (args.Length != 3)
-			return false;
-		
-		// IPAddress
-		if (!IPAddress.TryParse(args[0], out ipAddress))
-			ipAddress = IPAddress.Any;
-		
-		// Port
-		if (!TryParse(args[1], out port))
-			Logger?.Warning("Unable to parse port argument to int. {portArg}", args[1]);
-		
-		// WorldName
-		worldName = args[2];
-		
-		return true;
 	}
 }
