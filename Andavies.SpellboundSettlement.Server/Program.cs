@@ -31,7 +31,7 @@ public static class Program
 		
 		using ILifetimeScope scope = Container.BeginLifetimeScope();
 		Logger = Container.Resolve<ILogger>();
-		INetworkServer networkServer = Container.Resolve<INetworkServer>();
+		GameServer networkServer = Container.Resolve<GameServer>();
 
 		CommandLineParser commandLineParser = new(Logger);
 		commandLineParser.ParseArgs(args);
@@ -51,6 +51,7 @@ public static class Program
 	private static void RegisterTypes(ContainerBuilder container)
 	{
 		container.RegisterLogger(); // Registers ILogger
+		container.RegisterType<GameServer>().AsSelf().SingleInstance();
 		container.RegisterType<NetworkServer>().As<INetworkServer>().SingleInstance();
 	}
 }

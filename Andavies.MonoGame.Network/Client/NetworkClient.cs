@@ -75,6 +75,14 @@ public class NetworkClient : INetworkClient
 		_logger.Information("Connected to server {server}", _server.EndPoint);
 	}
 
+	public void SendMessage<T>(T packet) where T : INetSerializable
+	{
+		_dataWriter.Reset();
+		_packetProcessor.WriteNetSerializable(_dataWriter, ref packet);
+		_server?.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
+		_logger.LogPacketSent(packet, "Server");
+	}
+
 	public void AddSubscription<T>(Action<INetSerializable> onReceivedCallback) where T : INetSerializable, new()
 	{
 		if (!_subscriptions.TryGetValue(typeof(T), out List<Action<INetSerializable>>? actions))
@@ -127,13 +135,5 @@ public class NetworkClient : INetworkClient
 		{
 			_logger.Warning("ParseException - {exception}", parseException.Message);
 		}
-	}
-
-	public void SendMessage<T>(T packet) where T : INetSerializable
-	{
-		_dataWriter.Reset();
-		_packetProcessor.WriteNetSerializable(_dataWriter, ref packet);
-		_server?.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
-		_logger.LogPacketSent(packet, "Server");
 	}
 }
