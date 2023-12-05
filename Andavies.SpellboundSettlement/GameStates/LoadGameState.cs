@@ -27,8 +27,8 @@ public class LoadGameState : GameState
 		base.Start();
 		
 		// Initialize server
-		string arguments = $"{ServerCommandLineUtility.IpCommandLineArgKey} localhost {ServerCommandLineUtility.PortCommandLineArgKey} 5678 {ServerCommandLineUtility.WorldNameCommandLineArgKey} TestWorld";
-		_serverStarter.StartServer(arguments);
+		const string arguments = $"{ServerCommandLineUtility.IpCommandLineArgKey} localhost {ServerCommandLineUtility.PortCommandLineArgKey} 5678 {ServerCommandLineUtility.WorldNameCommandLineArgKey} TestWorld";
+		_serverStarter.StartServer(arguments, "Andavies.SpellboundSettlement.Server");
 
 		_networkClient.Start();
 	}

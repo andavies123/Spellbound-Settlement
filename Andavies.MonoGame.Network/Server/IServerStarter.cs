@@ -2,5 +2,5 @@
 
 public interface IServerStarter
 {
-	void StartServer(string arguments);
+	void StartServer(string arguments, string processName);
 }

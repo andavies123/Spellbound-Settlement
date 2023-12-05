@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Andavies.MonoGame.Network.Server;
+using Andavies.MonoGame.NetworkUtilities.Extensions;
 using Andavies.MonoGame.Utilities;
 using Autofac;
 using AutofacSerilogIntegration;
@@ -23,6 +24,9 @@ public static class Program
 		        outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContext:l}){NewLine}{Exception}", 
 		        theme: AnsiConsoleTheme.Code)
 	        .CreateLogger();
+
+        // Todo: Add argument for setting this value
+        NetworkLoggerExtensions.LogPackets = false;
         
 		// Init Autofac
 		ContainerBuilder builder = new();

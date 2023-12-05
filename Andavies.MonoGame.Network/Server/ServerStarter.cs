@@ -1,15 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Serilog;
 
 namespace Andavies.MonoGame.Network.Server;
 
 public class ServerStarter : IServerStarter
 {
-	// Todo: Everything in this class should be general
-	private const string WindowsServerPath = "Andavies.SpellboundSettlement.Server.exe";
-	private const string MacServerPath = "Andavies.SpellboundSettlement.Server";
-
 	private readonly ILogger _logger;
 
 	public ServerStarter(ILogger logger)
@@ -17,9 +14,9 @@ public class ServerStarter : IServerStarter
 		_logger = logger;
 	}
 	
-	public void StartServer(string arguments)
+	public void StartServer(string arguments, string processName)
 	{
-		foreach (Process process in Process.GetProcessesByName("Andavies.SpellboundSettlement.Server"))
+		foreach (Process process in Process.GetProcessesByName(processName))
 		{
 			_logger.Debug("Stopping: {processName}", process.ProcessName);
 			process.Kill();
@@ -29,7 +26,7 @@ public class ServerStarter : IServerStarter
 		
 		ProcessStartInfo startInfo = new()
 		{
-			FileName = GetServerExecutablePath(),
+			FileName = GetServerExecutablePath(processName),
 			UseShellExecute = true,
 			CreateNoWindow = false,
 			Arguments = arguments
@@ -39,19 +36,31 @@ public class ServerStarter : IServerStarter
 		Process.Start(startInfo);
 	}
 
-	private static string GetServerExecutablePath()
+	private string GetServerExecutablePath(string processName)
 	{
 		string assemblyLocation = Assembly.GetExecutingAssembly().Location;
 		string assemblyDirectory = Path.GetDirectoryName(assemblyLocation) ?? string.Empty;
-		
-		//Todo: Find better way to get the assembly path, this should be temporary
-		string path = Path.Combine(assemblyDirectory, WindowsServerPath);
-		if (File.Exists(path))
-			return path;
-		path = Path.Combine(assemblyDirectory, MacServerPath);
-		if (File.Exists(path))
-			return path;
 
-		return string.Empty;
+		string process;
+		if (OperatingSystem.IsWindows())
+		{
+			process = Path.Combine(assemblyDirectory, processName + ".exe");
+			_logger.Information("Starting Windows process: {process}", process);
+		}
+		else if (OperatingSystem.IsMacOS())
+		{
+			process = Path.Combine(assemblyDirectory, processName);
+			_logger.Information("Starting MacOS process: {process}", process);
+		}
+		else
+		{
+			_logger.Error("Unable to start server on this operating system. {operatingSystem}", RuntimeInformation.OSDescription);
+			throw new Exception();
+		}
+
+		return Path.Combine(assemblyDirectory, process);
 	}
+	// Todo: Everything in this class should be general
+	// private const string WindowsServerPath = "Andavies.SpellboundSettlement.Server.exe";
+	// private const string MacServerPath = "Andavies.SpellboundSettlement.Server";
 }

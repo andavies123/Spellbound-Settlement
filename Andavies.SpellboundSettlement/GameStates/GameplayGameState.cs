@@ -48,9 +48,9 @@ public class GameplayGameState : GameState
 		_networkClient.AddSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
 
 		List<Vector2> chunkPositions = new();
-		for (int x = 0; x < 20; x++)
+		for (int x = 0; x < 5; x++)
 		{
-			for (int y = 0; y < 20; y++)
+			for (int y = 0; y < 5; y++)
 			{
 				chunkPositions.Add(new Vector2(x, y));
 			}
