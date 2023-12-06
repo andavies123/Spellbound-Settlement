@@ -66,6 +66,7 @@ public class NetworkServer : INetworkServer
 		
 		_logger.Information("Stopping server");
 		_isRunning = false;
+		_packetBatchSender.ClearBatch();
 	}
 	
 	public void SendPacket<T>(NetPeer client, T packet) where T : INetSerializable

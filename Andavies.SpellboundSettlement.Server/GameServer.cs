@@ -85,6 +85,7 @@ public class GameServer
 
 	private void UpdateClients()
 	{
-		_packetBatchSender.SendBatch();
+		Thread thread = new(_packetBatchSender.SendBatch);
+		thread.Start();
 	}
 }

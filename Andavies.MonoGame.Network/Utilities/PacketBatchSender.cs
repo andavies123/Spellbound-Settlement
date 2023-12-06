@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.Network.Extensions;
+﻿using System.Collections.Concurrent;
+using Andavies.MonoGame.Network.Extensions;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Serilog;
@@ -10,7 +11,8 @@ public class PacketBatchSender : IPacketBatchSender
 	private readonly ILogger _logger;
 	private readonly NetPacketProcessor _packetProcessor = new();
 	private readonly NetDataWriter _dataWriter = new();
-	private readonly Queue<Action> _batchQueue = new();
+	private readonly ConcurrentQueue<Action> _batchQueue = new();
+	private readonly object _queueLock = new(); // Lock to manage adding/removing from the batch queue
     
 	public PacketBatchSender(ILogger logger)
 	{
@@ -19,7 +21,10 @@ public class PacketBatchSender : IPacketBatchSender
 
 	public void AddPacket<T>(NetPeer client, T packet) where T : INetSerializable
 	{
-		_batchQueue.Enqueue(() => SendPacketNow(client, packet));
+		lock (_queueLock)
+		{
+			_batchQueue.Enqueue(() => SendPacketNow(client, packet));
+		}
 	}
 
 	public void SendPacketNow<T>(NetPeer client, T packet) where T : INetSerializable
@@ -32,15 +37,21 @@ public class PacketBatchSender : IPacketBatchSender
 
 	public void SendBatch()
 	{
-		while (_batchQueue.Count > 0)
+		lock (_queueLock)
 		{
-			Action sendAction = _batchQueue.Dequeue();
-			sendAction.Invoke();
+			while (!_batchQueue.IsEmpty)
+			{
+				if (_batchQueue.TryDequeue(out Action? sendAction))
+					sendAction.Invoke();
+			}	
 		}
 	}
 
 	public void ClearBatch()
 	{
-		_batchQueue.Clear();
+		lock (_queueLock)
+		{
+			_batchQueue.Clear();
+		}
 	}
 }
