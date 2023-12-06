@@ -1,7 +1,7 @@
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
 
-namespace Andavies.MonoGame.NetworkUtilities.Extensions;
+namespace Andavies.MonoGame.Network.Extensions;
 
 public static class NetDataReaderExtensions
 {

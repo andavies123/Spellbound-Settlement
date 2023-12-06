@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Net;
-using Andavies.MonoGame.NetworkUtilities.Extensions;
+using Andavies.MonoGame.Network.Extensions;
+using Andavies.MonoGame.Network.Utilities;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Serilog;
@@ -10,17 +11,18 @@ namespace Andavies.MonoGame.Network.Server;
 public class NetworkServer : INetworkServer
 {
 	private readonly ILogger _logger;
+	private readonly IPacketBatchSender _packetBatchSender;
 	private readonly NetManager _server;
 	private readonly EventBasedNetListener _listener = new();
-	private readonly NetDataWriter _dataWriter = new();
 	private readonly NetPacketProcessor _packetProcessor = new();
 	private readonly ConcurrentDictionary<Type, List<Action<INetSerializable, NetPeer>>> _subscriptions = new();
 	private bool _isRunning = false;
 	private int _maxUsersAllowed = 10;
 
-	public NetworkServer(ILogger logger)
+	public NetworkServer(ILogger logger, IPacketBatchSender packetBatchSender)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_packetBatchSender = packetBatchSender;
 		_server = new NetManager(_listener);
 	}
 
@@ -65,13 +67,10 @@ public class NetworkServer : INetworkServer
 		_logger.Information("Stopping server");
 		_isRunning = false;
 	}
-
+	
 	public void SendPacket<T>(NetPeer client, T packet) where T : INetSerializable
 	{
-		_dataWriter.Reset();
-		_packetProcessor.WriteNetSerializable(_dataWriter, ref packet);
-		client.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
-		_logger.LogPacketSent(packet, "Client");
+        _packetBatchSender.AddPacket(client, packet);
 	}
 
 	public void AddSubscription<T>(Action<INetSerializable, NetPeer> onReceivedCallback) where T : INetSerializable, new()

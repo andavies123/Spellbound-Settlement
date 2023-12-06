@@ -1,6 +1,6 @@
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
-using Andavies.MonoGame.NetworkUtilities.Extensions;
+using Andavies.MonoGame.Network.Extensions;
 
 namespace Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 

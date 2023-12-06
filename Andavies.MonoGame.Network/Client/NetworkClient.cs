@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using Andavies.MonoGame.NetworkUtilities.Extensions;
+using Andavies.MonoGame.Network.Extensions;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Serilog;

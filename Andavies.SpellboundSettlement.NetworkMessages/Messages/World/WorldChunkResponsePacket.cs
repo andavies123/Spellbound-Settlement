@@ -1,4 +1,4 @@
-using Andavies.MonoGame.NetworkUtilities.Extensions;
+using Andavies.MonoGame.Network.Extensions;
 using Andavies.SpellboundSettlement.GameWorld;
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;

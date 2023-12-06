@@ -1,7 +1,7 @@
 ﻿using LiteNetLib.Utils;
 using Serilog;
 
-namespace Andavies.MonoGame.NetworkUtilities.Extensions;
+namespace Andavies.MonoGame.Network.Extensions;
 
 public static class NetworkLoggerExtensions
 {

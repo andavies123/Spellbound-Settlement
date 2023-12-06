@@ -1,7 +1,7 @@
 ﻿using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.Network.Client;
+using Andavies.MonoGame.Network.Extensions;
 using Andavies.MonoGame.Network.Server;
-using Andavies.MonoGame.NetworkUtilities.Extensions;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;

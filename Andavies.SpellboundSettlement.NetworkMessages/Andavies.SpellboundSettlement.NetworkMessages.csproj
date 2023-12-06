@@ -13,7 +13,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Andavies.MonoGame.NetworkUtilities\Andavies.MonoGame.NetworkUtilities.csproj" />
+      <ProjectReference Include="..\Andavies.MonoGame.Network\Andavies.MonoGame.Network.csproj" />
       <ProjectReference Include="..\Andavies.SpellboundSettlement.GameWorld\Andavies.SpellboundSettlement.GameWorld.csproj" />
     </ItemGroup>
 

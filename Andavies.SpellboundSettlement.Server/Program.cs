@@ -1,6 +1,7 @@
 ﻿using System.Net;
+using Andavies.MonoGame.Network.Extensions;
 using Andavies.MonoGame.Network.Server;
-using Andavies.MonoGame.NetworkUtilities.Extensions;
+using Andavies.MonoGame.Network.Utilities;
 using Andavies.MonoGame.Utilities;
 using Autofac;
 using AutofacSerilogIntegration;
@@ -26,7 +27,7 @@ public static class Program
 	        .CreateLogger();
 
         // Todo: Add argument for setting this value
-        NetworkLoggerExtensions.LogPackets = false;
+        NetworkLoggerExtensions.LogPackets = true;
         
 		// Init Autofac
 		ContainerBuilder builder = new();
@@ -57,5 +58,6 @@ public static class Program
 		container.RegisterLogger(); // Registers ILogger
 		container.RegisterType<GameServer>().AsSelf().SingleInstance();
 		container.RegisterType<NetworkServer>().As<INetworkServer>().SingleInstance();
+		container.RegisterType<PacketBatchSender>().As<IPacketBatchSender>().SingleInstance();
 	}
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using Andavies.MonoGame.Network.Server;
+using Andavies.MonoGame.Network.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
@@ -12,12 +13,14 @@ namespace Andavies.SpellboundSettlement.Server;
 public class GameServer
 {
 	private readonly INetworkServer _networkServer;
+	private readonly IPacketBatchSender _packetBatchSender;
 	private readonly World _world = new((0, 0), 5);
 	private bool _runGameLoop = false;
     
-	public GameServer(INetworkServer networkServer)
+	public GameServer(INetworkServer networkServer, IPacketBatchSender packetBatchSender)
 	{
-		_networkServer = networkServer;
+		_networkServer = networkServer ?? throw new ArgumentNullException(nameof(networkServer));
+		_packetBatchSender = packetBatchSender ?? throw new ArgumentNullException(nameof(packetBatchSender));
 	}
 
 	public void Start(IPAddress ipAddress, int port, int maxAllowedUsers)
@@ -44,7 +47,7 @@ public class GameServer
 
 	private void OnClientConnected(NetPeer client)
 	{
-		_networkServer.SendPacket(client, new WelcomePacket {WelcomeMessage = "Welcome to this Spellbound Settlement server"});
+		_packetBatchSender.SendPacketNow(client, new WelcomePacket {WelcomeMessage = "Welcome to this Spellbound Settlement server"});
 	}
 
 	private void OnWorldChunkRequestPacketReceived(INetSerializable packet, NetPeer client)
@@ -54,10 +57,7 @@ public class GameServer
 		
 		foreach (Vector2 chunkPosition in requestPacket.ChunkPositions)
 		{
-			_networkServer.SendPacket(client, new WorldChunkResponsePacket
-			{
-				Chunk = _world.GetChunk(chunkPosition)
-			});	
+			_packetBatchSender.AddPacket(client, new WorldChunkResponsePacket {Chunk = _world.GetChunk(chunkPosition)});
 		}
 	}
 	
@@ -85,6 +85,6 @@ public class GameServer
 
 	private void UpdateClients()
 	{
-		// Update all clients
+		_packetBatchSender.SendBatch();
 	}
 }
