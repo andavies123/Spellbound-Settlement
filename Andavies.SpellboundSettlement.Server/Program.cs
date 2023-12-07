@@ -50,7 +50,7 @@ public static class Program
 		if (port == null || !int.TryParse(port, out int parsedPort))
 			parsedPort = 5555;
 		
-		networkServer.Start(ipAddress, parsedPort, 10);
+		networkServer.Start(ipAddress, parsedPort, 10, 50);
 	}
 
 	private static void RegisterTypes(ContainerBuilder container)
