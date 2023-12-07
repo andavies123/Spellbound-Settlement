@@ -28,8 +28,12 @@ public class LoadGameState : GameState
 		base.Start();
 		
 		// Initialize server
-		string arguments = ServerCommandLineUtility.BuildArgs(IPAddress.Any, 5678, "New World");
-		_serverStarter.StartServer(arguments, "Andavies.SpellboundSettlement.Server");
+		ServerCommandLineArgsBuilder builder = new();
+		builder.SetIpAddress(IPAddress.Any);
+		builder.SetPort(5678);
+		builder.SetLocalOnlyServer(false);
+		_serverStarter.StartServer(builder.BuildArgs(), "Andavies.SpellboundSettlement.Server");
+		Console.WriteLine(builder.BuildArgs());
 
 		_networkClient.Start();
 	}

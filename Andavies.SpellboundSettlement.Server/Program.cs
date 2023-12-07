@@ -43,12 +43,13 @@ public static class Program
 
 		commandLineParser.TryGetArg(ServerCommandLineUtility.IpCommandLineArgKey, out string? ip);
 		commandLineParser.TryGetArg(ServerCommandLineUtility.PortCommandLineArgKey, out string? port);
-		commandLineParser.TryGetArg(ServerCommandLineUtility.WorldNameCommandLineArgKey, out string? worldName);
+		commandLineParser.TryGetArg(ServerCommandLineUtility.LocalOnlyCommandLineArgKey, out string? isLocalOnly);// Todo get bool value, true if it exists. false if not
 
 		if (!IPAddress.TryParse(ip, out IPAddress? ipAddress))
 			ipAddress = IPAddress.Any;
 		if (port == null || !int.TryParse(port, out int parsedPort))
 			parsedPort = 5555;
+		
 		
 		networkServer.Start(ipAddress, parsedPort, 10, 50);
 	}
