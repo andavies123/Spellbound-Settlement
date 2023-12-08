@@ -37,7 +37,10 @@ public static class Program
 		using ILifetimeScope scope = Container.BeginLifetimeScope();
 		Logger = Container.Resolve<ILogger>();
 		GameServer networkServer = Container.Resolve<GameServer>();
+		IServerConfigFileManager configManager = Container.Resolve<IServerConfigFileManager>();
 
+		ServerSettings serverSettings = configManager.ReadConfigFile();
+		
 		CommandLineParser commandLineParser = new(Logger);
 		commandLineParser.ParseArgs(args);
 
@@ -50,15 +53,16 @@ public static class Program
 		if (port == null || !int.TryParse(port, out int parsedPort))
 			parsedPort = 5555;
 		
-		
 		networkServer.Start(ipAddress, parsedPort, 10, 50);
 	}
 
 	private static void RegisterTypes(ContainerBuilder container)
 	{
 		container.RegisterLogger(); // Registers ILogger
+		
 		container.RegisterType<GameServer>().AsSelf().SingleInstance();
 		container.RegisterType<NetworkServer>().As<INetworkServer>().SingleInstance();
 		container.RegisterType<PacketBatchSender>().As<IPacketBatchSender>().SingleInstance();
+		container.RegisterType<ServerConfigFileManager>().As<IServerConfigFileManager>().SingleInstance();
 	}
 }
