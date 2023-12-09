@@ -33,7 +33,6 @@ public class LoadGameState : GameState
 		builder.SetPort(5678);
 		builder.SetLocalOnlyServer(false);
 		_serverStarter.StartServer(builder.BuildArgs(), "Andavies.SpellboundSettlement.Server");
-		Console.WriteLine(builder.BuildArgs());
 
 		_networkClient.Start();
 	}
