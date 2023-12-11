@@ -60,7 +60,4 @@ public class ServerStarter : IServerStarter
 
 		return Path.Combine(assemblyDirectory, process);
 	}
-	// Todo: Everything in this class should be general
-	// private const string WindowsServerPath = "Andavies.SpellboundSettlement.Server.exe";
-	// private const string MacServerPath = "Andavies.SpellboundSettlement.Server";
 }

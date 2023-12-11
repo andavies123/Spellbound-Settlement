@@ -24,7 +24,7 @@ public class NetworkServer : INetworkServer
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_packetBatchSender = packetBatchSender;
-		_serverAccessManager = serverAccessManager; // TODO: WIRE THIS UP
+		_serverAccessManager = serverAccessManager;
 		_server = new NetManager(_listener);
 	}
 
