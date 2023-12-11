@@ -27,9 +27,10 @@ public static class Program
 		// Init Logger
 		Log.Logger = new LoggerConfiguration()
 			.Enrich.WithProperty("SourceContext", null)
+			.Enrich.WithComputed("SourceContextClass", "Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)")
 			.MinimumLevel.Verbose()
 			.WriteTo.Console(
-				outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContext:l}){NewLine}{Exception}", 
+				outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContextClass:l}){NewLine}{Exception}", 
 				theme: AnsiConsoleTheme.Code)
 			.CreateLogger();
 		

@@ -12,6 +12,7 @@ public class NetworkServer : INetworkServer
 {
 	private readonly ILogger _logger;
 	private readonly IPacketBatchSender _packetBatchSender;
+	private readonly IServerAccessManager _serverAccessManager;
 	private readonly NetManager _server;
 	private readonly EventBasedNetListener _listener = new();
 	private readonly NetPacketProcessor _packetProcessor = new();
@@ -19,10 +20,11 @@ public class NetworkServer : INetworkServer
 	private bool _isRunning = false;
 	private int _maxUsersAllowed = 10;
 
-	public NetworkServer(ILogger logger, IPacketBatchSender packetBatchSender)
+	public NetworkServer(ILogger logger, IPacketBatchSender packetBatchSender, IServerAccessManager serverAccessManager)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_packetBatchSender = packetBatchSender;
+		_serverAccessManager = serverAccessManager; // TODO: WIRE THIS UP
 		_server = new NetManager(_listener);
 	}
 
@@ -117,7 +119,8 @@ public class NetworkServer : INetworkServer
 	{
 		string userName = connectionRequest.Data.GetString();
 		_logger.Information("Connection request received from {userName} at {endpoint}", userName, connectionRequest.RemoteEndPoint);
-		if (_server.ConnectedPeersCount < _maxUsersAllowed)
+		
+		if (_server.ConnectedPeersCount < _maxUsersAllowed && _serverAccessManager.IsAllowed(userName))
 			connectionRequest.Accept();
 		else
 			connectionRequest.Reject();

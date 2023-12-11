@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Andavies.MonoGame.Network.Extensions;
+﻿using Andavies.MonoGame.Network.Extensions;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.Network.Utilities;
 using Andavies.MonoGame.Utilities;
@@ -20,14 +19,15 @@ public static class Program
 		// Init logger
         Log.Logger = new LoggerConfiguration()
 	        .Enrich.WithProperty("SourceContext", null)
+	        .Enrich.WithComputed("SourceContextClass", "Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)")
 	        .MinimumLevel.Verbose()
 	        .WriteTo.Console(
-		        outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContext:l}){NewLine}{Exception}", 
+		        outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {Message} ({SourceContextClass:l}){NewLine}{Exception}", 
 		        theme: AnsiConsoleTheme.Code)
 	        .CreateLogger();
 
         // Todo: Add argument for setting this value
-        NetworkLoggerExtensions.LogPackets = true;
+        NetworkLoggerExtensions.LogPackets = false;
         
 		// Init Autofac
 		ContainerBuilder builder = new();
@@ -36,21 +36,18 @@ public static class Program
 		
 		using ILifetimeScope scope = Container.BeginLifetimeScope();
 		Logger = Container.Resolve<ILogger>();
-		GameServer networkServer = Container.Resolve<GameServer>();
-		IServerConfigFileManager configManager = Container.Resolve<IServerConfigFileManager>();
+		GameServer gameServer = Container.Resolve<GameServer>();
 
 		// Read Server Settings
+		IServerConfigFileManager configManager = Container.Resolve<IServerConfigFileManager>();
 		ServerSettings serverSettings = configManager.ReadConfigFile();
 		CommandLineParser commandLineParser = new(Logger);
 		commandLineParser.ParseArgs(args);
 		OverrideServerSettingsWithCommandLineArgs(commandLineParser, serverSettings);
-
-		if (!IPAddress.TryParse(serverSettings.IpAddress, out IPAddress? parsedIpAddress))
-			parsedIpAddress = IPAddress.Any;
-		if (!int.TryParse(serverSettings.Port, out int parsedPort))
-			parsedPort = 5555;
 		
-		networkServer.Start(parsedIpAddress, parsedPort, 10, 50);
+		configManager.SaveConfigFile(serverSettings);
+		
+		gameServer.Start(serverSettings, 10, 50);
 	}
 
 	private static void RegisterTypes(ContainerBuilder container)
@@ -61,6 +58,7 @@ public static class Program
 		container.RegisterType<NetworkServer>().As<INetworkServer>().SingleInstance();
 		container.RegisterType<PacketBatchSender>().As<IPacketBatchSender>().SingleInstance();
 		container.RegisterType<ServerConfigFileManager>().As<IServerConfigFileManager>().SingleInstance();
+		container.RegisterType<ServerAccessManager>().As<IServerAccessManager>().SingleInstance();
 	}
 
 	private static void OverrideServerSettingsWithCommandLineArgs(CommandLineParser parser, ServerSettings serverSettings)

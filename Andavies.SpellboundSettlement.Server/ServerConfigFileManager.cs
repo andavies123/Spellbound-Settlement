@@ -40,16 +40,3 @@ public class ServerConfigFileManager : IServerConfigFileManager
 		SaveConfigFile(new ServerSettings());
 	}
 }
-
-public class ServerSettings
-{
-	public string IpAddress { get; set; } = "localhost";
-	public string Port { get; set; } = "5555";
-	public bool IsLocalOnly { get; set; } = false;
-}
-
-public interface IServerConfigFileManager
-{
-	ServerSettings ReadConfigFile();
-	void SaveConfigFile(ServerSettings serverSettings);
-}

@@ -17,28 +17,37 @@ public class GameServer
 	private readonly ILogger _logger;
 	private readonly INetworkServer _networkServer;
 	private readonly IPacketBatchSender _packetBatchSender;
+	private readonly IServerAccessManager _serverAccessManager;
 	private readonly World _world = new((0, 0), 5);
 	private bool _runGameLoop = false;
 	private int _tickRate = 50;
     
-	public GameServer(ILogger logger, INetworkServer networkServer, IPacketBatchSender packetBatchSender)
+	public GameServer(ILogger logger, INetworkServer networkServer, IPacketBatchSender packetBatchSender, IServerAccessManager serverAccessManager)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_networkServer = networkServer ?? throw new ArgumentNullException(nameof(networkServer));
 		_packetBatchSender = packetBatchSender ?? throw new ArgumentNullException(nameof(packetBatchSender));
+		_serverAccessManager = serverAccessManager ?? throw new ArgumentNullException(nameof(serverAccessManager));
 	}
 
 	private float TickTimeMilliseconds => 1000f / _tickRate;
 	
-	public void Start(IPAddress ipAddress, int port, int maxAllowedUsers, int tickRate)
+	public void Start(ServerSettings serverSettings, int maxAllowedUsers, int tickRate)
 	{
+		if (!IPAddress.TryParse(serverSettings.IpAddress, out IPAddress? parsedIpAddress))
+			parsedIpAddress = IPAddress.Any;
+		if (!int.TryParse(serverSettings.Port, out int parsedPort))
+			parsedPort = 5555;
+
+		InitializeServerAccessManager(serverSettings);
+		
 		_networkServer.AddSubscription<WorldChunkRequestPacket>(OnWorldChunkRequestPacketReceived);
 		
 		_networkServer.ServerStarted += OnServerStarted;
 		_networkServer.ClientConnected += OnClientConnected;
 
 		_tickRate = tickRate;
-		_networkServer.Start(ipAddress, port, maxAllowedUsers);
+		_networkServer.Start(parsedIpAddress, parsedPort, maxAllowedUsers);
 	}
 
 	public void Stop()
@@ -109,5 +118,15 @@ public class GameServer
 	{
 		Thread thread = new(_packetBatchSender.SendBatch);
 		thread.Start();
+	}
+
+	private void InitializeServerAccessManager(ServerSettings serverSettings)
+	{
+		_serverAccessManager.ClearWhiteList();
+		_serverAccessManager.ClearBlackList();
+		_serverAccessManager.WhiteListEnabled = serverSettings.WhiteListEnabled;
+		_serverAccessManager.BlackListEnabled = serverSettings.BlackListEnabled;
+		serverSettings.WhiteList.ForEach(_serverAccessManager.AddToWhiteList);
+		serverSettings.BlackList.ForEach(_serverAccessManager.AddToBlackList);
 	}
 }
