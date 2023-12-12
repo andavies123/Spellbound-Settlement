@@ -11,6 +11,7 @@ public class LoadGameState : GameState
 {
 	private readonly IServerStarter _serverStarter;
 	private readonly INetworkClient _networkClient;
+	private readonly ServerCommandLineArgsBuilder _argsBuilder = new();
 
 	public LoadGameState(IServerStarter serverStarter, INetworkClient networkClient)
 	{
@@ -28,11 +29,8 @@ public class LoadGameState : GameState
 		base.Start();
 		
 		// Initialize server
-		ServerCommandLineArgsBuilder builder = new();
-		builder.SetIpAddress(IPAddress.Any);
-		builder.SetPort(5678);
-		builder.SetLocalOnlyServer(false);
-		_serverStarter.StartServer(builder.BuildArgs(), "Andavies.SpellboundSettlement.Server");
+		BuildSingleplayerServer();
+		_serverStarter.StartServer(_argsBuilder.BuildArgs(), "Andavies.SpellboundSettlement.Server");
 
 		_networkClient.Start();
 	}
@@ -50,5 +48,19 @@ public class LoadGameState : GameState
 			GameLoaded?.Invoke();
 		else
 			UnableToLoadGame?.Invoke();
+	}
+
+	private void BuildSingleplayerServer()
+	{
+		_argsBuilder.SetIpAddress(IPAddress.Loopback);
+		_argsBuilder.SetPort(5678);
+		_argsBuilder.SetLocalOnlyServer(true);
+	}
+
+	private void BuildMultiplayerServer()
+	{
+		_argsBuilder.SetIpAddress(IPAddress.Any);
+		_argsBuilder.SetPort(5678);
+		_argsBuilder.SetLocalOnlyServer(false);
 	}
 }
