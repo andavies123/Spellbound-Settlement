@@ -71,14 +71,13 @@ public class GameplayGameState : GameState
 
 		_gameplayGameplayUIState.PauseButtonClicked += OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;
+		Input.MouseMoved += OnMouseMoved;
 	}
 	
 	public override void Update(float deltaTimeSeconds)
 	{
 		base.Update(deltaTimeSeconds);
 		_networkClient.Update();
-
-		HandleMouseHover();
 	}
 
 	public override void Draw3D(GraphicsDevice graphicsDevice)
@@ -98,6 +97,7 @@ public class GameplayGameState : GameState
 		
 		_gameplayGameplayUIState.PauseButtonClicked -= OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp -= OnPauseGameKeyReleased;
+		Input.MouseMoved -= OnMouseMoved;
 	}
 	
 	private void OnPauseGameKeyReleased() => PauseGameRequested?.Invoke();
@@ -229,5 +229,10 @@ public class GameplayGameState : GameState
 			return;
 		
 		_worldMesh.SetChunk(response.Chunk);
+	}
+
+	private void OnMouseMoved()
+	{
+		HandleMouseHover();
 	}
 }

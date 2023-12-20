@@ -10,6 +10,15 @@ namespace Andavies.MonoGame.Inputs;
 /// </summary>
 public static class Input
 {
+	/// <summary>Static constructor to initialize the current state</summary>
+	static Input()
+	{
+		SetInputStates();
+	}
+
+	/// <summary>Raised whenever the position of the mouse changes</summary>
+	public static event Action? MouseMoved;
+	
 	/// <summary>The position of the mouse on the screen during this frame</summary>
 	public static Point CurrentMousePosition => CurrentMouseState.Position;
 
@@ -21,16 +30,14 @@ public static class Input
 	private static MouseState? PreviousMouseState { get; set; }
 	private static MouseState CurrentMouseState { get; set; }
 
-	/// <summary>Static constructor to initialize the current state</summary>
-	static Input()
-	{
-		SetInputStates();
-	}
-
 	/// <summary>Call this at the beginning of each frame to update the Input States</summary>
 	public static void Update()
 	{
 		SetInputStates();
+		
+		// Check for mouse movement
+		if (!PreviousMouseState.HasValue || PreviousMouseState.Value.Position != CurrentMousePosition)
+			MouseMoved?.Invoke();
 	}
 
 	/// <summary>Checks a given key to see if it was pressed during this last frame</summary>
