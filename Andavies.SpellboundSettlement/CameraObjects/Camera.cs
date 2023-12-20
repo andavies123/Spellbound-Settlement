@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Andavies.SpellboundSettlement.CameraObjects;
 
@@ -43,5 +44,17 @@ public class Camera
 	public void RecalculateProjectionMatrix()
 	{
 		ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearClippingPlane, FarClippingPlane);
+	}
+	
+	public Ray GetRayFromCamera(Viewport viewport, Vector2 screenPoint, float distance)
+	{
+		Vector3 nearPoint = new(screenPoint, 0);
+		Vector3 farPoint = new(screenPoint, 1);
+
+		Vector3 nearWorld = viewport.Unproject(nearPoint, ProjectionMatrix, ViewMatrix, Matrix.Identity);
+		Vector3 farWorld = viewport.Unproject(farPoint, ProjectionMatrix, ViewMatrix, Matrix.Identity);
+
+		Vector3 direction = Vector3.Normalize(farWorld - nearWorld);
+		return new Ray(nearWorld, direction * distance);
 	}
 }

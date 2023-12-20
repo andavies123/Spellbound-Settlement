@@ -9,19 +9,35 @@ namespace Andavies.SpellboundSettlement.Meshes;
 public class CubeMesh : IMesh
 {
 	private readonly PlaneMesh[] _faceMeshes;
+	private Color _color;
 
 	public CubeMesh(Vector3 vertexOffset, Color color)
 	{
+		_color = color;
 		_faceMeshes = new[]
 		{
-			new PlaneMesh(GetOffsetVertices(XPosVertices, vertexOffset), color),
-			new PlaneMesh(GetOffsetVertices(XNegVertices, vertexOffset), color),
-			new PlaneMesh(GetOffsetVertices(YPosVertices, vertexOffset), color),
-			new PlaneMesh(GetOffsetVertices(YNegVertices, vertexOffset), color),
-			new PlaneMesh(GetOffsetVertices(ZPosVertices, vertexOffset), color),
-			new PlaneMesh(GetOffsetVertices(ZNegVertices, vertexOffset), color)
+			new PlaneMesh(GetOffsetVertices(XPosVertices, vertexOffset), Color),
+			new PlaneMesh(GetOffsetVertices(XNegVertices, vertexOffset), Color),
+			new PlaneMesh(GetOffsetVertices(YPosVertices, vertexOffset), Color),
+			new PlaneMesh(GetOffsetVertices(YNegVertices, vertexOffset), Color),
+			new PlaneMesh(GetOffsetVertices(ZPosVertices, vertexOffset), Color),
+			new PlaneMesh(GetOffsetVertices(ZNegVertices, vertexOffset), Color)
 		};
 		RecalculateMesh();
+	}
+
+	public Color Color
+	{
+		get => _color;
+		set
+		{
+			_color = value;
+			foreach (PlaneMesh faceMesh in _faceMeshes)
+			{
+				faceMesh.Color = _color;
+			}
+			RecalculateMesh();
+		}
 	}
 
 	public void SetFaceVisibility(WorldDirection worldDirection, bool visibility) =>

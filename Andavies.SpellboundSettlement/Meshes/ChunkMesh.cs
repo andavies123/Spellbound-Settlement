@@ -17,8 +17,10 @@ public class ChunkMesh : IMesh
 	{
 		_chunk = chunk;
 		_chunkOffset = chunkOffset;
-
 		_cubeMeshes = new CubeMesh[_chunk.TileCount.x, _chunk.TileCount.y, _chunk.TileCount.z];
+
+		Collider = new BoundingBox(_chunkOffset, _chunkOffset + new Vector3(_chunk.TileCount.x, _chunk.TileCount.y, _chunk.TileCount.z));
+		TileColliders = new BoundingBox[_chunk.TileCount.x, _chunk.TileCount.y, _chunk.TileCount.z];
 		
 		InitializeCubeMeshes();
 		RecalculateMesh();
@@ -27,6 +29,19 @@ public class ChunkMesh : IMesh
 	public bool IsVisible { get; set; }
 	public VertexPositionColor[] Vertices { get; private set; }
 	public int[] Indices { get; private set; }
+	
+	// Colliders
+	public BoundingBox Collider { get; set; }
+	public BoundingBox[,,] TileColliders { get; set; }
+
+	public CubeMesh[,,] TileMeshes => _cubeMeshes;
+	public Vector2 ChunkPosition => _chunk.ChunkPosition;
+
+	public void SetTileColor(int x, int y, int z, Color color)
+	{
+		_cubeMeshes[x, y, z].Color = color;
+		RecalculateMesh();
+	}
 
 	private void InitializeCubeMeshes()
 	{
@@ -36,7 +51,9 @@ public class ChunkMesh : IMesh
 			{
 				for (int z = 0; z < _cubeMeshes.GetLength(2); z++)
 				{
-					_cubeMeshes[x, y, z] = new CubeMesh(_chunkOffset + new Vector3(x, y, z), WorldMeshConstants.HeightColors[y]);
+					Vector3 tilePosition = _chunkOffset + new Vector3(x, y, z);
+					_cubeMeshes[x, y, z] = new CubeMesh(tilePosition, WorldMeshConstants.HeightColors[y]);
+					TileColliders[x, y, z] = new BoundingBox(tilePosition, tilePosition + WorldMeshConstants.Vertex111);
 					
 					// Check to see if the whole cube is visible
 					if (_chunk.Tiles[x, y, z] == 0)

@@ -5,26 +5,38 @@ namespace Andavies.MonoGame.Meshes;
 
 public class PlaneMesh : IMesh
 {
-	public PlaneMesh(Vector3[] vertices, Color color)
+	private readonly Vector3[] _cornerVertices;
+	private Color _color;
+	
+	public PlaneMesh(Vector3[] cornerVertices, Color color)
 	{
-		Color = color;
+		if (cornerVertices.Length != MeshConstants.VerticesPerFace)
+			throw new ArgumentOutOfRangeException($"{nameof(cornerVertices)}", $"Should have a length of {MeshConstants.VerticesPerFace}");
 		
-		if (vertices.Length != MeshConstants.VerticesPerFace)
-			throw new ArgumentOutOfRangeException(
-				$"{nameof(vertices)}", 
-				$"Should have a length of {MeshConstants.VerticesPerFace}");
+		_cornerVertices = cornerVertices;
+		_color = color;
+		
+		RecalculateMesh();
+	}
 
-		for (int vertexIndex = 0; vertexIndex < vertices.Length; vertexIndex++)
-			Vertices[vertexIndex] = new VertexPositionColor(vertices[vertexIndex], Color);
+	public Color Color
+	{
+		get => _color;
+		set
+		{
+			_color = value;
+			RecalculateMesh();
+		}
 	}
 	
-	public Color Color { get; set; }
-	
 	// IMesh Implementation
-	
 	public bool IsVisible { get; set; } = true;
 	public VertexPositionColor[] Vertices { get; } = new VertexPositionColor[MeshConstants.VerticesPerFace];
 	public int[] Indices => MeshConstants.FaceIndices;
-	
-	public void RecalculateMesh() { }
+
+	public void RecalculateMesh()
+	{
+		for (int vertexIndex = 0; vertexIndex < _cornerVertices.Length; vertexIndex++)
+			Vertices[vertexIndex] = new VertexPositionColor(_cornerVertices[vertexIndex], Color);
+	}
 }
