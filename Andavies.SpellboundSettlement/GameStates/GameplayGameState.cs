@@ -59,7 +59,7 @@ public class GameplayGameState : GameState
 		_networkClient.AddSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
 
 		List<Vector2> chunkPositions = new();
-		const int chunkRadius = 3;
+		const int chunkRadius = 5;
 		for (int x = 0; x < chunkRadius; x++)
 		{
 			for (int y = 0; y < chunkRadius; y++)

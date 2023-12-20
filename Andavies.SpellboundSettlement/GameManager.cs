@@ -45,6 +45,10 @@ public class GameManager : Game
 		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
 		IsMouseVisible = true;
+		
+		// Frame rate settings
+		IsFixedTimeStep = false;
+		Global.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = true; // VSync
 
 		Global.GraphicsDeviceManager.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
 		Global.GraphicsDeviceManager.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -74,8 +78,6 @@ public class GameManager : Game
 		InitializeUIStyleCollection();
 		
 		_gameStateManager.LateInit();
-		
-		//_client.Start();
 	}
 
 	protected override void LoadContent()
@@ -86,12 +88,24 @@ public class GameManager : Game
 		GlobalFonts.HintFont = Content.Load<SpriteFont>("HintFont");
 	}
 
+	private DateTime _fpsUpdateTime = DateTime.Now;
+	private int _frameCount = 0;
+
 	protected override void Update(GameTime gameTime)
 	{
 		_currentTime = DateTime.Now;
 		_deltaTime = _currentTime - _previousTime;
 
 		float deltaTimeSeconds = (float) _deltaTime.TotalSeconds;
+
+		// Frame count
+		_frameCount++;
+		if ((_currentTime - _fpsUpdateTime).TotalSeconds >= 1.0)
+		{
+			_logger.Debug("FPS: {fps}", _frameCount);
+			_frameCount = 0;
+			_fpsUpdateTime = _currentTime;
+		}
 
 		Input.Update();
 		
