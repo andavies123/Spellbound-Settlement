@@ -5,7 +5,6 @@ using Andavies.MonoGame.UI.Styles;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.Globals;
-using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
@@ -86,6 +85,7 @@ public class GameManager : Game
 		Effect = Content.Load<Effect>("TestShader");
 		GlobalFonts.DefaultFont = Content.Load<SpriteFont>("TestFont");
 		GlobalFonts.HintFont = Content.Load<SpriteFont>("HintFont");
+		GlobalModels.TestModel = Content.Load<Model>("Models/TestModel");
 	}
 
 	private DateTime _fpsUpdateTime = DateTime.Now;

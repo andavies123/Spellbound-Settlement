@@ -6,6 +6,7 @@ using Andavies.MonoGame.Meshes;
 using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Utilities.Extensions;
 using Andavies.SpellboundSettlement.CameraObjects;
+using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
 using Andavies.SpellboundSettlement.Meshes;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
@@ -55,7 +56,7 @@ public class GameplayGameState : GameState
 		base.Start();
 		
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
-		
+
 		_networkClient.AddSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
 
 		List<Vector2> chunkPositions = new();
@@ -67,7 +68,8 @@ public class GameplayGameState : GameState
 				chunkPositions.Add(new Vector2(x, y));
 			}
 		}
-		_networkClient.SendMessage(new WorldChunkRequestPacket {ChunkPositions = chunkPositions });
+
+		_networkClient.SendMessage(new WorldChunkRequestPacket {ChunkPositions = chunkPositions});
 
 		_gameplayGameplayUIState.PauseButtonClicked += OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;
@@ -87,6 +89,9 @@ public class GameplayGameState : GameState
 		// Draw World
 		foreach (ChunkMesh chunkMesh in _worldMesh.ChunkMeshes.Values)
 			DrawMesh(graphicsDevice, chunkMesh);
+
+		// Draw Custom Meshes
+		DrawModel(GlobalModels.TestModel, new Vector3(-.5f, .5f, -.5f), .5f);
 	}
 	
 	public override void End()
@@ -130,6 +135,27 @@ public class GameplayGameState : GameState
 			0,
 			0,
 			indexBuffer.IndexCount / 3);
+	}
+
+	private void DrawModel(Model model, Vector3 position, float scale)
+	{
+		foreach (ModelMesh modelMesh in model.Meshes)
+		{
+			foreach (var effect1 in modelMesh.Effects)
+			{
+				BasicEffect effect = (BasicEffect) effect1;
+				effect.EnableDefaultLighting();
+				effect.View = _camera.ViewMatrix;
+				effect.Projection = _camera.ProjectionMatrix;
+			
+				Matrix translationMatrix = Matrix.CreateTranslation(position);
+				Matrix scaleMatrix = Matrix.CreateScale(scale);
+				
+				effect.World = scaleMatrix * Matrix.Identity * translationMatrix;
+			}
+			
+			modelMesh.Draw();
+		}
 	}
 
 	private void HandleMouseHover()

@@ -36,7 +36,7 @@ public class WorldViewCameraController : ICameraController
 	{
 		_camera.WorldPosition = Vector3.Zero;
 		
-		_camera.Position = new Vector3(0, 50, 0);
+		_camera.Position = new Vector3(25, 50, 55);
 		_camera.Target = Vector3.Zero;
 		_camera.Up = Vector3.Up;
 		_camera.Yaw = MathHelper.ToRadians(180);
