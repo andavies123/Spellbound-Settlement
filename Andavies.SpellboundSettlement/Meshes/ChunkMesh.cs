@@ -2,6 +2,7 @@
 using System.Linq;
 using Andavies.MonoGame.Meshes;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.Globals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -33,6 +34,7 @@ public class ChunkMesh : IMesh
 	// Colliders
 	public BoundingBox Collider { get; set; }
 	public BoundingBox[,,] TileColliders { get; set; }
+	public List<(Model, Vector3)> Models { get; set; } = new();
 
 	public CubeMesh[,,] TileMeshes => _cubeMeshes;
 	public Vector2 ChunkPosition => _chunk.ChunkPosition;
@@ -61,19 +63,26 @@ public class ChunkMesh : IMesh
 						_cubeMeshes[x, y, z].IsVisible = false;
 						continue;
 					}
-					
+
+					if (_chunk.Tiles[x, y, z] == 2)
+					{
+						_cubeMeshes[x, y, z].IsVisible = false;
+						Models.Add((GlobalModels.RockSmall1, new Vector3(x, y, z)));
+						continue;
+					}
+                    
 					// Check each cubes individual faces for visibility
-					if (x + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.X) - 1 && _chunk.Tiles[x + 1, y, z] != 0)
+					if (x + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.X) - 1 && IsTileVisible(x + 1, y, z))
 						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.XPositive, false);
-					if (x - 1 >= 0 && _chunk.Tiles[x - 1, y, z] != 0)
+					if (x - 1 >= 0 && IsTileVisible(x - 1, y, z))
 						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.XNegative, false);
-					if (y + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.Y) - 1 && _chunk.Tiles[x, y + 1, z] != 0) 
+					if (y + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.Y) - 1 && IsTileVisible(x, y + 1, z)) 
 						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.YPositive, false);
-					if (y - 1 >= 0 && _chunk.Tiles[x, y - 1, z] != 0) 
+					if (y - 1 >= 0 && IsTileVisible(x, y - 1, z)) 
 						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.YNegative, false);
-					if (z + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.Z) - 1 && _chunk.Tiles[x, y, z + 1] != 0) 
+					if (z + 1 <= _chunk.Tiles.GetLength((int)WorldDimension.Z) - 1 && IsTileVisible(x, y, z + 1)) 
 						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.ZPositive, false);
-					if (z - 1 >= 0 && _chunk.Tiles[x, y, z - 1] != 0) 
+					if (z - 1 >= 0 && IsTileVisible(x, y, z - 1)) 
 						_cubeMeshes[x, y, z].SetFaceVisibility(WorldDirection.ZNegative, false);
 					
 					// Recalculate mesh
@@ -81,6 +90,11 @@ public class ChunkMesh : IMesh
 				}
 			}
 		}
+	}
+
+	private bool IsTileVisible(int x, int y, int z)
+	{
+		return _chunk.Tiles[x, y, z] != 0 && _chunk.Tiles[x, y, z] != 2;
 	}
 
 	public void RecalculateMesh()

@@ -6,7 +6,6 @@ using Andavies.MonoGame.Meshes;
 using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Utilities.Extensions;
 using Andavies.SpellboundSettlement.CameraObjects;
-using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
 using Andavies.SpellboundSettlement.Meshes;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
@@ -88,10 +87,13 @@ public class GameplayGameState : GameState
 		
 		// Draw World
 		foreach (ChunkMesh chunkMesh in _worldMesh.ChunkMeshes.Values)
+		{
 			DrawMesh(graphicsDevice, chunkMesh);
-
-		// Draw Custom Meshes
-		DrawModel(GlobalModels.RockSmall1, new Vector3(0, 6, 0), .5f);
+			foreach ((Model model, Vector3 position) in chunkMesh.Models)
+			{
+				DrawModel(model, new Vector3(10 * chunkMesh.ChunkPosition.X, 0, 10 * chunkMesh.ChunkPosition.Y) + position, .5f);
+			}
+		}
 	}
 	
 	public override void End()

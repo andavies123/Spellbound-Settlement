@@ -39,14 +39,25 @@ public class World
 		{
 			for (int z = 0; z < chunk.TileCount.z; z++)
 			{
-				float noise = RandomUtility.GetPerlinNoise(100, .5f, (
+				const int seed = 100;
+				float noise = RandomUtility.GetPerlinNoise(seed, .5f, (
 					chunkPosition.X + ((float)x / ChunkTileCount) + float.Epsilon,
 					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
 				int height = GetHeightFromNoise(noise, 0, ChunkTileCount);
+
+				float rockNoise = RandomUtility.GetPerlinNoise(seed, 1f, (
+					chunkPosition.X + ((float)x / ChunkTileCount) + float.Epsilon,
+					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
+				bool addRock = (int)((rockNoise + 1) * 1000) % 97 == 0; // 97 is an arbitrary prime number. Completely random
 				
 				for (int y = 0; y < chunk.TileCount.y; y++)
 				{
-					chunk.Tiles[x, y, z] = y <= height ? 1 : 0;
+					if (y <= height)
+						chunk.Tiles[x, y, z] = 1;
+					else if (y == height + 1 && addRock)
+						chunk.Tiles[x, y, z] = 2;
+					else
+						chunk.Tiles[x, y, z] = 0;
 				}
 			}
 		}
