@@ -20,7 +20,7 @@
 /processorParam:TextureFormat=Compressed
 /build:HintFont.spritefont
 
-#begin Models/TestModel.fbx
+#begin Models/Rocks/rock_small_1.obj
 /importer:FbxImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
@@ -37,7 +37,7 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
-/build:Models/TestModel.fbx
+/build:Models/Rocks/rock_small_1.obj
 
 #begin TestFont.spritefont
 /importer:FontDescriptionImporter

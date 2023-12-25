@@ -91,7 +91,7 @@ public class GameplayGameState : GameState
 			DrawMesh(graphicsDevice, chunkMesh);
 
 		// Draw Custom Meshes
-		DrawModel(GlobalModels.TestModel, new Vector3(-.5f, .5f, -.5f), .5f);
+		DrawModel(GlobalModels.RockSmall1, new Vector3(0, 6, 0), .5f);
 	}
 	
 	public override void End()

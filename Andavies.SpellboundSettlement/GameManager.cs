@@ -85,7 +85,7 @@ public class GameManager : Game
 		Effect = Content.Load<Effect>("TestShader");
 		GlobalFonts.DefaultFont = Content.Load<SpriteFont>("TestFont");
 		GlobalFonts.HintFont = Content.Load<SpriteFont>("HintFont");
-		GlobalModels.TestModel = Content.Load<Model>("Models/TestModel");
+		GlobalModels.RockSmall1 = Content.Load<Model>("Models/Rocks/rock_small_1");
 	}
 
 	private DateTime _fpsUpdateTime = DateTime.Now;
