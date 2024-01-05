@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using Andavies.MonoGame.Utilities;
-using Microsoft.Xna.Framework;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
 
@@ -8,9 +7,9 @@ public class World
 {
 	private const int ChunkTileCount = 10;
 	
-	private readonly ConcurrentDictionary<Vector2, Chunk> _chunks = new();
+	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
 
-	public IReadOnlyDictionary<Vector2, Chunk> Chunks => _chunks;
+	public IReadOnlyDictionary<Vector2Int, Chunk> Chunks => _chunks;
 
 	public World((int x, int z) centerChunkPosition, int initialGenerationRadius)
 	{
@@ -19,25 +18,24 @@ public class World
 		{
 			for (int z = centerChunkPosition.z - radius; z <= centerChunkPosition.z + radius; z++)
 			{
-				Chunk chunk = GenerateChunk(new Vector2(x, z));
+				Chunk chunk = GenerateChunk(new Vector2Int(x, z));
 				_chunks[chunk.ChunkPosition] = chunk;
 			}
 		}
 	}
 
-	public Chunk GetChunk(Vector2 chunkPosition)
+	public Chunk GetChunk(Vector2Int chunkPosition)
 	{
 		return _chunks.GetOrAdd(chunkPosition, GenerateChunk);
 	}
 
-	private Chunk GenerateChunk(Vector2 chunkPosition)
+	private Chunk GenerateChunk(Vector2Int chunkPosition)
 	{
-		Chunk chunk = new(chunkPosition, chunkPosition * ChunkTileCount, (ChunkTileCount, ChunkTileCount, ChunkTileCount));
-		chunk.SetAllTiles(0);
+		Chunk chunk = new(chunkPosition, new Vector3Int(ChunkTileCount));
 
-		for (int x = 0; x < chunk.TileCount.x; x++)
+		for (int x = 0; x < chunk.TileCount.X; x++)
 		{
-			for (int z = 0; z < chunk.TileCount.z; z++)
+			for (int z = 0; z < chunk.TileCount.Z; z++)
 			{
 				const int seed = 100;
 				float noise = RandomUtility.GetPerlinNoise(seed, .5f, (
@@ -48,16 +46,20 @@ public class World
 				float rockNoise = RandomUtility.GetPerlinNoise(seed, 1f, (
 					chunkPosition.X + ((float)x / ChunkTileCount) + float.Epsilon,
 					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
-				bool addRock = (int)((rockNoise + 1) * 1000) % 97 == 0; // 97 is an arbitrary prime number. Completely random
+				bool addRock = (int) ((rockNoise + 1) * 1000) % 97 == 0; // 97 is an arbitrary prime number. Completely random
 				
-				for (int y = 0; y < chunk.TileCount.y; y++)
+				for (int y = 0; y < chunk.TileCount.X; y++)
 				{
+					Vector3Int tilePosition = new(x, y, z);
 					if (y <= height)
-						chunk.Tiles[x, y, z] = 1;
+						chunk.WorldTiles[x, y, z] = new WorldTile(1, chunkPosition, tilePosition);
 					else if (y == height + 1 && addRock)
-						chunk.Tiles[x, y, z] = 2;
+						chunk.WorldTiles[x, y, z] = new WorldTile(2, chunkPosition, tilePosition)
+						{
+							Rotation = GetRotationFromNoise(rockNoise)
+						};
 					else
-						chunk.Tiles[x, y, z] = 0;
+						chunk.WorldTiles[x, y, z] = new WorldTile(0, chunkPosition, tilePosition);
 				}
 			}
 		}
@@ -67,4 +69,7 @@ public class World
 	
 	private static int GetHeightFromNoise(float noise, int minHeight, int maxHeight) =>
 		(int)((maxHeight - minHeight) * ((noise + 1)/2)) + minHeight;
+
+	private static Rotation GetRotationFromNoise(float noise) =>
+		(Rotation) ((int) ((noise + 1) * 1000) % 4);
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Andavies.MonoGame.Meshes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,8 +47,8 @@ public class CubeMesh : IMesh
 	#region IMesh Implementation
 	
 	public bool IsVisible { get; set; } = true;
-	public VertexPositionColor[] Vertices { get; private set; }
-	public int[] Indices { get; private set; }
+	public VertexPositionColor[] Vertices { get; private set; } = Array.Empty<VertexPositionColor>();
+	public int[] Indices { get; private set; } = Array.Empty<int>();
 
 	public void RecalculateMesh()
 	{

@@ -5,8 +5,10 @@ using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
+using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
+using Andavies.SpellboundSettlement.Meshes;
 using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using Andavies.SpellboundSettlement.UIStates.MainMenu;
 using Andavies.SpellboundSettlement.UIStates.PauseMenu;
@@ -20,7 +22,15 @@ namespace Andavies.SpellboundSettlement;
 
 public static class Program
 {
-	public static IContainer Container { get; set; }
+	/// <summary>
+	/// This logger is used for debugging only.
+	/// Rather than bringing in the logger via Dependency Injection just to solve an issue,
+	/// The developer can just call this Logger, so its easier to keep track of which log statements
+	/// should probably be removed when it is time to release the game.
+	/// For consistent log statements, use Dependency Injection to get the logger
+	/// </summary>
+	public static ILogger Logger { get; private set; }
+	private static IContainer Container { get; set; }
 	
 	public static void Main(string[] args)
 	{
@@ -43,6 +53,7 @@ public static class Program
 		Container = builder.Build();
 
 		using ILifetimeScope scope = Container.BeginLifetimeScope();
+		Logger = Container.Resolve<ILogger>();
 		GameManager gameManager = Container.Resolve<GameManager>();
 		gameManager.Run();
 	}
@@ -52,6 +63,10 @@ public static class Program
 		builder.RegisterLogger(); // Registers ILogger
 		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
+		builder.RegisterType<TileRepository>().As<ITileRepository>().SingleInstance();
+		builder.RegisterType<ChunkDrawManager>().As<IChunkDrawManager>().SingleInstance();
+		builder.RegisterType<ChunkMeshBuilder>().As<IChunkMeshBuilder>().SingleInstance();
+		builder.RegisterType<TileMouseHoverHandler>().As<ITileHoverHandler>().SingleInstance();
 		
 		// Server
 		builder.RegisterType<ServerStarter>().As<IServerStarter>().SingleInstance();

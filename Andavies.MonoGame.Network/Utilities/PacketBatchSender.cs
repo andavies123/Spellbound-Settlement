@@ -31,6 +31,7 @@ public class PacketBatchSender : IPacketBatchSender
 	{
 		_dataWriter.Reset();
 		_packetProcessor.WriteNetSerializable(_dataWriter, ref packet);
+		
 		client.Send(_dataWriter, DeliveryMethod.ReliableOrdered);
 		_logger.LogPacketSent(packet, client.EndPoint.ToString());
 	}

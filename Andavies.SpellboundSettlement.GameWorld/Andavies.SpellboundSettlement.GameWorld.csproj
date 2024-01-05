@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Andavies.MonoGame.Meshes\Andavies.MonoGame.Meshes.csproj" />
       <ProjectReference Include="..\Andavies.MonoGame.Utilities\Andavies.MonoGame.Utilities.csproj" />
     </ItemGroup>
 

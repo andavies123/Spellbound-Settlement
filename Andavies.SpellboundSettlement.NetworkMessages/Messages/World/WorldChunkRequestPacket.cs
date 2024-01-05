@@ -1,6 +1,6 @@
 using LiteNetLib.Utils;
-using Microsoft.Xna.Framework;
 using Andavies.MonoGame.Network.Extensions;
+using Andavies.MonoGame.Utilities;
 
 namespace Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 
@@ -12,7 +12,7 @@ public class WorldChunkRequestPacket : INetSerializable
 	/// <summary>
 	/// Collection of chunk positions that the client is requesting data for
 	/// </summary>
-	public List<Vector2> ChunkPositions { get; set; } = new();
+	public List<Vector2Int> ChunkPositions { get; set; } = new();
 	
 	public void Serialize(NetDataWriter writer)
 	{
@@ -21,6 +21,6 @@ public class WorldChunkRequestPacket : INetSerializable
 
 	public void Deserialize(NetDataReader reader)
 	{
-		ChunkPositions = reader.GetVector2List();
+		ChunkPositions = reader.GetVector2IntList();
 	}
 }

@@ -1,3 +1,4 @@
+using Andavies.MonoGame.Utilities;
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework;
 
@@ -11,11 +12,17 @@ public static class NetDataWriterExtensions
 		writer.Put(value.Y);
 	}
 
-	public static void Put(this NetDataWriter writer, (int x, int y, int z) value)
+	public static void Put(this NetDataWriter writer, Vector2Int value)
 	{
-		writer.Put(value.x);
-		writer.Put(value.y);
-		writer.Put(value.z);
+		writer.Put(value.X);
+		writer.Put(value.Y);
+	}
+
+	public static void Put(this NetDataWriter writer, Vector3Int value)
+	{
+		writer.Put(value.X);
+		writer.Put(value.Y);
+		writer.Put(value.Z);
 	}
 
 	public static void Put(this NetDataWriter writer, int[,,] value)
@@ -33,6 +40,12 @@ public static class NetDataWriterExtensions
 	}
 
 	public static void Put(this NetDataWriter writer, List<Vector2> value)
+	{
+		writer.Put(value.Count);
+		value.ForEach(writer.Put);
+	}
+
+	public static void Put(this NetDataWriter writer, List<Vector2Int> value)
 	{
 		writer.Put(value.Count);
 		value.ForEach(writer.Put);

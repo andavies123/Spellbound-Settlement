@@ -16,4 +16,9 @@
 
 
 
+    <ItemGroup>
+      <ProjectReference Include="..\Andavies.MonoGame.Utilities\Andavies.MonoGame.Utilities.csproj" />
+    </ItemGroup>
+
+
 </Project>

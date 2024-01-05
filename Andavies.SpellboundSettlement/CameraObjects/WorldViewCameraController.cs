@@ -1,6 +1,6 @@
 ﻿using System;
+using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
-using Autofac;
 using Microsoft.Xna.Framework;
 
 namespace Andavies.SpellboundSettlement.CameraObjects;
@@ -44,7 +44,7 @@ public class WorldViewCameraController : ICameraController
 		_camera.Roll = MathHelper.ToRadians(0);
 		
 		_camera.FieldOfView = CalculateFieldOfView();
-		_camera.AspectRatio = Program.Container.Resolve<Game>().GraphicsDevice.Viewport.AspectRatio;
+		_camera.AspectRatio = Global.GraphicsDeviceManager.GraphicsDevice.Viewport.AspectRatio;
 		_camera.NearClippingPlane = 0.1f;
 		_camera.FarClippingPlane = 1000f;
 		

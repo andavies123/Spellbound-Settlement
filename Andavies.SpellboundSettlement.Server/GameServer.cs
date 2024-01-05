@@ -1,6 +1,7 @@
 using System.Net;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.Network.Utilities;
+using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
@@ -72,7 +73,7 @@ public class GameServer
 		if (packet is not WorldChunkRequestPacket requestPacket)
 			return;
 		
-		foreach (Vector2 chunkPosition in requestPacket.ChunkPositions)
+		foreach (Vector2Int chunkPosition in requestPacket.ChunkPositions)
 		{
 			_packetBatchSender.AddPacket(client, new WorldChunkResponsePacket {Chunk = _world.GetChunk(chunkPosition)});
 		}

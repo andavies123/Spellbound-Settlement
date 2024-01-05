@@ -1,26 +1,23 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Andavies.SpellboundSettlement.GameWorld;
-using Microsoft.Xna.Framework;
+using System.Linq;
+using Andavies.MonoGame.Utilities;
 
 namespace Andavies.SpellboundSettlement.Meshes;
 
 public class WorldMesh
 {
-	private readonly ConcurrentDictionary<Vector2, ChunkMesh> _chunkMeshes = new();
-	
-	public IReadOnlyDictionary<Vector2, ChunkMesh> ChunkMeshes => _chunkMeshes;
+	private readonly ConcurrentDictionary<Vector2Int, ChunkMesh> _chunkMeshes = new();
 
-	public void SetChunk(Chunk chunk)
+	public IReadOnlyList<ChunkMesh> ChunkMeshes => _chunkMeshes.Values.ToList();
+	
+	public void SetChunkMesh(ChunkMesh chunkMesh, Vector2Int chunkPosition)
 	{
-		_chunkMeshes.TryAdd(chunk.ChunkPosition, GenerateChunkMesh(chunk));
+		_chunkMeshes[chunkPosition] = chunkMesh;
 	}
 
-	private ChunkMesh GenerateChunkMesh(Chunk chunk)
+	public bool TryGetChunkMesh(Vector2Int chunkPosition, out ChunkMesh chunkMesh)
 	{
-		ChunkMesh chunkMesh = new(
-			chunk,
-			new Vector3(chunk.WorldOffset.X, 0, chunk.WorldOffset.Y));
-		return chunkMesh;
+		return _chunkMeshes.TryGetValue(chunkPosition, out chunkMesh);
 	}
 }
