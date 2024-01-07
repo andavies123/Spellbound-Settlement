@@ -16,4 +16,5 @@ public class WorldTile
 	public Vector3Int TilePosition { get; }
 	
 	public Rotation Rotation { get; set; } = Rotation.Zero;
+	public float Scale { get; set; } = 1f;
 }

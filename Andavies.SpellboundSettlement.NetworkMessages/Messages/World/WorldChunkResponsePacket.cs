@@ -33,6 +33,7 @@ public class WorldChunkResponsePacket : INetSerializable
 					writer.Put(worldTile.TileId);
 					writer.Put(worldTile.TilePosition);
 					writer.Put((int)worldTile.Rotation);
+					writer.Put(worldTile.Scale);
 				}
 			}
 		}
@@ -53,9 +54,11 @@ public class WorldChunkResponsePacket : INetSerializable
 					int tileId = reader.GetInt();
 					Vector3Int tilePosition = reader.GetVector3Int();
 					Rotation rotation = (Rotation)reader.GetInt();
+					float scale = reader.GetFloat();
 					worldTiles[x, y, z] = new WorldTile(tileId, chunkPosition, tilePosition)
 					{
-						Rotation = rotation
+						Rotation = rotation,
+						Scale = scale
 					};
 				}
 			}

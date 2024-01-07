@@ -1,24 +1,20 @@
 ﻿using System;
 using Andavies.MonoGame.Meshes;
-using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Meshes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Serilog;
 
 namespace Andavies.SpellboundSettlement;
 
 public class ChunkDrawManager : IChunkDrawManager
 {
-	private readonly ILogger _logger;
 	private readonly Camera _camera;
 	
-	public ChunkDrawManager(ILogger logger, Camera camera)
+	public ChunkDrawManager(Camera camera)
 	{
-		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_camera = camera ?? throw new ArgumentNullException(nameof(camera));
 	}
 
@@ -83,7 +79,7 @@ public class ChunkDrawManager : IChunkDrawManager
 
 				Matrix rotationMatrix = Matrix.CreateRotationY(RotationToRadians(worldTile.Rotation));
 				Matrix translationMatrix = Matrix.CreateTranslation(modelTileDetails.PostScaleOffset + position);
-				Matrix scaleMatrix = Matrix.CreateScale(modelTileDetails.ModelScale);
+				Matrix scaleMatrix = Matrix.CreateScale(modelTileDetails.ModelScale * worldTile.Scale);
 				
 				effect.World = scaleMatrix * rotationMatrix * translationMatrix; // Translation needs to be last
 			}

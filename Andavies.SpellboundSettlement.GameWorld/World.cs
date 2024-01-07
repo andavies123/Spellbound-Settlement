@@ -56,7 +56,8 @@ public class World
 					else if (y == height + 1 && addRock)
 						chunk.WorldTiles[x, y, z] = new WorldTile(2, chunkPosition, tilePosition)
 						{
-							Rotation = GetRotationFromNoise(rockNoise)
+							Rotation = GetRotationFromNoise(rockNoise),
+							Scale = GetRockScaleFromNoise(rockNoise)
 						};
 					else
 						chunk.WorldTiles[x, y, z] = new WorldTile(0, chunkPosition, tilePosition);
@@ -70,6 +71,9 @@ public class World
 	private static int GetHeightFromNoise(float noise, int minHeight, int maxHeight) =>
 		(int)((maxHeight - minHeight) * ((noise + 1)/2)) + minHeight;
 
-	private static Rotation GetRotationFromNoise(float noise) =>
-		(Rotation) ((int) ((noise + 1) * 1000) % 4);
+	private static Rotation GetRotationFromNoise(float noise) => (Rotation) ((int) ((noise + 1) * 1000) % 4);
+	private static float GetRockScaleFromNoise(float noise) => MathF.Abs(GetHundredthsPlace(noise)) / 20f + 0.75f;
+
+	private static int GetTenthsPlace(float value) => (int) (value * 10 % 10);
+	private static int GetHundredthsPlace(float value) => (int) (value * 100 % 10);
 }
