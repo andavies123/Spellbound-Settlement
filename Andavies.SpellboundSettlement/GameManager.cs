@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Andavies.MonoGame.Drawing;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Styles;
@@ -18,7 +20,9 @@ public class GameManager : Game
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
 	private readonly IUIStyleRepository _uiStyleCollection;
+	private readonly ITileLoader _tileLoader;
 	private readonly ITileRepository _tileRepository;
+	private readonly IModelRepository _modelRepository;
 	
 	// Update Times
 	private DateTime _currentTime;
@@ -35,7 +39,9 @@ public class GameManager : Game
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
 		IUIStyleRepository uiStyleCollection,
-		ITileRepository tileRepository)
+		ITileLoader tileLoader,
+		ITileRepository tileRepository,
+		IModelRepository modelRepository)
 	{
 		Global.GameManager = this;
 
@@ -43,7 +49,9 @@ public class GameManager : Game
 		_gameStateManager = gameStateManager;
 		_cameraController = cameraController;
 		_uiStyleCollection = uiStyleCollection ?? throw new ArgumentNullException(nameof(uiStyleCollection));
+		_tileLoader = tileLoader ?? throw new ArgumentNullException(nameof(tileLoader));
 		_tileRepository = tileRepository ?? throw new ArgumentNullException(nameof(tileRepository));
+		_modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
 		
 		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -79,7 +87,6 @@ public class GameManager : Game
 		
 		Global.SpriteBatch = new SpriteBatch(GraphicsDevice);
 		InitializeUIStyleCollection();
-		InitializeTileRepository();
 		
 		_gameStateManager.LateInit();
 	}
@@ -90,8 +97,9 @@ public class GameManager : Game
 		Effect = Content.Load<Effect>("TestShader");
 		GlobalFonts.DefaultFont = Content.Load<SpriteFont>("TestFont");
 		GlobalFonts.HintFont = Content.Load<SpriteFont>("HintFont");
-		GlobalModels.RockSmall1 = Content.Load<Model>("Models/Rocks/rockSmall1");
-		GlobalModels.SizeTestCube = Content.Load<Model>("Models/Test Models/SizeTestCube");
+
+		InitializeTileRepository();
+		InitializeModelRepository();
 	}
 
 	private DateTime _fpsUpdateTime = DateTime.Now;
@@ -169,8 +177,17 @@ public class GameManager : Game
 
 	private void InitializeTileRepository()
 	{
-		_tileRepository.TryAddTileDetails(0, new NonVisibleTileDetails(0, "Air", ""));
-		_tileRepository.TryAddTileDetails(1, new TerrainTileDetails(1, "Ground", ""));
-		_tileRepository.TryAddTileDetails(2, new ModelTileDetails(2, "Small Rock", "", GlobalModels.RockSmall1, 1/32f));
+		string path = Path.Combine(Environment.CurrentDirectory, @"Assets\Config\world_tiles.json");
+		_tileLoader.LoadTilesFromJson(path, _tileRepository);
+	}
+
+	private void InitializeModelRepository()
+	{
+		List<ModelTileDetails> modelTileDetailsList = _tileRepository.GetAllTileDetailsOfType<ModelTileDetails>();
+		
+		foreach (ModelTileDetails modelTileDetails in modelTileDetailsList)
+		{
+			_modelRepository.TryAddModel(modelTileDetails.ContentModelPath, Content.Load<Model>(modelTileDetails.ContentModelPath));
+		}
 	}
 }

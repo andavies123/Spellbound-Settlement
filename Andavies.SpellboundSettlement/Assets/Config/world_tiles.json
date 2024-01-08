@@ -1,0 +1,30 @@
+﻿{
+  "Tiles": [
+    {
+      "meshType": "NonVisible",
+      "details": {
+        "tileId": 0,
+        "displayName": "Air",
+        "description": "Invisible terrain block that is neither drawn nor interacted with"
+      }
+    },
+    {
+      "meshType": "Terrain",
+      "details": {
+        "tileId": 1,
+        "displayName": "Ground",
+        "description": "Terrain block that represents the ground" 
+      }
+    },
+    {
+      "meshType": "Model",
+      "details": {
+        "tileId": 2,
+        "displayName": "Small Rock",
+        "description": "A small rock",
+        "contentModelPath": "Models/Rocks/rockSmall1",
+        "modelScale": 0.03125 
+      }
+    }
+  ]
+}

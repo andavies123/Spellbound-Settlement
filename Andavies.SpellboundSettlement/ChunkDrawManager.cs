@@ -11,10 +11,12 @@ namespace Andavies.SpellboundSettlement;
 
 public class ChunkDrawManager : IChunkDrawManager
 {
+	private readonly IModelRepository _modelRepository;
 	private readonly Camera _camera;
 	
-	public ChunkDrawManager(Camera camera)
+	public ChunkDrawManager(IModelRepository modelRepository, Camera camera)
 	{
+		_modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
 		_camera = camera ?? throw new ArgumentNullException(nameof(camera));
 	}
 
@@ -66,8 +68,13 @@ public class ChunkDrawManager : IChunkDrawManager
 			worldTile.ParentChunkPosition.X * tileCount + worldTile.TilePosition.X, 
 			0f * tileCount + worldTile.TilePosition.Y, // Currently the world is only 1 chunk high
 			worldTile.ParentChunkPosition.Y * tileCount + worldTile.TilePosition.Z);
+
+		if (!_modelRepository.TryGetModel(modelTileDetails.ContentModelPath, out Model model) || model == null)
+		{
+			return;
+		}
 		
-		foreach (ModelMesh modelMesh in modelTileDetails.Model.Meshes)
+		foreach (ModelMesh modelMesh in model.Meshes)
 		{
 			foreach (var effect1 in modelMesh.Effects)
 			{
@@ -76,7 +83,7 @@ public class ChunkDrawManager : IChunkDrawManager
 				
 				effect.View = _camera.ViewMatrix;
 				effect.Projection = _camera.ProjectionMatrix;
-
+		
 				Matrix rotationMatrix = Matrix.CreateRotationY(RotationToRadians(worldTile.Rotation));
 				Matrix translationMatrix = Matrix.CreateTranslation(modelTileDetails.PostScaleOffset + position);
 				Matrix scaleMatrix = Matrix.CreateScale(modelTileDetails.ModelScale * worldTile.Scale);

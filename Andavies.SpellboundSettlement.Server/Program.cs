@@ -11,15 +11,6 @@ namespace Andavies.SpellboundSettlement.Server;
 
 public static class Program
 {
-	/// <summary>
-	/// This logger is used for debugging only.
-	/// Rather than bringing in the logger via Dependency Injection just to solve an issue,
-	/// The developer can just call this Logger, so its easier to keep track of which log statements
-	/// should probably be removed when it is time to release the game.
-	/// For consistent log statements, use Dependency Injection to get the logger
-	/// </summary>
-	public static ILogger Logger { get; private set; } = null!;
-
 	private static IContainer? Container { get; set; }
 	
 	private static void Main(string[] args)
@@ -43,13 +34,12 @@ public static class Program
 		Container = builder.Build();
 		
 		using ILifetimeScope scope = Container.BeginLifetimeScope();
-		Logger = Container.Resolve<ILogger>();
 		GameServer gameServer = Container.Resolve<GameServer>();
 
 		// Read Server Settings
 		IServerConfigFileManager configManager = Container.Resolve<IServerConfigFileManager>();
 		ServerSettings serverSettings = configManager.ReadConfigFile();
-		CommandLineParser commandLineParser = new(Logger);
+		CommandLineParser commandLineParser = new(Container.Resolve<ILogger>());
 		commandLineParser.ParseArgs(args);
 		OverrideServerSettingsWithCommandLineArgs(commandLineParser, serverSettings);
 		

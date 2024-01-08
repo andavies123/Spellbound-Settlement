@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
 
@@ -51,19 +50,19 @@ public readonly struct TerrainTileDetails : ITileDetails
 
 public readonly struct ModelTileDetails : ITileDetails
 {
-	public ModelTileDetails(int tileId, string displayName, string description, Model model, float modelScale)
+	public ModelTileDetails(int tileId, string displayName, string description, string contentModelPath, float modelScale)
 	{
 		TileId = tileId;
 		DisplayName = displayName;
 		Description = description;
-		Model = model;
+		ContentModelPath = contentModelPath;
 		ModelScale = modelScale;
 	}
 	
 	public int TileId { get; }
 	public string DisplayName { get; }
 	public string Description { get; }
-	public Model Model { get; }
+	public string ContentModelPath { get; }
 	public float ModelScale { get; }
 	public Vector3 PostScaleOffset { get; } = new(.5f);
 }
