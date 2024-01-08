@@ -8,6 +8,7 @@ using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.Globals;
+using Andavies.SpellboundSettlement.Repositories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
@@ -23,6 +24,7 @@ public class GameManager : Game
 	private readonly ITileLoader _tileLoader;
 	private readonly ITileRepository _tileRepository;
 	private readonly IModelRepository _modelRepository;
+	private readonly IFontRepository _fontRepository;
 	
 	// Update Times
 	private DateTime _currentTime;
@@ -41,7 +43,8 @@ public class GameManager : Game
 		IUIStyleRepository uiStyleCollection,
 		ITileLoader tileLoader,
 		ITileRepository tileRepository,
-		IModelRepository modelRepository)
+		IModelRepository modelRepository,
+		IFontRepository fontRepository)
 	{
 		Global.GameManager = this;
 
@@ -52,6 +55,7 @@ public class GameManager : Game
 		_tileLoader = tileLoader ?? throw new ArgumentNullException(nameof(tileLoader));
 		_tileRepository = tileRepository ?? throw new ArgumentNullException(nameof(tileRepository));
 		_modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
+		_fontRepository = fontRepository ?? throw new ArgumentNullException(nameof(fontRepository));
 		
 		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -95,11 +99,10 @@ public class GameManager : Game
 	{
 		_logger.Debug("Loading Content...");
 		Effect = Content.Load<Effect>("TestShader");
-		GlobalFonts.DefaultFont = Content.Load<SpriteFont>("TestFont");
-		GlobalFonts.HintFont = Content.Load<SpriteFont>("HintFont");
 
 		InitializeTileRepository();
 		InitializeModelRepository();
+		InitializeFontRepository();
 	}
 
 	private DateTime _fpsUpdateTime = DateTime.Now;
@@ -149,9 +152,12 @@ public class GameManager : Game
 
 	private void InitializeUIStyleCollection()
 	{
+		_fontRepository.TryGetFont("Default", out SpriteFont defaultFont);
+		_fontRepository.TryGetFont("TextInputHint", out SpriteFont textInputHintFont);
+		
 		_uiStyleCollection.DefaultButtonStyle = new ButtonStyle
 		{
-			Font = GlobalFonts.DefaultFont,
+			Font = defaultFont,
 			BackgroundColor = Color.LightSlateGray,
 			HoverBackgroundColor = Color.SlateGray,
 			MousePressedBackgroundColor = Color.DarkSlateGray,
@@ -161,15 +167,15 @@ public class GameManager : Game
 
 		_uiStyleCollection.DefaultLabelStyle = new LabelStyle
 		{
-			Font = GlobalFonts.DefaultFont,
+			Font = defaultFont,
 			BackgroundColor = Color.Transparent,
 			BackgroundTexture = Texture
 		};
 
 		_uiStyleCollection.DefaultTextInputStyle = new TextInputStyle
 		{
-			Font = GlobalFonts.DefaultFont,
-			HintTextFont = GlobalFonts.HintFont,
+			Font = defaultFont,
+			HintTextFont = textInputHintFont,
 			BackgroundColor = Color.LightGray,
 			BackgroundTexture = Texture
 		};
@@ -189,5 +195,11 @@ public class GameManager : Game
 		{
 			_modelRepository.TryAddModel(modelTileDetails.ContentModelPath, Content.Load<Model>(modelTileDetails.ContentModelPath));
 		}
+	}
+
+	private void InitializeFontRepository()
+	{
+		_fontRepository.TryAddFont("Default", Content.Load<SpriteFont>("TestFont"));
+		_fontRepository.TryAddFont("TextInputHint", Content.Load<SpriteFont>("HintFont"));
 	}
 }

@@ -9,6 +9,7 @@ using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
 using Andavies.SpellboundSettlement.Meshes;
+using Andavies.SpellboundSettlement.Repositories;
 using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using Andavies.SpellboundSettlement.UIStates.MainMenu;
 using Andavies.SpellboundSettlement.UIStates.PauseMenu;
@@ -54,12 +55,15 @@ public static class Program
 		builder.RegisterLogger(); // Registers ILogger
 		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
-		builder.RegisterType<TileRepository>().As<ITileRepository>().SingleInstance();
-		builder.RegisterType<ModelRepository>().As<IModelRepository>().SingleInstance();
 		builder.RegisterType<ChunkDrawManager>().As<IChunkDrawManager>().SingleInstance();
 		builder.RegisterType<ChunkMeshBuilder>().As<IChunkMeshBuilder>().SingleInstance();
 		builder.RegisterType<TileMouseHoverHandler>().As<ITileHoverHandler>().SingleInstance();
 		builder.RegisterType<TileLoader>().As<ITileLoader>().SingleInstance();
+		
+		// Repositories
+		builder.RegisterType<TileRepository>().As<ITileRepository>().SingleInstance();
+		builder.RegisterType<ModelRepository>().As<IModelRepository>().SingleInstance();
+		builder.RegisterType<FontRepository>().As<IFontRepository>().SingleInstance();
 		
 		// Server
 		builder.RegisterType<ServerStarter>().As<IServerStarter>().SingleInstance();

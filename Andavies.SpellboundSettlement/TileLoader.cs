@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.Repositories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;

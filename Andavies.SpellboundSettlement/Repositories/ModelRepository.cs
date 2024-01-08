@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 
-namespace Andavies.SpellboundSettlement.GameWorld;
+namespace Andavies.SpellboundSettlement.Repositories;
 
 public class ModelRepository : IModelRepository
 {
@@ -24,11 +26,22 @@ public class ModelRepository : IModelRepository
 		return true;
 	}
 
-	public bool TryGetModel(string key, out Model? model)
+	public bool TryGetModel(string key, out Model model)
 	{
 		if (!_models.TryGetValue(key, out model))
 		{
 			_logger.Warning("Unable to get Model with key: {key}", key);
+			return false;
+		}
+
+		return true;
+	}
+
+	public bool TryRemoveModel(string key)
+	{
+		if (!_models.Remove(key))
+		{
+			_logger.Warning("Unable to remove Model with key: {key}", key);
 			return false;
 		}
 

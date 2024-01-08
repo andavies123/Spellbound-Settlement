@@ -1,6 +1,9 @@
-﻿using Serilog;
+﻿using System;
+using System.Collections.Generic;
+using Andavies.SpellboundSettlement.GameWorld;
+using Serilog;
 
-namespace Andavies.SpellboundSettlement.GameWorld;
+namespace Andavies.SpellboundSettlement.Repositories;
 
 public class TileRepository : ITileRepository
 {
@@ -23,7 +26,7 @@ public class TileRepository : ITileRepository
 		return true;
 	}
 
-	public bool TryGetTileDetails(int key, out ITileDetails? tileDetails)
+	public bool TryGetTileDetails(int key, out ITileDetails tileDetails)
 	{
 		if (!_allTileDetails.TryGetValue(key, out tileDetails))
 		{

@@ -1,6 +1,7 @@
 ﻿using System;
 using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.Repositories;
 using Microsoft.Xna.Framework;
 using Serilog;
 

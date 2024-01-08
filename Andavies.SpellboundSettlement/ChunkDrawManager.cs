@@ -4,6 +4,7 @@ using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Meshes;
+using Andavies.SpellboundSettlement.Repositories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
