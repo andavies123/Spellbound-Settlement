@@ -47,17 +47,24 @@ public class World
 					chunkPosition.X + ((float)x / ChunkTileCount) + float.Epsilon,
 					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
 				bool addRock = (int) ((rockNoise + 1) * 1000) % 97 == 0; // 97 is an arbitrary prime number. Completely random
+				bool addGrass = GetThousandthsPlace(noise) < 2;
 				
 				for (int y = 0; y < chunk.TileCount.X; y++)
 				{
+					// Todo: Find way to not use hardcoded tileIds here
 					Vector3Int tilePosition = new(x, y, z);
 					if (y <= height)
 						chunk.WorldTiles[x, y, z] = new WorldTile(1, chunkPosition, tilePosition);
 					else if (y == height + 1 && addRock)
-						chunk.WorldTiles[x, y, z] = new WorldTile(2, chunkPosition, tilePosition)
+						chunk.WorldTiles[x, y, z] = new WorldTile(3, chunkPosition, tilePosition)
 						{
 							Rotation = GetRotationFromNoise(rockNoise),
 							Scale = GetRockScaleFromNoise(rockNoise)
+						};
+					else if (y == height + 1 && addGrass)
+						chunk.WorldTiles[x, y, z] = new WorldTile(2, chunkPosition, tilePosition)
+						{
+							Rotation = GetRotationFromNoise(rockNoise)
 						};
 					else
 						chunk.WorldTiles[x, y, z] = new WorldTile(0, chunkPosition, tilePosition);
@@ -74,6 +81,7 @@ public class World
 	private static Rotation GetRotationFromNoise(float noise) => (Rotation) ((int) ((noise + 1) * 1000) % 4);
 	private static float GetRockScaleFromNoise(float noise) => MathF.Abs(GetHundredthsPlace(noise)) / 20f + 0.75f;
 
-	private static int GetTenthsPlace(float value) => (int) (value * 10 % 10);
-	private static int GetHundredthsPlace(float value) => (int) (value * 100 % 10);
+	private static int GetTenthsPlace(float value) => (int) Math.Abs(value * 10 % 10);
+	private static int GetHundredthsPlace(float value) => (int) Math.Abs(value * 100 % 10);
+	private static int GetThousandthsPlace(float value) => (int) Math.Abs(value * 1000 % 10);
 }

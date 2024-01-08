@@ -20,6 +20,16 @@
       "meshType": "Model",
       "details": {
         "tileId": 2,
+        "displayName": "Grass",
+        "description": "Grass that can be walked through",
+        "contentModelPath": "Models/Grass/grass",
+        "modelScale": 0.03125
+      }
+    },
+    {
+      "meshType": "Model",
+      "details": {
+        "tileId": 3,
         "displayName": "Small Rock",
         "description": "A small rock",
         "contentModelPath": "Models/Rocks/rockSmall1",
