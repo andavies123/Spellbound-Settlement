@@ -6,6 +6,7 @@ using Andavies.MonoGame.UI.StateMachines;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
 using Andavies.SpellboundSettlement.Meshes;

@@ -2,6 +2,8 @@
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.Network.Utilities;
 using Andavies.MonoGame.Utilities;
+using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Autofac;
 using AutofacSerilogIntegration;
 using Serilog;
@@ -57,6 +59,10 @@ public static class Program
 		container.RegisterType<PacketBatchSender>().As<IPacketBatchSender>().SingleInstance();
 		container.RegisterType<ServerConfigFileManager>().As<IServerConfigFileManager>().SingleInstance();
 		container.RegisterType<ServerAccessManager>().As<IServerAccessManager>().SingleInstance();
+
+		container.RegisterType<World>().SingleInstance();
+		container.RegisterType<TileRepository>().As<ITileRepository>().SingleInstance();
+		container.RegisterType<TileLoader>().As<ITileLoader>().SingleInstance();
 	}
 
 	private static void OverrideServerSettingsWithCommandLineArgs(CommandLineParser parser, ServerSettings serverSettings)

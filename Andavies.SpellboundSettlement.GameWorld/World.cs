@@ -1,27 +1,43 @@
 ﻿using System.Collections.Concurrent;
 using Andavies.MonoGame.Utilities;
+using Andavies.SpellboundSettlement.GameWorld.Repositories;
+using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
 
 public class World
 {
 	private const int ChunkTileCount = 10;
+
+	private readonly ILogger _logger;
+	private readonly ITileRepository _tileRepository;
 	
 	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
 
 	public IReadOnlyDictionary<Vector2Int, Chunk> Chunks => _chunks;
 
-	public World((int x, int z) centerChunkPosition, int initialGenerationRadius)
+	public World(ILogger logger, ITileRepository tileRepository)
+	{
+		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_tileRepository = tileRepository ?? throw new ArgumentNullException(nameof(tileRepository));
+	}
+
+	public void CreateNewWorld(Vector2Int centerChunkPosition, int initialGenerationRadius)
 	{
 		int radius = initialGenerationRadius - 1;
-		for (int x = centerChunkPosition.x - radius; x <= centerChunkPosition.x + radius; x++)
+		for (int x = centerChunkPosition.X - radius; x <= centerChunkPosition.X + radius; x++)
 		{
-			for (int z = centerChunkPosition.z - radius; z <= centerChunkPosition.z + radius; z++)
+			for (int z = centerChunkPosition.Y - radius; z <= centerChunkPosition.Y + radius; z++)
 			{
 				Chunk chunk = GenerateChunk(new Vector2Int(x, z));
 				_chunks[chunk.ChunkPosition] = chunk;
 			}
 		}
+	}
+
+	public void LoadWorld()
+	{
+		throw new NotImplementedException();
 	}
 
 	public Chunk GetChunk(Vector2Int chunkPosition)
@@ -54,20 +70,38 @@ public class World
 					// Todo: Find way to not use hardcoded tileIds here
 					Vector3Int tilePosition = new(x, y, z);
 					if (y <= height)
+					{
 						chunk.WorldTiles[x, y, z] = new WorldTile(1, chunkPosition, tilePosition);
+					}
 					else if (y == height + 1 && addRock)
+					{
+						if (!_tileRepository.TryGetTileDetails(3, out ITileDetails? tileDetails) || tileDetails is not ModelTileDetails modelTileDetails)
+							continue;
+						
 						chunk.WorldTiles[x, y, z] = new WorldTile(3, chunkPosition, tilePosition)
 						{
 							Rotation = GetRotationFromNoise(rockNoise),
-							Scale = GetRockScaleFromNoise(rockNoise)
+							Scale = GetScaleFromNoise(rockNoise, modelTileDetails.MinDisplayScale, modelTileDetails.MaxDisplayScale)
 						};
+					}
 					else if (y == height + 1 && addGrass)
+					{
+						if (!_tileRepository.TryGetTileDetails(2, out ITileDetails? tileDetails) || tileDetails is not ModelTileDetails modelTileDetails)
+							continue;
+						
+						//_logger.Debug("Grass display scales, Min: {min} Max: {max}", modelTileDetails.MinDisplayScale, modelTileDetails.MaxDisplayScale);
+						//_logger.Debug("Grass scale: {value}", GetScaleFromNoise(noise, modelTileDetails.MinDisplayScale, modelTileDetails.MaxDisplayScale));
+                        
 						chunk.WorldTiles[x, y, z] = new WorldTile(2, chunkPosition, tilePosition)
 						{
-							Rotation = GetRotationFromNoise(rockNoise)
+							Rotation = GetRotationFromNoise(noise),
+							Scale = GetScaleFromNoise(noise, modelTileDetails.MinDisplayScale, modelTileDetails.MaxDisplayScale)
 						};
+					}
 					else
+					{
 						chunk.WorldTiles[x, y, z] = new WorldTile(0, chunkPosition, tilePosition);
+					}
 				}
 			}
 		}
@@ -79,9 +113,13 @@ public class World
 		(int)((maxHeight - minHeight) * ((noise + 1)/2)) + minHeight;
 
 	private static Rotation GetRotationFromNoise(float noise) => (Rotation) ((int) ((noise + 1) * 1000) % 4);
-	private static float GetRockScaleFromNoise(float noise) => MathF.Abs(GetHundredthsPlace(noise)) / 20f + 0.75f;
 
-	private static int GetTenthsPlace(float value) => (int) Math.Abs(value * 10 % 10);
+	private static float GetScaleFromNoise(float noise, float minScale, float maxScale)
+	{
+		float scaleDifference = maxScale - minScale;
+		return minScale + scaleDifference * GetHundredthsPlace(noise) / 10f;
+	}
+
 	private static int GetHundredthsPlace(float value) => (int) Math.Abs(value * 100 % 10);
 	private static int GetThousandthsPlace(float value) => (int) Math.Abs(value * 1000 % 10);
 }

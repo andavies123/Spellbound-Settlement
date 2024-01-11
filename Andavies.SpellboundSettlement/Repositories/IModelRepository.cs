@@ -26,4 +26,9 @@ public interface IModelRepository
 	/// <param name="key">The unique key that is used to find the Model object</param>
 	/// <returns>True if the Model object was successfully removed. False if it wasn't removed or not found</returns>
 	bool TryRemoveModel(string key);
+
+	/// <summary>
+	/// Clears out the internal collection of keys/values
+	/// </summary>
+	void ClearAll();
 }

@@ -23,7 +23,9 @@
         "displayName": "Grass",
         "description": "Grass that can be walked through",
         "contentModelPath": "Models/Grass/grass",
-        "modelScale": 0.03125
+        "modelScale": 0.03125,
+        "minDisplayScale": 0.5,
+        "maxDisplayScale": 1
       }
     },
     {
@@ -33,7 +35,9 @@
         "displayName": "Small Rock",
         "description": "A small rock",
         "contentModelPath": "Models/Rocks/rockSmall1",
-        "modelScale": 0.03125 
+        "modelScale": 0.03125,
+        "minDisplayScale": 0.25,
+        "maxDisplayScale": 1.5
       }
     }
   ]

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using Andavies.MonoGame.Drawing;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
-using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Repositories;
 using Microsoft.Xna.Framework;
@@ -21,9 +18,6 @@ public class GameManager : Game
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
 	private readonly IUIStyleRepository _uiStyleCollection;
-	private readonly ITileLoader _tileLoader;
-	private readonly ITileRepository _tileRepository;
-	private readonly IModelRepository _modelRepository;
 	private readonly IFontRepository _fontRepository;
 	
 	// Update Times
@@ -41,9 +35,6 @@ public class GameManager : Game
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
 		IUIStyleRepository uiStyleCollection,
-		ITileLoader tileLoader,
-		ITileRepository tileRepository,
-		IModelRepository modelRepository,
 		IFontRepository fontRepository)
 	{
 		Global.GameManager = this;
@@ -52,9 +43,6 @@ public class GameManager : Game
 		_gameStateManager = gameStateManager;
 		_cameraController = cameraController;
 		_uiStyleCollection = uiStyleCollection ?? throw new ArgumentNullException(nameof(uiStyleCollection));
-		_tileLoader = tileLoader ?? throw new ArgumentNullException(nameof(tileLoader));
-		_tileRepository = tileRepository ?? throw new ArgumentNullException(nameof(tileRepository));
-		_modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
 		_fontRepository = fontRepository ?? throw new ArgumentNullException(nameof(fontRepository));
 		
 		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -100,8 +88,6 @@ public class GameManager : Game
 		_logger.Debug("Loading Content...");
 		Effect = Content.Load<Effect>("TestShader");
 
-		InitializeTileRepository();
-		InitializeModelRepository();
 		InitializeFontRepository();
 	}
 
@@ -179,22 +165,6 @@ public class GameManager : Game
 			BackgroundColor = Color.LightGray,
 			BackgroundTexture = Texture
 		};
-	}
-
-	private void InitializeTileRepository()
-	{
-		string path = Path.Combine(Environment.CurrentDirectory, @"Assets\Config\world_tiles.json");
-		_tileLoader.LoadTilesFromJson(path, _tileRepository);
-	}
-
-	private void InitializeModelRepository()
-	{
-		List<ModelTileDetails> modelTileDetailsList = _tileRepository.GetAllTileDetailsOfType<ModelTileDetails>();
-		
-		foreach (ModelTileDetails modelTileDetails in modelTileDetailsList)
-		{
-			_modelRepository.TryAddModel(modelTileDetails.ContentModelPath, Content.Load<Model>(modelTileDetails.ContentModelPath));
-		}
 	}
 
 	private void InitializeFontRepository()

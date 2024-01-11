@@ -47,4 +47,9 @@ public class ModelRepository : IModelRepository
 
 		return true;
 	}
+
+	public void ClearAll()
+	{
+		_models.Clear();
+	}
 }
