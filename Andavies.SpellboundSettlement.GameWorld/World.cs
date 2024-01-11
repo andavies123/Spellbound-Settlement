@@ -88,9 +88,6 @@ public class World
 					{
 						if (!_tileRepository.TryGetTileDetails(2, out ITileDetails? tileDetails) || tileDetails is not ModelTileDetails modelTileDetails)
 							continue;
-						
-						//_logger.Debug("Grass display scales, Min: {min} Max: {max}", modelTileDetails.MinDisplayScale, modelTileDetails.MaxDisplayScale);
-						//_logger.Debug("Grass scale: {value}", GetScaleFromNoise(noise, modelTileDetails.MinDisplayScale, modelTileDetails.MaxDisplayScale));
                         
 						chunk.WorldTiles[x, y, z] = new WorldTile(2, chunkPosition, tilePosition)
 						{
