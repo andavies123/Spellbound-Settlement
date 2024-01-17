@@ -45,9 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\Config\world_tiles.json" />
-    <Content Include="Assets\Config\world_tiles.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

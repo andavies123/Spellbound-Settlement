@@ -5,11 +5,11 @@ using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
+using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
 using Andavies.SpellboundSettlement.Meshes;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
-using Andavies.SpellboundSettlement.Repositories;
 using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using LiteNetLib.Utils;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,9 +19,7 @@ namespace Andavies.SpellboundSettlement.GameStates;
 public class GameplayGameState : GameState
 {
 	private readonly INetworkClient _networkClient;
-	private readonly ITileLoader _tileLoader;
-	private readonly ITileRepository _tileRepository;
-	private readonly IModelRepository _modelRepository;
+	private readonly ITileRegistry _tileRegistry;
 	private readonly IChunkMeshBuilder _chunkMeshBuilder;
 	private readonly IChunkDrawManager _chunkDrawManager;
 	private readonly ITileHoverHandler _tileHoverHandler;
@@ -33,9 +31,7 @@ public class GameplayGameState : GameState
 	
 	public GameplayGameState(
 		INetworkClient networkClient,
-		ITileLoader tileLoader,
-		ITileRepository tileRepository,
-		IModelRepository modelRepository,
+		ITileRegistry tileRegistry,
 		IChunkMeshBuilder chunkMeshBuilder,
 		IChunkDrawManager chunkDrawManager,
 		ITileHoverHandler tileHoverHandler,
@@ -43,9 +39,7 @@ public class GameplayGameState : GameState
 		GameplayInputState inputState)
 	{
 		_networkClient = networkClient ?? throw new ArgumentNullException(nameof(networkClient));
-		_tileLoader = tileLoader ?? throw new ArgumentNullException(nameof(tileLoader));
-		_tileRepository = tileRepository ?? throw new ArgumentNullException(nameof(tileRepository));
-		_modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
+		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 		_chunkMeshBuilder = chunkMeshBuilder ?? throw new ArgumentNullException(nameof(chunkMeshBuilder));
 		_chunkDrawManager = chunkDrawManager ?? throw new ArgumentNullException(nameof(chunkDrawManager));
 		_tileHoverHandler = tileHoverHandler ?? throw new ArgumentNullException(nameof(tileHoverHandler));
@@ -63,10 +57,11 @@ public class GameplayGameState : GameState
 	{
 		base.Start();
 		
+		RegisterTiles();
+		
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
 
 		_networkClient.AddSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
-		_networkClient.AddSubscription<TileDetailsResponsePacket>(OnTileDetailsResponsePacketReceived);
 
 		List<Vector2Int> chunkPositions = new();
 		const int chunkRadius = 5;
@@ -107,7 +102,6 @@ public class GameplayGameState : GameState
 		base.End();
 		
 		_networkClient.RemoveSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
-		_networkClient.RemoveSubscription<TileDetailsResponsePacket>(OnTileDetailsResponsePacketReceived);
 		
 		_gameplayGameplayUIState.PauseButtonClicked -= OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp -= OnPauseGameKeyReleased;
@@ -119,17 +113,17 @@ public class GameplayGameState : GameState
 	private void OnPauseGameKeyReleased() => PauseGameRequested?.Invoke();
 	private void OnPauseGameClicked() => PauseGameRequested?.Invoke();
 
-	private void OnTileDetailsResponsePacketReceived(INetSerializable netSerializablePacket)
+	private void RegisterTiles()
 	{
-		if (netSerializablePacket is not TileDetailsResponsePacket tileDetailsResponsePacket)
-			return;
-		
-		_tileLoader.LoadTilesFromJson(tileDetailsResponsePacket.TileDetailsJson, _tileRepository);
-
-		foreach (ModelTileDetails modelTileDetails in _tileRepository.GetAllTileDetailsOfType<ModelTileDetails>())
-		{
-			_modelRepository.TryAddModel(modelTileDetails.ContentModelPath, Global.GameManager.Content.Load<Model>(modelTileDetails.ContentModelPath));
-		}
+		GrassTile grassTile = new();
+		grassTile.Model = Global.GameManager.Content.Load<Model>(grassTile.ContentModelPath);
+		SmallRockTile smallRockTile = new();
+		smallRockTile.Model = Global.GameManager.Content.Load<Model>(smallRockTile.ContentModelPath);
+        
+		_tileRegistry.RegisterTile(new AirTile());
+		_tileRegistry.RegisterTile(new GroundTile());
+		_tileRegistry.RegisterTile(grassTile);
+		_tileRegistry.RegisterTile(smallRockTile);
 	}
 
 	private void OnWorldChunkResponsePacketReceived(INetSerializable packet)
@@ -148,9 +142,9 @@ public class GameplayGameState : GameState
 
 	private void UnloadTileModels()
 	{
-		foreach (ModelTileDetails modelTileDetails in _tileRepository.GetAllTileDetailsOfType<ModelTileDetails>())
+		foreach (ModelTile modelTile in _tileRegistry.GetAllTilesOfType<ModelTile>())
 		{
-			Global.GameManager.Content.UnloadAsset(modelTileDetails.ContentModelPath);
+			Global.GameManager.Content.UnloadAsset(modelTile.ContentModelPath);
 		}
 	}
 

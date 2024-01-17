@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
+using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
@@ -10,16 +11,16 @@ public class World
 	private const int ChunkTileCount = 10;
 
 	private readonly ILogger _logger;
-	private readonly ITileRepository _tileRepository;
+	private readonly ITileRegistry _tileRegistry;
 	
 	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
 
 	public IReadOnlyDictionary<Vector2Int, Chunk> Chunks => _chunks;
 
-	public World(ILogger logger, ITileRepository tileRepository)
+	public World(ILogger logger, ITileRegistry tileRegistry)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		_tileRepository = tileRepository ?? throw new ArgumentNullException(nameof(tileRepository));
+		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 	}
 
 	public void CreateNewWorld(Vector2Int centerChunkPosition, int initialGenerationRadius)
@@ -47,6 +48,7 @@ public class World
 
 	private Chunk GenerateChunk(Vector2Int chunkPosition)
 	{
+		_logger.Debug("Generating chunk {position}", chunkPosition);
 		Chunk chunk = new(chunkPosition, new Vector3Int(ChunkTileCount));
 
 		for (int x = 0; x < chunk.TileCount.X; x++)
@@ -71,33 +73,39 @@ public class World
 					Vector3Int tilePosition = new(x, y, z);
 					if (y <= height)
 					{
-						chunk.WorldTiles[x, y, z] = new WorldTile(1, chunkPosition, tilePosition);
+						if (!_tileRegistry.TryGetTile(nameof(GroundTile), out Tile? tile) || tile == null)
+							continue;
+						
+						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition);
 					}
 					else if (y == height + 1 && addRock)
 					{
-						if (!_tileRepository.TryGetTileDetails(3, out ITileDetails? tileDetails) || tileDetails is not ModelTileDetails modelTileDetails)
+						if (!_tileRegistry.TryGetTile(nameof(SmallRockTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile(3, chunkPosition, tilePosition)
+						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition)
 						{
 							Rotation = GetRotationFromNoise(rockNoise),
-							Scale = GetScaleFromNoise(rockNoise, modelTileDetails.MinDisplayScale, modelTileDetails.MaxDisplayScale)
+							Scale = GetScaleFromNoise(rockNoise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
 						};
 					}
 					else if (y == height + 1 && addGrass)
 					{
-						if (!_tileRepository.TryGetTileDetails(2, out ITileDetails? tileDetails) || tileDetails is not ModelTileDetails modelTileDetails)
+						if (!_tileRegistry.TryGetTile(nameof(GrassTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
                         
-						chunk.WorldTiles[x, y, z] = new WorldTile(2, chunkPosition, tilePosition)
+						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition)
 						{
 							Rotation = GetRotationFromNoise(noise),
-							Scale = GetScaleFromNoise(noise, modelTileDetails.MinDisplayScale, modelTileDetails.MaxDisplayScale)
+							Scale = GetScaleFromNoise(noise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
 						};
 					}
 					else
 					{
-						chunk.WorldTiles[x, y, z] = new WorldTile(0, chunkPosition, tilePosition);
+						if (!_tileRegistry.TryGetTile(nameof(AirTile), out Tile? tile) || tile == null)
+							continue;
+						
+						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition);
 					}
 				}
 			}

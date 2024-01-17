@@ -51,7 +51,7 @@ public class WorldChunkResponsePacket : INetSerializable
 			{
 				for (int z = 0; z < tileCount.Z; z++)
 				{
-					int tileId = reader.GetInt();
+					string tileId = reader.GetString();
 					Vector3Int tilePosition = reader.GetVector3Int();
 					Rotation rotation = (Rotation)reader.GetInt();
 					float scale = reader.GetFloat();

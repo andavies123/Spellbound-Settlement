@@ -2,7 +2,7 @@
 using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
-using Andavies.SpellboundSettlement.Repositories;
+using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Serilog;
 
@@ -11,12 +11,12 @@ namespace Andavies.SpellboundSettlement.Meshes;
 public class ChunkMeshBuilder : IChunkMeshBuilder
 {
 	private readonly ILogger _logger;
-	private readonly ITileRepository _tileRepository;
+	private readonly ITileRegistry _tileRegistry;
 
-	public ChunkMeshBuilder(ILogger logger, ITileRepository tileRepository)
+	public ChunkMeshBuilder(ILogger logger, ITileRegistry tileRegistry)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		_tileRepository = tileRepository ?? throw new ArgumentNullException(nameof(tileRepository));
+		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 	}
 
 	public ChunkMesh BuildChunkMesh(Chunk chunk)
@@ -40,30 +40,30 @@ public class ChunkMeshBuilder : IChunkMeshBuilder
 
 	private void AddWorldTileToChunkMesh(WorldTile worldTile, ChunkMesh chunkMesh)
 	{
-		if (!_tileRepository.TryGetTileDetails(worldTile.TileId, out ITileDetails tileDetails) || tileDetails == null)
+		if (!_tileRegistry.TryGetTile(worldTile.TileId, out Tile tile) || tile == null)
 		{
 			_logger.Warning("Tile ID does not exist in tile repository. ID: {id}", worldTile.TileId);
 			return;
 		}
 
-		switch (tileDetails)
+		switch (tile)
 		{
-			case NonVisibleTileDetails nonVisibleTileDetails:
+			case AirTile:
 				// Currently we don't do anything for non visible tiles
 				break;
-			case TerrainTileDetails terrainTileDetails:
-				HandleTerrainTileDetails(chunkMesh, worldTile, terrainTileDetails);
+			case TerrainTile terrainTile:
+				HandleTerrainTileDetails(chunkMesh, worldTile, terrainTile);
 				break;
-			case ModelTileDetails modelTileDetails:
-				HandleModelTileDetails(chunkMesh, worldTile, modelTileDetails);
+			case ModelTile modelTile:
+				HandleModelTileDetails(chunkMesh, worldTile, modelTile);
 				break;
 			default:
-				_logger.Warning("Unable to draw tile with id: {tileId}", tileDetails.TileId);
+				_logger.Warning("Unable to draw tile: {tile}", tile.DisplayName);
 				break;
 		}
 	}
 
-	private static void HandleTerrainTileDetails(ChunkMesh chunkMesh, WorldTile worldTile, TerrainTileDetails terrainTileDetails)
+	private static void HandleTerrainTileDetails(ChunkMesh chunkMesh, WorldTile worldTile, TerrainTile terrainTile)
 	{
 		Vector3Int tilePosition = worldTile.ParentChunkPosition.ToVector3IntNoY() * 10 + worldTile.TilePosition;
 		CubeMesh cubeMesh = new((Vector3)tilePosition, WorldMeshConstants.HeightColors[worldTile.TilePosition.Y]);
@@ -71,8 +71,8 @@ public class ChunkMeshBuilder : IChunkMeshBuilder
 		chunkMesh.SetTileMesh(worldTile.TilePosition, cubeMesh);
 	}
 
-	private static void HandleModelTileDetails(ChunkMesh chunkMesh, WorldTile worldTile, ModelTileDetails modelTileDetails)
+	private static void HandleModelTileDetails(ChunkMesh chunkMesh, WorldTile worldTile, ModelTile modelTile)
 	{
-		chunkMesh.SetTileModel(worldTile.TilePosition, modelTileDetails, worldTile);
+		chunkMesh.SetTileModel(worldTile.TilePosition, modelTile, worldTile);
 	}
 }

@@ -4,14 +4,15 @@ namespace Andavies.SpellboundSettlement.GameWorld;
 
 public class WorldTile
 {
-	public WorldTile(int tileId, Vector2Int parentChunkPosition, Vector3Int tilePosition)
+	public WorldTile(string tileId, Vector2Int parentChunkPosition, Vector3Int tilePosition)
 	{
 		TileId = tileId;
 		ParentChunkPosition = parentChunkPosition;
 		TilePosition = tilePosition;
 	}
 	
-	public int TileId { get; set; } = 0;
+	public string TileId { get; set; }
+	
 	public Vector2Int ParentChunkPosition { get; set; }
 	public Vector3Int TilePosition { get; }
 	

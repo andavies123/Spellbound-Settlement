@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Tiles;
 
 namespace Andavies.SpellboundSettlement.Meshes;
 
 public class ChunkMesh
 {
-	private readonly ConcurrentDictionary<Vector3Int, (ModelTileDetails, WorldTile)> _tileModels = new ();
+	private readonly ConcurrentDictionary<Vector3Int, (ModelTile, WorldTile)> _tileModels = new ();
 
 	public ChunkMesh(Chunk chunk)
 	{
@@ -20,11 +21,11 @@ public class ChunkMesh
 	public TerrainMesh TerrainMesh { get; }
 	public ChunkMeshCollider ChunkMeshCollider { get; }
 	
-	public IReadOnlyDictionary<Vector3Int, (ModelTileDetails, WorldTile)> TileModels => _tileModels;
+	public IReadOnlyDictionary<Vector3Int, (ModelTile, WorldTile)> TileModels => _tileModels;
 
-	public void SetTileModel(Vector3Int position, ModelTileDetails modelTileDetails, WorldTile worldTile)
+	public void SetTileModel(Vector3Int position, ModelTile modelTile, WorldTile worldTile)
 	{
-		_tileModels[position] = (modelTileDetails, worldTile);
+		_tileModels[position] = (modelTile, worldTile);
 	}
 
 	public void SetTileMesh(Vector3Int position, CubeMesh cubeMesh)

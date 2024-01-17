@@ -5,7 +5,6 @@ using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
-using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
@@ -59,11 +58,9 @@ public static class Program
 		builder.RegisterType<ChunkDrawManager>().As<IChunkDrawManager>().SingleInstance();
 		builder.RegisterType<ChunkMeshBuilder>().As<IChunkMeshBuilder>().SingleInstance();
 		builder.RegisterType<TileMouseHoverHandler>().As<ITileHoverHandler>().SingleInstance();
-		builder.RegisterType<TileLoader>().As<ITileLoader>().SingleInstance();
 		
 		// Repositories
-		builder.RegisterType<TileRepository>().As<ITileRepository>().SingleInstance();
-		builder.RegisterType<ModelRepository>().As<IModelRepository>().SingleInstance();
+		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
 		builder.RegisterType<FontRepository>().As<IFontRepository>().SingleInstance();
 		
 		// Server

@@ -61,8 +61,7 @@ public static class Program
 		container.RegisterType<ServerAccessManager>().As<IServerAccessManager>().SingleInstance();
 
 		container.RegisterType<World>().SingleInstance();
-		container.RegisterType<TileRepository>().As<ITileRepository>().SingleInstance();
-		container.RegisterType<TileLoader>().As<ITileLoader>().SingleInstance();
+		container.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
 	}
 
 	private static void OverrideServerSettingsWithCommandLineArgs(CommandLineParser parser, ServerSettings serverSettings)

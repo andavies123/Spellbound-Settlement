@@ -2,9 +2,9 @@
 using Andavies.MonoGame.Meshes;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Meshes;
-using Andavies.SpellboundSettlement.Repositories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,12 +12,10 @@ namespace Andavies.SpellboundSettlement;
 
 public class ChunkDrawManager : IChunkDrawManager
 {
-	private readonly IModelRepository _modelRepository;
 	private readonly Camera _camera;
 	
-	public ChunkDrawManager(IModelRepository modelRepository, Camera camera)
+	public ChunkDrawManager(Camera camera)
 	{
-		_modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
 		_camera = camera ?? throw new ArgumentNullException(nameof(camera));
 	}
 
@@ -27,9 +25,9 @@ public class ChunkDrawManager : IChunkDrawManager
 		DrawTerrain(Global.GraphicsDeviceManager.GraphicsDevice, chunkMesh.TerrainMesh);
 		
 		// 2. Draw Models
-		foreach ((ModelTileDetails modelTileDetails, WorldTile worldTile) in chunkMesh.TileModels.Values)
+		foreach ((ModelTile modelTile, WorldTile worldTile) in chunkMesh.TileModels.Values)
 		{
-			DrawWorldTile(modelTileDetails, worldTile);
+			DrawWorldTile(modelTile, worldTile);
 		}
 	}
 	
@@ -62,7 +60,7 @@ public class ChunkDrawManager : IChunkDrawManager
 			indexBuffer.IndexCount / 3);
 	}
 	
-	private void DrawWorldTile(ModelTileDetails modelTileDetails, WorldTile worldTile)
+	private void DrawWorldTile(ModelTile modelTile, WorldTile worldTile)
 	{
 		const int tileCount = 10;
 		Vector3 position = new(
@@ -70,12 +68,15 @@ public class ChunkDrawManager : IChunkDrawManager
 			0f * tileCount + worldTile.TilePosition.Y, // Currently the world is only 1 chunk high
 			worldTile.ParentChunkPosition.Y * tileCount + worldTile.TilePosition.Z);
 
-		if (!_modelRepository.TryGetModel(modelTileDetails.ContentModelPath, out Model model) || model == null)
-		{
+		// if (!_modelRepository.TryGetModel(modelTile.ContentModelPath, out Model model) || model == null)
+		// {
+		// 	return;
+		// }
+
+		if (modelTile.Model == null)
 			return;
-		}
 		
-		foreach (ModelMesh modelMesh in model.Meshes)
+		foreach (ModelMesh modelMesh in modelTile.Model.Meshes)
 		{
 			foreach (var effect1 in modelMesh.Effects)
 			{
@@ -86,8 +87,8 @@ public class ChunkDrawManager : IChunkDrawManager
 				effect.Projection = _camera.ProjectionMatrix;
 		
 				Matrix rotationMatrix = Matrix.CreateRotationY(RotationToRadians(worldTile.Rotation));
-				Matrix translationMatrix = Matrix.CreateTranslation(modelTileDetails.PostScaleOffset + position);
-				Matrix scaleMatrix = Matrix.CreateScale(modelTileDetails.ModelScale * worldTile.Scale);
+				Matrix translationMatrix = Matrix.CreateTranslation(modelTile.ModelDisplayOffset + position);
+				Matrix scaleMatrix = Matrix.CreateScale(modelTile.ModelDisplayScale * worldTile.Scale);
 				
 				effect.World = scaleMatrix * rotationMatrix * translationMatrix; // Translation needs to be last
 			}
