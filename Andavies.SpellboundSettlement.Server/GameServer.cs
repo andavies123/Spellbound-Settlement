@@ -2,6 +2,7 @@ using System.Net;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.Network.Utilities;
 using Andavies.MonoGame.Utilities;
+using Andavies.MonoGame.Utilities.GameEvents;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
@@ -21,6 +22,7 @@ public class GameServer
 	private readonly INetworkServer _networkServer;
 	private readonly IPacketBatchSender _packetBatchSender;
 	private readonly IServerAccessManager _serverAccessManager;
+	private readonly IGameEventSystem _gameEventSystem;
 	private readonly ITileRegistry _tileRegistry;
 	private readonly World _world;
 	
@@ -31,6 +33,7 @@ public class GameServer
 		INetworkServer networkServer,
 		IPacketBatchSender packetBatchSender,
 		IServerAccessManager serverAccessManager,
+		IGameEventSystem gameEventSystem,
 		ITileRegistry tileRegistry,
 		World world)
 	{
@@ -38,6 +41,7 @@ public class GameServer
 		_networkServer = networkServer ?? throw new ArgumentNullException(nameof(networkServer));
 		_packetBatchSender = packetBatchSender ?? throw new ArgumentNullException(nameof(packetBatchSender));
 		_serverAccessManager = serverAccessManager ?? throw new ArgumentNullException(nameof(serverAccessManager));
+		_gameEventSystem = gameEventSystem ?? throw new ArgumentNullException(nameof(gameEventSystem));
 		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 		_world = world ?? throw new ArgumentNullException(nameof(world));
 		
@@ -54,7 +58,9 @@ public class GameServer
 
 		InitializeServerAccessManager(serverSettings);
 		RegisterTiles();
+		
 		_world.CreateNewWorld(Vector2Int.Zero, 5);
+		_gameEventSystem.Publish(new WorldCreatedGameEvent());
 		
 		_networkServer.AddSubscription<WorldChunkRequestPacket>(OnWorldChunkRequestPacketReceived);
 		

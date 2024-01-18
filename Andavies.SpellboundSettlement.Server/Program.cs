@@ -2,6 +2,7 @@
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.Network.Utilities;
 using Andavies.MonoGame.Utilities;
+using Andavies.MonoGame.Utilities.GameEvents;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Autofac;
@@ -59,6 +60,7 @@ public static class Program
 		container.RegisterType<PacketBatchSender>().As<IPacketBatchSender>().SingleInstance();
 		container.RegisterType<ServerConfigFileManager>().As<IServerConfigFileManager>().SingleInstance();
 		container.RegisterType<ServerAccessManager>().As<IServerAccessManager>().SingleInstance();
+		container.RegisterType<GameEventSystem>().As<IGameEventSystem>().SingleInstance();
 
 		container.RegisterType<World>().SingleInstance();
 		container.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
