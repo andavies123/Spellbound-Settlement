@@ -74,3 +74,18 @@ public class SmallRockTile : ModelTile
 	public override float ModelDisplayScale => 1 / 32f;
 	public override Vector3 ModelDisplayOffset => new(0.5f);
 }
+
+public class BushTile : ModelTile
+{
+	public override string TileId => nameof(BushTile);
+	public override string DisplayName => "Bush";
+	public override string Description => "A bush";
+	public override bool IsBreakable => true;
+
+	public override string ContentModelPath => "Models/Bushes/bush";
+	public override float MinGenerationScale => .25f;
+	public override float MaxGenerationScale => 1f;
+
+	public override float ModelDisplayScale => 1 / 32f;
+	public override Vector3 ModelDisplayOffset => new(0.5f);
+}

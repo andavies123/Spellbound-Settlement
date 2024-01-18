@@ -160,5 +160,6 @@ public class GameServer
 		_tileRegistry.RegisterTile(new GroundTile());
 		_tileRegistry.RegisterTile(new GrassTile());
 		_tileRegistry.RegisterTile(new SmallRockTile());
+		_tileRegistry.RegisterTile(new BushTile());
 	}
 }

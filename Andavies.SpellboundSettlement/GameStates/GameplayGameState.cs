@@ -119,11 +119,14 @@ public class GameplayGameState : GameState
 		grassTile.Model = Global.GameManager.Content.Load<Model>(grassTile.ContentModelPath);
 		SmallRockTile smallRockTile = new();
 		smallRockTile.Model = Global.GameManager.Content.Load<Model>(smallRockTile.ContentModelPath);
+		BushTile bushTile = new();
+		bushTile.Model = Global.GameManager.Content.Load<Model>(bushTile.ContentModelPath);
         
 		_tileRegistry.RegisterTile(new AirTile());
 		_tileRegistry.RegisterTile(new GroundTile());
 		_tileRegistry.RegisterTile(grassTile);
 		_tileRegistry.RegisterTile(smallRockTile);
+		_tileRegistry.RegisterTile(bushTile);
 	}
 
 	private void OnWorldChunkResponsePacketReceived(INetSerializable packet)

@@ -66,6 +66,7 @@ public class World
 					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
 				bool addRock = (int) ((rockNoise + 1) * 1000) % 97 == 0; // 97 is an arbitrary prime number. Completely random
 				bool addGrass = GetThousandthsPlace(noise) < 2;
+				bool addBush = GetThousandthsPlace(noise) == 3;
 				
 				for (int y = 0; y < chunk.TileCount.X; y++)
 				{
@@ -94,6 +95,17 @@ public class World
 						if (!_tileRegistry.TryGetTile(nameof(GrassTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
                         
+						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition)
+						{
+							Rotation = GetRotationFromNoise(noise),
+							Scale = GetScaleFromNoise(noise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
+						};
+					}
+					else if (y == height + 1 && addBush)
+					{
+						if (!_tileRegistry.TryGetTile(nameof(BushTile), out Tile? tile) || tile is not ModelTile modelTile)
+							continue;
+						
 						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition)
 						{
 							Rotation = GetRotationFromNoise(noise),
