@@ -67,12 +67,7 @@ public class ChunkDrawManager : IChunkDrawManager
 			worldTile.ParentChunkPosition.X * tileCount + worldTile.TilePosition.X, 
 			0f * tileCount + worldTile.TilePosition.Y, // Currently the world is only 1 chunk high
 			worldTile.ParentChunkPosition.Y * tileCount + worldTile.TilePosition.Z);
-
-		// if (!_modelRepository.TryGetModel(modelTile.ContentModelPath, out Model model) || model == null)
-		// {
-		// 	return;
-		// }
-
+		
 		if (modelTile.Model == null)
 			return;
 		

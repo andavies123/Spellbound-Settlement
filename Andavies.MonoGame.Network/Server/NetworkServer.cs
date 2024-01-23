@@ -31,6 +31,8 @@ public class NetworkServer : INetworkServer
 	public event Action? ServerStarted;
 	public event Action<NetPeer>? ClientConnected;
 	public event Action<NetPeer>? ClientDisconnected;
+
+	public List<NetPeer> Clients => _server.ConnectedPeerList;
 	
 	public void Start(IPAddress ipAddress, int port, int maxAllowedUsers)
 	{

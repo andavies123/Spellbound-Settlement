@@ -62,8 +62,11 @@ public static class Program
 		container.RegisterType<ServerAccessManager>().As<IServerAccessManager>().SingleInstance();
 		container.RegisterType<GameEventSystem>().As<IGameEventSystem>().SingleInstance();
 
+		container.RegisterType<WorldManager>().As<IWorldManager>().SingleInstance();
 		container.RegisterType<World>().SingleInstance();
 		container.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
+		container.RegisterType<WizardManager>().As<IWizardManager>().SingleInstance();
+		container.RegisterType<GameEventListener>().As<IGameEventListener>().SingleInstance();
 	}
 
 	private static void OverrideServerSettingsWithCommandLineArgs(CommandLineParser parser, ServerSettings serverSettings)

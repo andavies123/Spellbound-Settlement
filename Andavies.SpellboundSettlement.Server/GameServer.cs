@@ -8,6 +8,7 @@ using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
+using Andavies.SpellboundSettlement.Wizards;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Serilog;
@@ -23,6 +24,8 @@ public class GameServer
 	private readonly IPacketBatchSender _packetBatchSender;
 	private readonly IServerAccessManager _serverAccessManager;
 	private readonly IGameEventSystem _gameEventSystem;
+	private readonly IWorldManager _worldManager;
+	private readonly IWizardManager _wizardManager;
 	private readonly ITileRegistry _tileRegistry;
 	private readonly World _world;
 	
@@ -34,7 +37,10 @@ public class GameServer
 		IPacketBatchSender packetBatchSender,
 		IServerAccessManager serverAccessManager,
 		IGameEventSystem gameEventSystem,
+		IWorldManager worldManager,
+		IWizardManager wizardManager,
 		ITileRegistry tileRegistry,
+		IGameEventListener gameEventListener, // Only added here so it gets started
 		World world)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -42,9 +48,10 @@ public class GameServer
 		_packetBatchSender = packetBatchSender ?? throw new ArgumentNullException(nameof(packetBatchSender));
 		_serverAccessManager = serverAccessManager ?? throw new ArgumentNullException(nameof(serverAccessManager));
 		_gameEventSystem = gameEventSystem ?? throw new ArgumentNullException(nameof(gameEventSystem));
+		_worldManager = worldManager ?? throw new ArgumentNullException(nameof(worldManager));
+		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
 		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 		_world = world ?? throw new ArgumentNullException(nameof(world));
-		
 	}
 
 	private float TickTimeMilliseconds => 1000f / _tickRate;
@@ -59,7 +66,8 @@ public class GameServer
 		InitializeServerAccessManager(serverSettings);
 		RegisterTiles();
 		
-		_world.CreateNewWorld(Vector2Int.Zero, 5);
+		_worldManager.CreateWorld();
+		
 		_gameEventSystem.Publish(new WorldCreatedGameEvent());
 		
 		_networkServer.AddSubscription<WorldChunkRequestPacket>(OnWorldChunkRequestPacketReceived);
@@ -85,7 +93,15 @@ public class GameServer
 
 	private void OnClientConnected(NetPeer client)
 	{
-		_packetBatchSender.SendPacketNow(client, new WelcomePacket {WelcomeMessage = "Welcome to this Spellbound Settlement server"});
+		_packetBatchSender.AddPacket(client, new WelcomePacket {WelcomeMessage = "Welcome to this Spellbound Settlement server"});
+
+		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
+		{
+			_packetBatchSender.AddPacket(client, new WizardAddedPacket
+			{
+				Wizard = wizard
+			});
+		}
 	}
 
 	private void OnWorldChunkRequestPacketReceived(INetSerializable packet, NetPeer client)
@@ -135,7 +151,7 @@ public class GameServer
 
 	private void UpdateGame()
 	{
-		// Update game logic
+		_worldManager.Tick();
 	}
 
 	private void UpdateClients()

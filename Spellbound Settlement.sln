@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Network",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.MonoGame.Drawing", "Andavies.MonoGame.Drawing\Andavies.MonoGame.Drawing.csproj", "{9E21A00A-BA9F-4A4E-B7C4-ABD0E98EB1CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andavies.SpellboundSettlement.Wizards", "Andavies.SpellboundSettlement.Wizards\Andavies.SpellboundSettlement.Wizards.csproj", "{3D72E5A6-9B52-47BE-9E1D-3E6D788CAC5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{9E21A00A-BA9F-4A4E-B7C4-ABD0E98EB1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E21A00A-BA9F-4A4E-B7C4-ABD0E98EB1CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E21A00A-BA9F-4A4E-B7C4-ABD0E98EB1CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D72E5A6-9B52-47BE-9E1D-3E6D788CAC5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D72E5A6-9B52-47BE-9E1D-3E6D788CAC5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D72E5A6-9B52-47BE-9E1D-3E6D788CAC5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D72E5A6-9B52-47BE-9E1D-3E6D788CAC5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

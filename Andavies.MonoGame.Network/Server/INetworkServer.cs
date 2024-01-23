@@ -13,6 +13,9 @@ public interface INetworkServer
 	/// <summary>Raised when a client disconnects from the server</summary>
 	public event Action<NetPeer>? ClientDisconnected;
 	
+	/// <summary>A list of all the clients that are currently connected</summary>
+	public List<NetPeer> Clients { get; }
+	
 	/// <summary>Call this to create the server and start the current server loop</summary>
 	/// <param name="ipAddress">The ip address the server will run on</param>
 	/// <param name="port">The port the server will run on</param>
