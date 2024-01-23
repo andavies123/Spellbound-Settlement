@@ -12,10 +12,12 @@ namespace Andavies.SpellboundSettlement;
 
 public class ChunkDrawManager : IChunkDrawManager
 {
+	private readonly IModelDrawManager _modelDrawManager;
 	private readonly Camera _camera;
 	
-	public ChunkDrawManager(Camera camera)
+	public ChunkDrawManager(IModelDrawManager modelDrawManager, Camera camera)
 	{
+		_modelDrawManager = modelDrawManager ?? throw new ArgumentNullException(nameof(modelDrawManager));
 		_camera = camera ?? throw new ArgumentNullException(nameof(camera));
 	}
 
@@ -64,32 +66,34 @@ public class ChunkDrawManager : IChunkDrawManager
 	{
 		const int tileCount = 10;
 		Vector3 position = new(
-			worldTile.ParentChunkPosition.X * tileCount + worldTile.TilePosition.X, 
+			worldTile.ParentChunkPosition.X * tileCount + worldTile.TilePosition.X,
 			0f * tileCount + worldTile.TilePosition.Y, // Currently the world is only 1 chunk high
 			worldTile.ParentChunkPosition.Y * tileCount + worldTile.TilePosition.Z);
 		
-		if (modelTile.Model == null)
-			return;
+		_modelDrawManager.DrawModel(modelTile.Model, modelTile.ModelDetails, position, worldTile.Scale, RotationToRadians(worldTile.Rotation));
 		
-		foreach (ModelMesh modelMesh in modelTile.Model.Meshes)
-		{
-			foreach (var effect1 in modelMesh.Effects)
-			{
-				BasicEffect effect = (BasicEffect) effect1;
-				effect.EnableDefaultLighting();
-				
-				effect.View = _camera.ViewMatrix;
-				effect.Projection = _camera.ProjectionMatrix;
-		
-				Matrix rotationMatrix = Matrix.CreateRotationY(RotationToRadians(worldTile.Rotation));
-				Matrix translationMatrix = Matrix.CreateTranslation(modelTile.ModelDisplayOffset + position);
-				Matrix scaleMatrix = Matrix.CreateScale(modelTile.ModelDisplayScale * worldTile.Scale);
-				
-				effect.World = scaleMatrix * rotationMatrix * translationMatrix; // Translation needs to be last
-			}
-			
-			modelMesh.Draw();
-		}
+		// if (modelTile.Model == null)
+		// 	return;
+		//
+		// foreach (ModelMesh modelMesh in modelTile.Model.Meshes)
+		// {
+		// 	foreach (var effect1 in modelMesh.Effects)
+		// 	{
+		// 		BasicEffect effect = (BasicEffect) effect1;
+		// 		effect.EnableDefaultLighting();
+		// 		
+		// 		effect.View = _camera.ViewMatrix;
+		// 		effect.Projection = _camera.ProjectionMatrix;
+		//
+		// 		Matrix rotationMatrix = Matrix.CreateRotationY(RotationToRadians(worldTile.Rotation));
+		// 		Matrix translationMatrix = Matrix.CreateTranslation(modelTile.ModelDisplayOffset + position);
+		// 		Matrix scaleMatrix = Matrix.CreateScale(modelTile.ModelDisplayScale * worldTile.Scale);
+		// 		
+		// 		effect.World = scaleMatrix * rotationMatrix * translationMatrix; // Translation needs to be last
+		// 	}
+		// 	
+		// 	modelMesh.Draw();
+		// }
 	}
 
 	private static float RotationToRadians(Rotation rotation)

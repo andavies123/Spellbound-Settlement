@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Andavies.SpellboundSettlement;
+namespace Andavies.MonoGame.Utilities;
 
 public readonly struct ModelDetails
 {

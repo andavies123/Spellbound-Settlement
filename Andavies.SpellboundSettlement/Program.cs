@@ -58,6 +58,7 @@ public static class Program
 		builder.RegisterType<ChunkDrawManager>().As<IChunkDrawManager>().SingleInstance();
 		builder.RegisterType<ChunkMeshBuilder>().As<IChunkMeshBuilder>().SingleInstance();
 		builder.RegisterType<TileMouseHoverHandler>().As<ITileHoverHandler>().SingleInstance();
+		builder.RegisterType<ModelDrawManager>().As<IModelDrawManager>().SingleInstance();
 		
 		// Repositories
 		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();

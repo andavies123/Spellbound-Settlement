@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Utilities;
-using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
@@ -29,7 +28,7 @@ public class GameplayGameState : GameState
 	private readonly IChunkMeshBuilder _chunkMeshBuilder;
 	private readonly IChunkDrawManager _chunkDrawManager;
 	private readonly ITileHoverHandler _tileHoverHandler;
-	private readonly Camera _camera;
+	private readonly IModelDrawManager _modelDrawManager;
 	private readonly WorldMesh _worldMesh = new();
 
 	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
@@ -45,9 +44,9 @@ public class GameplayGameState : GameState
 		IChunkMeshBuilder chunkMeshBuilder,
 		IChunkDrawManager chunkDrawManager,
 		ITileHoverHandler tileHoverHandler,
+		IModelDrawManager modelDrawManager,
 		GameplayUIState gameplayUIState,
-		GameplayInputState inputState,
-		Camera camera)
+		GameplayInputState inputState)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_networkClient = networkClient ?? throw new ArgumentNullException(nameof(networkClient));
@@ -55,9 +54,9 @@ public class GameplayGameState : GameState
 		_chunkMeshBuilder = chunkMeshBuilder ?? throw new ArgumentNullException(nameof(chunkMeshBuilder));
 		_chunkDrawManager = chunkDrawManager ?? throw new ArgumentNullException(nameof(chunkDrawManager));
 		_tileHoverHandler = tileHoverHandler ?? throw new ArgumentNullException(nameof(tileHoverHandler));
+		_modelDrawManager = modelDrawManager ?? throw new ArgumentNullException(nameof(modelDrawManager));
 		_gameplayGameplayUIState = gameplayUIState ?? throw new ArgumentNullException(nameof(gameplayUIState));
 		InputState = inputState ?? throw new ArgumentNullException(nameof(inputState));
-		_camera = camera ?? throw new ArgumentNullException(nameof(camera));
 		
 		UIStates.Add(gameplayUIState);
 	}
@@ -141,11 +140,11 @@ public class GameplayGameState : GameState
 	private void RegisterTiles()
 	{
 		GrassTile grassTile = new();
-		grassTile.Model = Global.GameManager.Content.Load<Model>(grassTile.ContentModelPath);
+		grassTile.Model = Global.GameManager.Content.Load<Model>(grassTile.ModelDetails.ContentModelPath);
 		SmallRockTile smallRockTile = new();
-		smallRockTile.Model = Global.GameManager.Content.Load<Model>(smallRockTile.ContentModelPath);
+		smallRockTile.Model = Global.GameManager.Content.Load<Model>(smallRockTile.ModelDetails.ContentModelPath);
 		BushTile bushTile = new();
-		bushTile.Model = Global.GameManager.Content.Load<Model>(bushTile.ContentModelPath);
+		bushTile.Model = Global.GameManager.Content.Load<Model>(bushTile.ModelDetails.ContentModelPath);
         
 		_tileRegistry.RegisterTile(new AirTile());
 		_tileRegistry.RegisterTile(new GroundTile());
@@ -170,25 +169,7 @@ public class GameplayGameState : GameState
 			return;
 		}
 		
-		foreach (ModelMesh modelMesh in wizardDrawDetails.Model.Meshes)
-		{
-			foreach (var effect1 in modelMesh.Effects)
-			{
-				BasicEffect effect = (BasicEffect) effect1;
-				effect.EnableDefaultLighting();
-				
-				effect.View = _camera.ViewMatrix;
-				effect.Projection = _camera.ProjectionMatrix;
-		
-				//Matrix rotationMatrix = Matrix.CreateRotationY(RotationToRadians(worldTile.Rotation));
-				Matrix translationMatrix = Matrix.CreateTranslation(wizardDrawDetails.ModelDetails.PostScaleOffset + (Vector3)wizard.WorldPosition);
-				Matrix scaleMatrix = Matrix.CreateScale(wizardDrawDetails.ModelDetails.ModelScale);
-				
-				effect.World = scaleMatrix * translationMatrix; // Translation needs to be last
-			}
-			
-			modelMesh.Draw();
-		}
+		_modelDrawManager.DrawModel(wizardDrawDetails.Model, wizardDrawDetails.ModelDetails, (Vector3)wizard.WorldPosition, 1f, 0);
 	}
 
 	private void OnWorldChunkResponsePacketReceived(INetSerializable packet)
@@ -234,7 +215,7 @@ public class GameplayGameState : GameState
 	{
 		foreach (ModelTile modelTile in _tileRegistry.GetAllTilesOfType<ModelTile>())
 		{
-			Global.GameManager.Content.UnloadAsset(modelTile.ContentModelPath);
+			Global.GameManager.Content.UnloadAsset(modelTile.ModelDetails.ContentModelPath);
 		}
 	}
 
