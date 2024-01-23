@@ -4,8 +4,6 @@ using Andavies.MonoGame.Network.Utilities;
 using Andavies.MonoGame.Utilities;
 using Andavies.MonoGame.Utilities.GameEvents;
 using Andavies.SpellboundSettlement.GameWorld;
-using Andavies.SpellboundSettlement.GameWorld.Repositories;
-using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using Andavies.SpellboundSettlement.Wizards;
@@ -26,7 +24,7 @@ public class GameServer
 	private readonly IGameEventSystem _gameEventSystem;
 	private readonly IWorldManager _worldManager;
 	private readonly IWizardManager _wizardManager;
-	private readonly ITileRegistry _tileRegistry;
+	private readonly ITileRegister _tileRegister;
 	private readonly World _world;
 	
 	private bool _runGameLoop = false;
@@ -39,7 +37,7 @@ public class GameServer
 		IGameEventSystem gameEventSystem,
 		IWorldManager worldManager,
 		IWizardManager wizardManager,
-		ITileRegistry tileRegistry,
+		ITileRegister tileRegister,
 		IGameEventListener gameEventListener, // Only added here so it gets started
 		World world)
 	{
@@ -50,7 +48,7 @@ public class GameServer
 		_gameEventSystem = gameEventSystem ?? throw new ArgumentNullException(nameof(gameEventSystem));
 		_worldManager = worldManager ?? throw new ArgumentNullException(nameof(worldManager));
 		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
-		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
+		_tileRegister = tileRegister ?? throw new ArgumentNullException(nameof(tileRegister));
 		_world = world ?? throw new ArgumentNullException(nameof(world));
 	}
 
@@ -64,7 +62,7 @@ public class GameServer
 			parsedPort = 5555;
 
 		InitializeServerAccessManager(serverSettings);
-		RegisterTiles();
+		_tileRegister.RegisterTiles();
 		
 		_worldManager.CreateWorld();
 		
@@ -168,14 +166,5 @@ public class GameServer
 		_serverAccessManager.BlackListEnabled = serverSettings.BlackListEnabled;
 		serverSettings.WhiteList.ForEach(_serverAccessManager.AddToWhiteList);
 		serverSettings.BlackList.ForEach(_serverAccessManager.AddToBlackList);
-	}
-	
-	private void RegisterTiles()
-	{
-		_tileRegistry.RegisterTile(new AirTile());
-		_tileRegistry.RegisterTile(new GroundTile());
-		_tileRegistry.RegisterTile(new GrassTile());
-		_tileRegistry.RegisterTile(new SmallRockTile());
-		_tileRegistry.RegisterTile(new BushTile());
 	}
 }

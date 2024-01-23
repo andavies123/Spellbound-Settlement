@@ -65,6 +65,7 @@ public static class Program
 		container.RegisterType<WorldManager>().As<IWorldManager>().SingleInstance();
 		container.RegisterType<World>().SingleInstance();
 		container.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
+		container.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
 		container.RegisterType<WizardManager>().As<IWizardManager>().SingleInstance();
 		container.RegisterType<GameEventListener>().As<IGameEventListener>().SingleInstance();
 	}

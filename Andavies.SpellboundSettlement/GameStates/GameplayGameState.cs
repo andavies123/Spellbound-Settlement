@@ -139,18 +139,18 @@ public class GameplayGameState : GameState
 
 	private void RegisterTiles()
 	{
-		GrassTile grassTile = new();
-		grassTile.Model = Global.GameManager.Content.Load<Model>(grassTile.ModelDetails.ContentModelPath);
-		SmallRockTile smallRockTile = new();
-		smallRockTile.Model = Global.GameManager.Content.Load<Model>(smallRockTile.ModelDetails.ContentModelPath);
-		BushTile bushTile = new();
-		bushTile.Model = Global.GameManager.Content.Load<Model>(bushTile.ModelDetails.ContentModelPath);
-        
-		_tileRegistry.RegisterTile(new AirTile());
-		_tileRegistry.RegisterTile(new GroundTile());
-		_tileRegistry.RegisterTile(grassTile);
-		_tileRegistry.RegisterTile(smallRockTile);
-		_tileRegistry.RegisterTile(bushTile);
+		_tileRegistry.TryGetTile(nameof(GrassTile), out Tile tile);
+		GrassTile grassTile = tile as GrassTile;
+		
+		_tileRegistry.TryGetTile(nameof(SmallRockTile), out tile);
+		SmallRockTile smallRockTile = tile as SmallRockTile;
+		
+		_tileRegistry.TryGetTile(nameof(BushTile), out tile);
+		BushTile bushTile = tile as BushTile;
+		
+		grassTile!.Model = Global.GameManager.Content.Load<Model>(grassTile.ModelDetails.ContentModelPath);
+		smallRockTile!.Model = Global.GameManager.Content.Load<Model>(smallRockTile.ModelDetails.ContentModelPath);
+		bushTile!.Model = Global.GameManager.Content.Load<Model>(bushTile.ModelDetails.ContentModelPath);
 	}
 
 	private void RegisterWizardDrawDetails()

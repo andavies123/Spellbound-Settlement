@@ -13,6 +13,8 @@ public class TileRegistry : ITileRegistry
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 	}
 
+	public int TileCount => _allTiles.Count;
+
 	public bool RegisterTile(Tile tile)
 	{
 		if (!_allTiles.TryAdd(tile.TileId, tile))

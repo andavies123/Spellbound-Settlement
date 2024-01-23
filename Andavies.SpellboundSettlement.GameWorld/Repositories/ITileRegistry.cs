@@ -5,6 +5,11 @@ namespace Andavies.SpellboundSettlement.GameWorld.Repositories;
 public interface ITileRegistry
 {
 	/// <summary>
+	/// The current number of registered tiles
+	/// </summary>
+	int TileCount { get; }
+	
+	/// <summary>
 	/// Registers a tile to the registry.
 	/// Uses the tile's unique Id to register
 	/// </summary>

@@ -4,6 +4,7 @@ using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
+using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Repositories;
 using Microsoft.Xna.Framework;
@@ -19,6 +20,7 @@ public class GameManager : Game
 	private readonly ICameraController _cameraController;
 	private readonly IUIStyleRepository _uiStyleCollection;
 	private readonly IFontRepository _fontRepository;
+	private readonly ITileRegister _tileRegister;
 	
 	// Update Times
 	private DateTime _currentTime;
@@ -35,15 +37,17 @@ public class GameManager : Game
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
 		IUIStyleRepository uiStyleCollection,
-		IFontRepository fontRepository)
+		IFontRepository fontRepository,
+		ITileRegister tileRegister)
 	{
 		Global.GameManager = this;
 
-		_logger = logger;
-		_gameStateManager = gameStateManager;
-		_cameraController = cameraController;
+		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_gameStateManager = gameStateManager ?? throw new ArgumentNullException(nameof(gameStateManager));
+		_cameraController = cameraController ?? throw new ArgumentNullException(nameof(cameraController));
 		_uiStyleCollection = uiStyleCollection ?? throw new ArgumentNullException(nameof(uiStyleCollection));
 		_fontRepository = fontRepository ?? throw new ArgumentNullException(nameof(fontRepository));
+		_tileRegister = tileRegister ?? throw new ArgumentNullException(nameof(tileRegister));
 		
 		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
@@ -79,6 +83,7 @@ public class GameManager : Game
 		
 		Global.SpriteBatch = new SpriteBatch(GraphicsDevice);
 		InitializeUIStyleCollection();
+		_tileRegister.RegisterTiles();
 		
 		_gameStateManager.LateInit();
 	}
