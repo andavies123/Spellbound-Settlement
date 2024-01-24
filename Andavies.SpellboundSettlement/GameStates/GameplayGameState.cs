@@ -153,7 +153,7 @@ public class GameplayGameState : GameState
 			return;
 		}
 		
-		_modelDrawManager.DrawModel(wizardDrawDetails.Model, wizardDrawDetails.ModelDetails, (Vector3)wizard.WorldPosition, 1f, 0);
+		_modelDrawManager.DrawModel(wizardDrawDetails.Model, wizardDrawDetails.ModelDetails, (Vector3)wizard.Position, 1f, wizard.Rotation);
 	}
 
 	private void OnWorldChunkResponsePacketReceived(INetSerializable packet)

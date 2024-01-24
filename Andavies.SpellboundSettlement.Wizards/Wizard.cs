@@ -9,19 +9,35 @@ public abstract class Wizard : INetSerializable
 	public Guid Id { get; private set; } = Guid.NewGuid();
 	public string Name { get; set; } = "Andrew Davies";
 	
-	public Vector3Int WorldPosition { get; set; }
+	/// <summary>
+	/// The current world position of this wizard.
+	/// This value is in world coordinates
+	/// </summary>
+	public Vector3Int Position { get; set; }
 	
+	/// <summary>
+	/// The current world rotation of this wizard.
+	/// This value is in radians.
+	/// 0     => Facing positive X
+	/// PI/2  => Facing positive Z
+	/// PI    => Facing negative X
+	/// 3PI/2 => Facing negative Z
+	/// </summary>
+	public float Rotation { get; set; }
+
 	public virtual void Serialize(NetDataWriter writer)
 	{
 		writer.Put(Id.ToString());
 		writer.Put(Name);
-		writer.Put(WorldPosition);
+		writer.Put(Position);
+		writer.Put(Rotation);
 	}
 
 	public virtual void Deserialize(NetDataReader reader)
 	{
 		Id = Guid.Parse(reader.GetString());
 		Name = reader.GetString();
-		WorldPosition = reader.GetVector3Int();
+		Position = reader.GetVector3Int();
+		Rotation = reader.GetFloat();
 	}
 }

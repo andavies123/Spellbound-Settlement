@@ -91,7 +91,7 @@ public class GameManager : Game
 	protected override void LoadContent()
 	{
 		_logger.Debug("Loading Content...");
-		Effect = Content.Load<Effect>("TestShader");
+		Effect = Content.Load<Effect>("Shaders/BaseShader");
 
 		InitializeFontRepository();
 	}

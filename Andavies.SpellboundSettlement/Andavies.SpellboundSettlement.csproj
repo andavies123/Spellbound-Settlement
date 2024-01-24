@@ -47,6 +47,9 @@
   <ItemGroup>
     <None Remove="Assets\Config\world_tiles.json" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Content\Shaders\ShadowMap.fx" />
+  </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />
