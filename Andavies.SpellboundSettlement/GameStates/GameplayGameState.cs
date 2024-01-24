@@ -69,7 +69,7 @@ public class GameplayGameState : GameState
 	{
 		base.Start();
 		
-		RegisterTiles();
+		LoadTileModels();
 		RegisterWizardDrawDetails();
 		
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
@@ -137,22 +137,6 @@ public class GameplayGameState : GameState
 	private void OnPauseGameKeyReleased() => PauseGameRequested?.Invoke();
 	private void OnPauseGameClicked() => PauseGameRequested?.Invoke();
 
-	private void RegisterTiles()
-	{
-		_tileRegistry.TryGetTile(nameof(GrassTile), out Tile tile);
-		GrassTile grassTile = tile as GrassTile;
-		
-		_tileRegistry.TryGetTile(nameof(SmallRockTile), out tile);
-		SmallRockTile smallRockTile = tile as SmallRockTile;
-		
-		_tileRegistry.TryGetTile(nameof(BushTile), out tile);
-		BushTile bushTile = tile as BushTile;
-		
-		grassTile!.Model = Global.GameManager.Content.Load<Model>(grassTile.ModelDetails.ContentModelPath);
-		smallRockTile!.Model = Global.GameManager.Content.Load<Model>(smallRockTile.ModelDetails.ContentModelPath);
-		bushTile!.Model = Global.GameManager.Content.Load<Model>(bushTile.ModelDetails.ContentModelPath);
-	}
-
 	private void RegisterWizardDrawDetails()
 	{
 		BasicWizardDrawDetails basicWizardDrawDetails = new();
@@ -211,11 +195,20 @@ public class GameplayGameState : GameState
 		_wizards[wizardAddedPacket.Wizard.Id] = wizardAddedPacket.Wizard;
 	}
 
+	private void LoadTileModels()
+	{
+		foreach (ModelTile modelTile in _tileRegistry.GetAllTilesOfType<ModelTile>())
+		{
+			modelTile.Model = Global.GameManager.Content.Load<Model>(modelTile.ModelDetails.ContentModelPath);
+		}
+	}
+
 	private void UnloadTileModels()
 	{
 		foreach (ModelTile modelTile in _tileRegistry.GetAllTilesOfType<ModelTile>())
 		{
 			Global.GameManager.Content.UnloadAsset(modelTile.ModelDetails.ContentModelPath);
+			modelTile.Model = null;
 		}
 	}
 
