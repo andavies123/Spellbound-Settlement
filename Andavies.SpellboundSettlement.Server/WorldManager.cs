@@ -21,45 +21,36 @@ public class WorldManager : IWorldManager
 
 	public void CreateWorld()
 	{
+		_logger.Debug("Creating the world...");
 		_world.CreateNewWorld(Vector2Int.Zero, 5);
 
-		BasicWizard wizard1 = new()
+		for (int i = 0; i < 50; i++)
 		{
-			Name = "Andrew Davies",
-			Position = new Vector3Int(0, 10, 0),
-			Rotation = 0
-		};
-		
-		BasicWizard wizard2 = new()
-		{
-			Name = "Andrew Davies",
-			Position = new Vector3Int(2, 10, 0),
-			Rotation = MathHelper.PiOver2
-		};
-		
-		BasicWizard wizard3 = new()
-		{
-			Name = "Andrew Davies",
-			Position = new Vector3Int(4, 10, 0),
-			Rotation = MathHelper.Pi
-		};
-		
-		BasicWizard wizard4 = new()
-		{
-			Name = "Andrew Davies",
-			Position = new Vector3Int(6, 10, 0),
-			Rotation = MathHelper.PiOver2 * 3
-		};
-		
-		_wizardManager.AddWizard(wizard1);
-		_wizardManager.AddWizard(wizard2);
-		_wizardManager.AddWizard(wizard3);
-		_wizardManager.AddWizard(wizard4);
+			SpawnWizard();
+		}
 	}
 
 	public void Tick()
 	{
 		// Add Update logic here
+	}
+
+	private void SpawnWizard()
+	{
+		int xPos = Random.Shared.Next(50);
+		int zPos = Random.Shared.Next(50);
+		int yPos = _world.GetHeightAtPosition(new Vector3Int(xPos, 0, zPos)) + 1; // Increase by 1 to be on top of the terrain
+		Vector3Int position = new(xPos, yPos, zPos);
+		float rotation = Random.Shared.Next(4) * MathHelper.PiOver2;
+		
+		BasicWizard wizard = new()
+		{
+			Name = "Andrew Davies",
+			Position = position,
+			Rotation = rotation
+		};
+		
+		_wizardManager.AddWizard(wizard);
 	}
 }
 

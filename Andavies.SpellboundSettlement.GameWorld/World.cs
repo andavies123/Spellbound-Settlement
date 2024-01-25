@@ -46,6 +46,22 @@ public class World
 		return _chunks.GetOrAdd(chunkPosition, GenerateChunk);
 	}
 
+	public int GetHeightAtPosition(Vector3Int worldPosition)
+	{
+		(Vector2Int chunkPosition, Vector3Int tilePosition) = GetChunkPositionFromWorldPosition(worldPosition);
+
+		Chunk chunk = _chunks.GetOrAdd(chunkPosition, GenerateChunk);
+		return chunk.GetHeightAtPosition(new Vector2Int(tilePosition.X, tilePosition.Z));
+	}
+
+	private (Vector2Int chunkPosition, Vector3Int tilePosition) GetChunkPositionFromWorldPosition(Vector3Int worldPosition)
+	{
+		Vector2Int chunkPosition = new(worldPosition.X / 10, worldPosition.Z / 10);
+		Vector3Int tilePosition = new(worldPosition.X % 10, worldPosition.Y % 10, worldPosition.Z % 10);
+
+		return (chunkPosition, tilePosition);
+	}
+
 	private Chunk GenerateChunk(Vector2Int chunkPosition)
 	{
 		_logger.Debug("Generating chunk {position}", chunkPosition);
