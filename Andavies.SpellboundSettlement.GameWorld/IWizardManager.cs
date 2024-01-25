@@ -4,11 +4,11 @@ namespace Andavies.SpellboundSettlement.GameWorld;
 
 public interface IWizardManager
 {
-	event Action<Wizard> WizardAdded;
+	event Action<Wizard> WizardUpdated;
 	event Action<Wizard> WizardRemoved;
 	
 	IReadOnlyDictionary<Guid, Wizard> AllWizards { get; }
 	
-	void AddWizard(Wizard wizard);
+	void AddOrUpdateWizard(Wizard wizard);
 	void RemoveWizard(Guid wizardId);
 }

@@ -23,24 +23,18 @@ public class GameEventListener : IGameEventListener
 		_packetBatchSender = packetBatchSender ?? throw new ArgumentNullException(nameof(packetBatchSender));
 		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
 
-		_wizardManager.WizardAdded += OnWizardAdded;
+		_wizardManager.WizardUpdated += OnWizardUpdated;
 		_wizardManager.WizardRemoved += OnWizardRemoved;
 	}
 
-	private void OnWizardAdded(Wizard wizard)
+	private void OnWizardUpdated(Wizard wizard)
 	{
-		SendToAllClients(new WizardAddedPacket
-		{
-			Wizard = wizard
-		});
+		SendToAllClients(new WizardUpdatedPacket {Wizard = wizard});
 	}
 
 	private void OnWizardRemoved(Wizard wizard)
 	{
-		SendToAllClients(new WizardRemovedPacket
-		{
-			Wizard = wizard
-		});
+		SendToAllClients(new WizardRemovedPacket {Wizard = wizard});
 	}
 
 	private void SendToAllClients(INetSerializable packet)

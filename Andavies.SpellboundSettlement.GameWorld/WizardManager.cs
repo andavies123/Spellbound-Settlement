@@ -10,7 +10,7 @@ public class WizardManager : IWizardManager
 	
 	private readonly ConcurrentDictionary<Guid, Wizard> _allWizards = new();
 
-	public event Action<Wizard>? WizardAdded;
+	public event Action<Wizard>? WizardUpdated;
 	public event Action<Wizard>? WizardRemoved;
 
 	public WizardManager(ILogger logger)
@@ -20,25 +20,16 @@ public class WizardManager : IWizardManager
 
 	public IReadOnlyDictionary<Guid, Wizard> AllWizards => _allWizards;
 	
-	public void AddWizard(Wizard wizard)
+	public void AddOrUpdateWizard(Wizard wizard)
 	{
-		if (!_allWizards.TryAdd(wizard.Id, wizard))
-		{
-			_logger.Warning("Unable to add wizard: {name}, {id}", wizard.Name, wizard.Id);
-			return;
-		}
+		_allWizards[wizard.Id] = wizard;
 		
-		WizardAdded?.Invoke(wizard);
+		WizardUpdated?.Invoke(wizard);
 	}
 
 	public void RemoveWizard(Guid wizardId)
 	{
-		if (!_allWizards.TryRemove(wizardId, out Wizard? wizard))
-		{
-			_logger.Warning("Unable to remove wizard: {id}", wizardId);
-			return;
-		}
-		
-		WizardRemoved?.Invoke(wizard);
+		if (_allWizards.TryRemove(wizardId, out Wizard? wizard)) 
+			WizardRemoved?.Invoke(wizard);
 	}
 }

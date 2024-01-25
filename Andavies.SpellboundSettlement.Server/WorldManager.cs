@@ -50,7 +50,7 @@ public class WorldManager : IWorldManager
 			Rotation = rotation
 		};
 		
-		_wizardManager.AddWizard(wizard);
+		_wizardManager.AddOrUpdateWizard(wizard);
 	}
 }
 

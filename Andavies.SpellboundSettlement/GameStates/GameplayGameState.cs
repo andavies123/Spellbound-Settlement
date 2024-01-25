@@ -25,6 +25,7 @@ public class GameplayGameState : GameState
 	private readonly ILogger _logger;
 	private readonly INetworkClient _networkClient;
 	private readonly ITileRegistry _tileRegistry;
+	private readonly IWizardManager _wizardManager;
 	private readonly IChunkMeshBuilder _chunkMeshBuilder;
 	private readonly IChunkDrawManager _chunkDrawManager;
 	private readonly ITileHoverHandler _tileHoverHandler;
@@ -32,7 +33,6 @@ public class GameplayGameState : GameState
 	private readonly WorldMesh _worldMesh = new();
 
 	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
-	private readonly ConcurrentDictionary<Guid, Wizard> _wizards = new();
 	private readonly ConcurrentDictionary<Type, WizardDrawDetails> _wizardDrawDetails = new();
 
 	private readonly GameplayUIState _gameplayGameplayUIState;
@@ -41,6 +41,7 @@ public class GameplayGameState : GameState
 		ILogger logger,
 		INetworkClient networkClient,
 		ITileRegistry tileRegistry,
+		IWizardManager wizardManager,
 		IChunkMeshBuilder chunkMeshBuilder,
 		IChunkDrawManager chunkDrawManager,
 		ITileHoverHandler tileHoverHandler,
@@ -51,6 +52,7 @@ public class GameplayGameState : GameState
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_networkClient = networkClient ?? throw new ArgumentNullException(nameof(networkClient));
 		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
+		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
 		_chunkMeshBuilder = chunkMeshBuilder ?? throw new ArgumentNullException(nameof(chunkMeshBuilder));
 		_chunkDrawManager = chunkDrawManager ?? throw new ArgumentNullException(nameof(chunkDrawManager));
 		_tileHoverHandler = tileHoverHandler ?? throw new ArgumentNullException(nameof(tileHoverHandler));
@@ -75,7 +77,6 @@ public class GameplayGameState : GameState
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
 
 		_networkClient.AddSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
-		_networkClient.AddSubscription<WizardAddedPacket>(OnWizardAddedPacketReceived);
 		_networkClient.AddSubscription<WizardRemovedPacket>(OnWizardRemovedPacketReceived);
 		_networkClient.AddSubscription<WizardUpdatedPacket>(OnWizardUpdatedPacketReceived);
 
@@ -112,7 +113,7 @@ public class GameplayGameState : GameState
 			_chunkDrawManager.DrawChunk(chunkMesh);
 		}
 
-		foreach (Wizard wizard in _wizards.Values)
+		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
 		{
 			DrawWizard(wizard);
 		}
@@ -123,7 +124,6 @@ public class GameplayGameState : GameState
 		base.End();
 		
 		_networkClient.RemoveSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
-		_networkClient.RemoveSubscription<WizardAddedPacket>(OnWizardAddedPacketReceived);
 		_networkClient.RemoveSubscription<WizardRemovedPacket>(OnWizardRemovedPacketReceived);
 		_networkClient.RemoveSubscription<WizardUpdatedPacket>(OnWizardUpdatedPacketReceived);
 		
@@ -170,29 +170,20 @@ public class GameplayGameState : GameState
 		_worldMesh.SetChunkMesh(chunkMesh, worldChunkResponsePacket.Chunk.ChunkPosition);
 	}
 
-	private void OnWizardAddedPacketReceived(INetSerializable packet)
+	private void OnWizardUpdatedPacketReceived(INetSerializable packet)
 	{
-		if (packet is not WizardAddedPacket wizardAddedPacket || wizardAddedPacket.Wizard == null)
+		if (packet is not WizardUpdatedPacket wizardUpdatedPacket || wizardUpdatedPacket.Wizard == null)
 			return;
-		
-		_wizards.TryAdd(wizardAddedPacket.Wizard.Id, wizardAddedPacket.Wizard);
-		_logger.Debug("Wizard added!");
+
+		_wizardManager.AddOrUpdateWizard(wizardUpdatedPacket.Wizard);
 	}
 
 	private void OnWizardRemovedPacketReceived(INetSerializable packet)
 	{
-		if (packet is not WizardAddedPacket wizardAddedPacket || wizardAddedPacket.Wizard == null)
+		if (packet is not WizardRemovedPacket wizardRemovedPacket || wizardRemovedPacket.Wizard == null)
 			return;
 		
-		_wizards.TryRemove(wizardAddedPacket.Wizard.Id, out Wizard _);
-	}
-
-	private void OnWizardUpdatedPacketReceived(INetSerializable packet)
-	{
-		if (packet is not WizardAddedPacket wizardAddedPacket || wizardAddedPacket.Wizard == null)
-			return;
-
-		_wizards[wizardAddedPacket.Wizard.Id] = wizardAddedPacket.Wizard;
+		_wizardManager.RemoveWizard(wizardRemovedPacket.Wizard.Id);
 	}
 
 	private void LoadTileModels()

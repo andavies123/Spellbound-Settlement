@@ -61,6 +61,7 @@ public static class Program
 		builder.RegisterType<TileMouseHoverHandler>().As<ITileHoverHandler>().SingleInstance();
 		builder.RegisterType<ModelDrawManager>().As<IModelDrawManager>().SingleInstance();
 		builder.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
+		builder.RegisterType<WizardManager>().As<IWizardManager>().SingleInstance();
 		
 		// Repositories
 		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();

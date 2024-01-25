@@ -95,7 +95,7 @@ public class GameServer
 
 		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
 		{
-			_packetBatchSender.AddPacket(client, new WizardAddedPacket
+			_packetBatchSender.AddPacket(client, new WizardUpdatedPacket
 			{
 				Wizard = wizard
 			});
