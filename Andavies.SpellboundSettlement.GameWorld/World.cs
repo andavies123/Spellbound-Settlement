@@ -2,6 +2,7 @@
 using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
+using Microsoft.Xna.Framework;
 using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
@@ -145,7 +146,7 @@ public class World
 	private static int GetHeightFromNoise(float noise, int minHeight, int maxHeight) =>
 		(int)((maxHeight - minHeight) * ((noise + 1)/2)) + minHeight;
 
-	private static Rotation GetRotationFromNoise(float noise) => (Rotation) ((int) ((noise + 1) * 1000) % 4);
+	private static float GetRotationFromNoise(float noise) => (int) ((noise + 1) * 1000) % 4 * MathHelper.PiOver2;
 
 	private static float GetScaleFromNoise(float noise, float minScale, float maxScale)
 	{

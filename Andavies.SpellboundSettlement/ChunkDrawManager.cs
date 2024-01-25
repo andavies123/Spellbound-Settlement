@@ -70,41 +70,6 @@ public class ChunkDrawManager : IChunkDrawManager
 			0f * tileCount + worldTile.TilePosition.Y, // Currently the world is only 1 chunk high
 			worldTile.ParentChunkPosition.Y * tileCount + worldTile.TilePosition.Z);
 		
-		_modelDrawManager.DrawModel(modelTile.Model, modelTile.ModelDetails, position, worldTile.Scale, RotationToRadians(worldTile.Rotation));
-		
-		// if (modelTile.Model == null)
-		// 	return;
-		//
-		// foreach (ModelMesh modelMesh in modelTile.Model.Meshes)
-		// {
-		// 	foreach (var effect1 in modelMesh.Effects)
-		// 	{
-		// 		BasicEffect effect = (BasicEffect) effect1;
-		// 		effect.EnableDefaultLighting();
-		// 		
-		// 		effect.View = _camera.ViewMatrix;
-		// 		effect.Projection = _camera.ProjectionMatrix;
-		//
-		// 		Matrix rotationMatrix = Matrix.CreateRotationY(RotationToRadians(worldTile.Rotation));
-		// 		Matrix translationMatrix = Matrix.CreateTranslation(modelTile.ModelDisplayOffset + position);
-		// 		Matrix scaleMatrix = Matrix.CreateScale(modelTile.ModelDisplayScale * worldTile.Scale);
-		// 		
-		// 		effect.World = scaleMatrix * rotationMatrix * translationMatrix; // Translation needs to be last
-		// 	}
-		// 	
-		// 	modelMesh.Draw();
-		// }
-	}
-
-	private static float RotationToRadians(Rotation rotation)
-	{
-		return rotation switch
-		{
-			Rotation.Zero => 0f,
-			Rotation.Ninety => MathHelper.PiOver2,
-			Rotation.OneHundredEighty => MathHelper.Pi,
-			Rotation.TwoHundredSeventy => MathHelper.PiOver2 * 3,
-			_ => throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null)
-		};
+		_modelDrawManager.DrawModel(modelTile.Model, modelTile.ModelDetails, position, worldTile.Scale, worldTile.Rotation);
 	}
 }

@@ -15,7 +15,7 @@ public class WorldTile
 	
 	public Vector2Int ParentChunkPosition { get; set; }
 	public Vector3Int TilePosition { get; }
-	
-	public Rotation Rotation { get; set; } = Rotation.Zero;
+
+	public float Rotation { get; set; } = 0f;
 	public float Scale { get; set; } = 1f;
 }

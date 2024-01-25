@@ -53,7 +53,7 @@ public class WorldChunkResponsePacket : INetSerializable
 				{
 					string tileId = reader.GetString();
 					Vector3Int tilePosition = reader.GetVector3Int();
-					Rotation rotation = (Rotation)reader.GetInt();
+					float rotation = reader.GetFloat();
 					float scale = reader.GetFloat();
 					worldTiles[x, y, z] = new WorldTile(tileId, chunkPosition, tilePosition)
 					{
