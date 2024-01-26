@@ -56,6 +56,7 @@ public static class Program
 		builder.RegisterLogger(); // Registers ILogger
 		builder.RegisterType<GameManager>().As<Game>().AsSelf().SingleInstance();
 		builder.RegisterType<Camera>().AsSelf().SingleInstance();
+		builder.RegisterType<WorldMesh>().AsSelf().SingleInstance();
 		builder.RegisterType<ChunkDrawManager>().As<IChunkDrawManager>().SingleInstance();
 		builder.RegisterType<ChunkMeshBuilder>().As<IChunkMeshBuilder>().SingleInstance();
 		builder.RegisterType<TileMouseHoverHandler>().As<ITileHoverHandler>().SingleInstance();
