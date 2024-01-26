@@ -1,31 +1,19 @@
-﻿using Andavies.MonoGame.Utilities;
+﻿using Andavies.MonoGame.Network.Extensions;
+using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
+using LiteNetLib.Utils;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
 
-public class Chunk
+public class Chunk : INetSerializable
 {
 	private const int XDimension = 0;
 	private const int YDimension = 1;
 	private const int ZDimension = 2;
-    
-	public Chunk(Vector2Int chunkPosition, Vector3Int tileCount)
-	{
-		ChunkPosition = chunkPosition;
-		TileCount = tileCount;
-		WorldTiles = new WorldTile[TileCount.X, TileCount.Y, TileCount.Z];
-	}
-
-	public Chunk(Vector2Int chunkPosition, WorldTile[,,] worldTiles)
-	{
-		ChunkPosition = chunkPosition;
-		TileCount = new Vector3Int(worldTiles.GetLength(XDimension), worldTiles.GetLength(YDimension), worldTiles.GetLength(ZDimension));
-		WorldTiles = worldTiles;
-	}
 	
-	public Vector2Int ChunkPosition { get; }
-	public Vector3Int TileCount { get; }
-	public WorldTile[,,] WorldTiles { get; }
+	public Vector2Int ChunkPosition { get; set; }
+	public Vector3Int TileCount { get; set; }
+	public WorldTile[,,] WorldTiles { get; set; } = new WorldTile[0, 0, 0];
 
 	/// <summary>
 	/// Returns the world height at a given (x, z) position
@@ -46,5 +34,42 @@ public class Chunk
 		}
 
 		return 0;
+	}
+
+	public void Serialize(NetDataWriter writer)
+	{
+		writer.Put(ChunkPosition);
+		writer.Put(TileCount);
+
+		for (int x = 0; x < WorldTiles.GetLength(0); x++)
+		{
+			for (int y = 0; y < WorldTiles.GetLength(1); y++)
+			{
+				for (int z = 0; z < WorldTiles.GetLength(2); z++)
+				{
+					WorldTiles[x, y, z].Serialize(writer);
+				}
+			}
+		}
+	}
+
+	public void Deserialize(NetDataReader reader)
+	{
+		ChunkPosition = reader.GetVector2Int();
+		TileCount = reader.GetVector3Int();
+
+		WorldTiles = new WorldTile[TileCount.X, TileCount.Y, TileCount.Z];
+		
+		for (int x = 0; x < WorldTiles.GetLength(0); x++)
+		{
+			for (int y = 0; y < WorldTiles.GetLength(1); y++)
+			{
+				for (int z = 0; z < WorldTiles.GetLength(2); z++)
+				{
+					WorldTiles[x, y, z] = new WorldTile();
+					WorldTiles[x, y, z].Deserialize(reader);
+				}
+			}
+		}
 	}
 }

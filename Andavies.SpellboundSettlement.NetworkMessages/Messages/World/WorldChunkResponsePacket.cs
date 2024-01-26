@@ -1,5 +1,3 @@
-using Andavies.MonoGame.Network.Extensions;
-using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
 using LiteNetLib.Utils;
 
@@ -17,53 +15,12 @@ public class WorldChunkResponsePacket : INetSerializable
 	
 	public void Serialize(NetDataWriter writer)
 	{
-		if (Chunk == null)
-			return;
-	
-		writer.Put(Chunk.ChunkPosition);
-		writer.Put(Chunk.TileCount);
-
-		for (int x = 0; x < Chunk.WorldTiles.GetLength(0); x++)
-		{
-			for (int y = 0; y < Chunk.WorldTiles.GetLength(1); y++)
-			{
-				for (int z = 0; z < Chunk.WorldTiles.GetLength(2); z++)
-				{
-					WorldTile worldTile = Chunk.WorldTiles[x, y, z];
-					writer.Put(worldTile.TileId);
-					writer.Put(worldTile.TilePosition);
-					writer.Put((int)worldTile.Rotation);
-					writer.Put(worldTile.Scale);
-				}
-			}
-		}
+		Chunk?.Serialize(writer);
 	}
 
 	public void Deserialize(NetDataReader reader)
 	{
-		Vector2Int chunkPosition = reader.GetVector2Int();
-		Vector3Int tileCount = reader.GetVector3Int();
-		WorldTile[,,] worldTiles = new WorldTile[tileCount.X, tileCount.Y, tileCount.Z];
-		
-		for (int x = 0; x < tileCount.X; x++)
-		{
-			for (int y = 0; y < tileCount.Y; y++)
-			{
-				for (int z = 0; z < tileCount.Z; z++)
-				{
-					string tileId = reader.GetString();
-					Vector3Int tilePosition = reader.GetVector3Int();
-					float rotation = reader.GetFloat();
-					float scale = reader.GetFloat();
-					worldTiles[x, y, z] = new WorldTile(tileId, chunkPosition, tilePosition)
-					{
-						Rotation = rotation,
-						Scale = scale
-					};
-				}
-			}
-		}
-		
-		Chunk = new Chunk(chunkPosition, worldTiles);
+		Chunk = new Chunk();
+		Chunk.Deserialize(reader);
 	}
 }

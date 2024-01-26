@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Utilities;
-using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Andavies.SpellboundSettlement.Globals;
@@ -25,14 +24,13 @@ public class GameplayGameState : GameState
 	private readonly ILogger _logger;
 	private readonly INetworkClient _networkClient;
 	private readonly ITileRegistry _tileRegistry;
-	private readonly IWizardManager _wizardManager;
+	private readonly IClientWorldManager _clientWorldManager;
 	private readonly IChunkMeshBuilder _chunkMeshBuilder;
 	private readonly IChunkDrawManager _chunkDrawManager;
 	private readonly ITileHoverHandler _tileHoverHandler;
 	private readonly IModelDrawManager _modelDrawManager;
 	private readonly WorldMesh _worldMesh = new();
-
-	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
+	
 	private readonly ConcurrentDictionary<Type, WizardDrawDetails> _wizardDrawDetails = new();
 
 	private readonly GameplayUIState _gameplayGameplayUIState;
@@ -41,7 +39,7 @@ public class GameplayGameState : GameState
 		ILogger logger,
 		INetworkClient networkClient,
 		ITileRegistry tileRegistry,
-		IWizardManager wizardManager,
+		IClientWorldManager clientWorldManager,
 		IChunkMeshBuilder chunkMeshBuilder,
 		IChunkDrawManager chunkDrawManager,
 		ITileHoverHandler tileHoverHandler,
@@ -52,7 +50,7 @@ public class GameplayGameState : GameState
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_networkClient = networkClient ?? throw new ArgumentNullException(nameof(networkClient));
 		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
-		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
+		_clientWorldManager = clientWorldManager ?? throw new ArgumentNullException(nameof(clientWorldManager));
 		_chunkMeshBuilder = chunkMeshBuilder ?? throw new ArgumentNullException(nameof(chunkMeshBuilder));
 		_chunkDrawManager = chunkDrawManager ?? throw new ArgumentNullException(nameof(chunkDrawManager));
 		_tileHoverHandler = tileHoverHandler ?? throw new ArgumentNullException(nameof(tileHoverHandler));
@@ -77,7 +75,6 @@ public class GameplayGameState : GameState
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
 
 		_networkClient.AddSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
-		_networkClient.AddSubscription<WizardRemovedPacket>(OnWizardRemovedPacketReceived);
 		_networkClient.AddSubscription<WizardUpdatedPacket>(OnWizardUpdatedPacketReceived);
 
 		List<Vector2Int> chunkPositions = new();
@@ -113,7 +110,7 @@ public class GameplayGameState : GameState
 			_chunkDrawManager.DrawChunk(chunkMesh);
 		}
 
-		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
+		foreach (Wizard wizard in _clientWorldManager.AllWizards.Values)
 		{
 			DrawWizard(wizard);
 		}
@@ -124,7 +121,6 @@ public class GameplayGameState : GameState
 		base.End();
 		
 		_networkClient.RemoveSubscription<WorldChunkResponsePacket>(OnWorldChunkResponsePacketReceived);
-		_networkClient.RemoveSubscription<WizardRemovedPacket>(OnWizardRemovedPacketReceived);
 		_networkClient.RemoveSubscription<WizardUpdatedPacket>(OnWizardUpdatedPacketReceived);
 		
 		_gameplayGameplayUIState.PauseButtonClicked -= OnPauseGameClicked;
@@ -140,9 +136,13 @@ public class GameplayGameState : GameState
 	private void RegisterWizardDrawDetails()
 	{
 		BasicWizardDrawDetails basicWizardDrawDetails = new();
-		basicWizardDrawDetails.Model = Global.GameManager.Content.Load<Model>(basicWizardDrawDetails.ModelDetails.ContentModelPath);
 		
 		_wizardDrawDetails.TryAdd(basicWizardDrawDetails.WizardType, basicWizardDrawDetails);
+		
+		foreach (WizardDrawDetails wizardDrawDetails in _wizardDrawDetails.Values)
+		{
+			wizardDrawDetails.Model = Global.GameManager.Content.Load<Model>(wizardDrawDetails.ModelDetails.ContentModelPath);
+		}
 	}
 
 	private void DrawWizard(Wizard wizard)
@@ -164,7 +164,7 @@ public class GameplayGameState : GameState
 		if (worldChunkResponsePacket.Chunk == null)
 			return;
 		
-		_chunks.TryAdd(worldChunkResponsePacket.Chunk.ChunkPosition, worldChunkResponsePacket.Chunk);
+		_clientWorldManager.AddOrUpdateChunk(worldChunkResponsePacket.Chunk);
 		
 		ChunkMesh chunkMesh = _chunkMeshBuilder.BuildChunkMesh(worldChunkResponsePacket.Chunk);
 		_worldMesh.SetChunkMesh(chunkMesh, worldChunkResponsePacket.Chunk.ChunkPosition);
@@ -175,15 +175,7 @@ public class GameplayGameState : GameState
 		if (packet is not WizardUpdatedPacket wizardUpdatedPacket || wizardUpdatedPacket.Wizard == null)
 			return;
 
-		_wizardManager.AddOrUpdateWizard(wizardUpdatedPacket.Wizard);
-	}
-
-	private void OnWizardRemovedPacketReceived(INetSerializable packet)
-	{
-		if (packet is not WizardRemovedPacket wizardRemovedPacket || wizardRemovedPacket.Wizard == null)
-			return;
-		
-		_wizardManager.RemoveWizard(wizardRemovedPacket.Wizard.Id);
+		_clientWorldManager.AddOrUpdateWizard(wizardUpdatedPacket.Wizard);
 	}
 
 	private void LoadTileModels()

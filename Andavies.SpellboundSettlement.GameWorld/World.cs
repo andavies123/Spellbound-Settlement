@@ -66,7 +66,12 @@ public class World
 	private Chunk GenerateChunk(Vector2Int chunkPosition)
 	{
 		_logger.Debug("Generating chunk {position}", chunkPosition);
-		Chunk chunk = new(chunkPosition, new Vector3Int(ChunkTileCount));
+		Chunk chunk = new()
+		{
+			ChunkPosition = chunkPosition,
+			TileCount = new Vector3Int(ChunkTileCount),
+			WorldTiles = new WorldTile[ChunkTileCount, ChunkTileCount, ChunkTileCount]
+		};
 
 		for (int x = 0; x < chunk.TileCount.X; x++)
 		{
@@ -94,15 +99,23 @@ public class World
 						if (!_tileRegistry.TryGetTile(nameof(GroundTile), out Tile? tile) || tile == null)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition);
+						chunk.WorldTiles[x, y, z] = new WorldTile
+						{
+							TileId = tile.TileId,
+							ParentChunkPosition = chunkPosition,
+							TilePosition = tilePosition
+						};
 					}
 					else if (y == height + 1 && addRock)
 					{
 						if (!_tileRegistry.TryGetTile(nameof(SmallRockTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition)
+						chunk.WorldTiles[x, y, z] = new WorldTile
 						{
+							TileId = tile.TileId,
+							ParentChunkPosition = chunkPosition,
+							TilePosition = tilePosition,
 							Rotation = GetRotationFromNoise(rockNoise),
 							Scale = GetScaleFromNoise(rockNoise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
 						};
@@ -112,8 +125,11 @@ public class World
 						if (!_tileRegistry.TryGetTile(nameof(GrassTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
                         
-						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition)
+						chunk.WorldTiles[x, y, z] = new WorldTile
 						{
+							TileId = tile.TileId,
+							ParentChunkPosition = chunkPosition,
+							TilePosition = tilePosition,
 							Rotation = GetRotationFromNoise(noise),
 							Scale = GetScaleFromNoise(noise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
 						};
@@ -123,8 +139,11 @@ public class World
 						if (!_tileRegistry.TryGetTile(nameof(BushTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition)
+						chunk.WorldTiles[x, y, z] = new WorldTile
 						{
+							TileId = tile.TileId,
+							ParentChunkPosition = chunkPosition,
+							TilePosition = tilePosition,
 							Rotation = GetRotationFromNoise(noise),
 							Scale = GetScaleFromNoise(noise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
 						};
@@ -134,7 +153,12 @@ public class World
 						if (!_tileRegistry.TryGetTile(nameof(AirTile), out Tile? tile) || tile == null)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile(tile.TileId, chunkPosition, tilePosition);
+						chunk.WorldTiles[x, y, z] = new WorldTile
+						{
+							TileId = tile.TileId,
+							ParentChunkPosition = chunkPosition,
+							TilePosition = tilePosition,
+						};
 					}
 				}
 			}
