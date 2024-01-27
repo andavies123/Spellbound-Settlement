@@ -63,6 +63,7 @@ public static class Program
 		builder.RegisterType<ModelDrawManager>().As<IModelDrawManager>().SingleInstance();
 		builder.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
 		builder.RegisterType<ClientWorldManager>().As<IClientWorldManager>().SingleInstance();
+		builder.RegisterType<WorldInteractionManager>().As<IWorldInteractionManager>();
 		
 		// Repositories
 		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();

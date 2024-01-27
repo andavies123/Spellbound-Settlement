@@ -18,6 +18,8 @@ public static class Input
 
 	/// <summary>Raised whenever the position of the mouse changes</summary>
 	public static event Action? MouseMoved;
+	public static event Action? LeftMousePressed;
+	public static event Action? RightMousePressed;
 	
 	/// <summary>The position of the mouse on the screen during this frame</summary>
 	public static Point CurrentMousePosition => CurrentMouseState.Position;
@@ -38,6 +40,12 @@ public static class Input
 		// Check for mouse movement
 		if (!PreviousMouseState.HasValue || PreviousMouseState.Value.Position != CurrentMousePosition)
 			MouseMoved?.Invoke();
+		
+		if (WasMousePressed(MouseButton.Left))
+			LeftMousePressed?.Invoke();
+		
+		if (WasMousePressed(MouseButton.Right))
+			RightMousePressed?.Invoke();
 	}
 
 	/// <summary>Checks a given key to see if it was pressed during this last frame</summary>

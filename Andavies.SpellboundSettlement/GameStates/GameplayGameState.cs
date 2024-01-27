@@ -25,8 +25,8 @@ public class GameplayGameState : GameState
 	private readonly ITileRegistry _tileRegistry;
 	private readonly IClientWorldManager _clientWorldManager;
 	private readonly IChunkDrawManager _chunkDrawManager;
-	private readonly ITileHoverHandler _tileHoverHandler;
 	private readonly IModelDrawManager _modelDrawManager;
+	private readonly IWorldInteractionManager _worldInteractionManager;
 	private readonly WorldMesh _worldMesh;
 	
 	private readonly ConcurrentDictionary<Type, WizardDrawDetails> _wizardDrawDetails = new();
@@ -39,8 +39,8 @@ public class GameplayGameState : GameState
 		ITileRegistry tileRegistry,
 		IClientWorldManager clientWorldManager,
 		IChunkDrawManager chunkDrawManager,
-		ITileHoverHandler tileHoverHandler,
 		IModelDrawManager modelDrawManager,
+		IWorldInteractionManager worldInteractionManager,
 		GameplayUIState gameplayUIState,
 		WorldMesh worldMesh,
 		GameplayInputState inputState)
@@ -50,8 +50,8 @@ public class GameplayGameState : GameState
 		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 		_clientWorldManager = clientWorldManager ?? throw new ArgumentNullException(nameof(clientWorldManager));
 		_chunkDrawManager = chunkDrawManager ?? throw new ArgumentNullException(nameof(chunkDrawManager));
-		_tileHoverHandler = tileHoverHandler ?? throw new ArgumentNullException(nameof(tileHoverHandler));
 		_modelDrawManager = modelDrawManager ?? throw new ArgumentNullException(nameof(modelDrawManager));
+		_worldInteractionManager = worldInteractionManager ?? throw new ArgumentNullException(nameof(worldInteractionManager));
 		_gameplayGameplayUIState = gameplayUIState ?? throw new ArgumentNullException(nameof(gameplayUIState));
 		_worldMesh = worldMesh ?? throw new ArgumentNullException(nameof(worldMesh));
 		InputState = inputState ?? throw new ArgumentNullException(nameof(inputState));
@@ -86,12 +86,16 @@ public class GameplayGameState : GameState
 
 		_gameplayGameplayUIState.PauseButtonClicked += OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;
-		Input.MouseMoved += OnMouseMoved;
+		
+		// These connections are made here so WorldInteractionManager doesn't have to worry about when to stop listening
+		Input.MouseMoved += _worldInteractionManager.UpdateTileHover;
+		Input.LeftMousePressed += _worldInteractionManager.UpdateTileInteract;
 	}
 	
 	public override void Update(float deltaTimeSeconds)
 	{
 		base.Update(deltaTimeSeconds);
+		
 		_networkClient.Update();
 	}
 
@@ -117,7 +121,9 @@ public class GameplayGameState : GameState
 		
 		_gameplayGameplayUIState.PauseButtonClicked -= OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp -= OnPauseGameKeyReleased;
-		Input.MouseMoved -= OnMouseMoved;
+		
+		Input.MouseMoved -= _worldInteractionManager.UpdateTileHover;
+		Input.LeftMousePressed -= _worldInteractionManager.UpdateTileInteract;
 		
 		UnloadTileModels();
 	}
@@ -163,10 +169,5 @@ public class GameplayGameState : GameState
 			Global.GameManager.Content.UnloadAsset(modelTile.ModelDetails.ContentModelPath);
 			modelTile.Model = null;
 		}
-	}
-
-	private void OnMouseMoved()
-	{
-		_tileHoverHandler.UpdateHover(_worldMesh);
 	}
 }
