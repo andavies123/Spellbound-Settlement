@@ -48,7 +48,7 @@ public static class Program
 		
 		configManager.SaveConfigFile(serverSettings);
 		
-		gameServer.Start(serverSettings, 10, 50);
+		gameServer.Start(serverSettings, 10, 30);
 	}
 
 	private static void RegisterTypes(ContainerBuilder container)

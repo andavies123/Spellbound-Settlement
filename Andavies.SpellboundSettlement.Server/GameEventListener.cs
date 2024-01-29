@@ -1,8 +1,8 @@
 ﻿using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.Network.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
-using Andavies.SpellboundSettlement.Wizards;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Serilog;
@@ -37,7 +37,7 @@ public class GameEventListener : IGameEventListener
 		SendToAllClients(new WizardRemovedPacket {Wizard = wizard});
 	}
 
-	private void SendToAllClients(INetSerializable packet)
+	public void SendToAllClients<T>(T packet) where T : INetSerializable
 	{
 		foreach (NetPeer client in _networkServer.Clients)
 		{

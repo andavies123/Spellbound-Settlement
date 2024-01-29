@@ -1,5 +1,6 @@
 ﻿using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.Wizards;
 using Microsoft.Xna.Framework;
 using Serilog;
@@ -30,9 +31,13 @@ public class WorldManager : IWorldManager
 		}
 	}
 
-	public void Tick()
+	public void Tick(float deltaTimeSeconds)
 	{
 		// Add Update logic here
+		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
+		{
+			wizard.Update(deltaTimeSeconds);
+		}
 	}
 
 	private void SpawnWizard()
@@ -51,11 +56,12 @@ public class WorldManager : IWorldManager
 		};
 		
 		_wizardManager.AddOrUpdateWizard(wizard);
+		wizard.Loiter();
 	}
 }
 
 public interface IWorldManager
 {
 	void CreateWorld();
-	void Tick();
+	void Tick(float deltaTimeSeconds);
 }

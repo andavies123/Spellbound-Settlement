@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
+using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Serilog;
-using Andavies.SpellboundSettlement.Wizards;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
 
@@ -24,12 +24,21 @@ public class WizardManager : IWizardManager
 	{
 		_allWizards[wizard.Id] = wizard;
 		
+		wizard.Updated += OnWizardUpdated;
 		WizardUpdated?.Invoke(wizard);
 	}
 
 	public void RemoveWizard(Guid wizardId)
 	{
-		if (_allWizards.TryRemove(wizardId, out Wizard? wizard)) 
+		if (_allWizards.TryRemove(wizardId, out Wizard? wizard))
+		{
+			wizard.Updated -= WizardUpdated;
 			WizardRemoved?.Invoke(wizard);
+		}
+	}
+
+	private void OnWizardUpdated(Wizard wizard)
+	{
+		WizardUpdated?.Invoke(wizard);
 	}
 }

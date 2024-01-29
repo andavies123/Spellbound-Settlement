@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.Wizards;
 using LiteNetLib.Utils;
 

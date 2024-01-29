@@ -20,6 +20,13 @@ public readonly struct Vector3Int
 
 	public Vector3Int(int value) : this(value, value, value) { }
 
+	public float Distance(Vector3Int other) => Distance(this, other);
+
+	public static float Distance(Vector3Int a, Vector3Int b)
+	{
+		return MathF.Sqrt(MathF.Pow(a.X - b.X, 2) + MathF.Pow(a.Y - b.Y, 2) + MathF.Pow(a.Z - b.Z, 2));
+	}
+
 	public static Vector3Int operator +(Vector3Int a, Vector3Int b)
 	{
 		return new Vector3Int(a.X + b.X, a.Y + b.Y, a.Z + b.Z);

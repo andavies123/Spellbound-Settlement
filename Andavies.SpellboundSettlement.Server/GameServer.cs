@@ -1,12 +1,13 @@
+using System.Diagnostics;
 using System.Net;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.Network.Utilities;
 using Andavies.MonoGame.Utilities;
 using Andavies.MonoGame.Utilities.GameEvents;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
-using Andavies.SpellboundSettlement.Wizards;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Serilog;
@@ -25,6 +26,7 @@ public class GameServer
 	private readonly IWorldManager _worldManager;
 	private readonly IWizardManager _wizardManager;
 	private readonly ITileRegister _tileRegister;
+	private readonly IGameEventListener _gameEventListener;
 	private readonly World _world;
 	
 	private bool _runGameLoop = false;
@@ -49,6 +51,7 @@ public class GameServer
 		_worldManager = worldManager ?? throw new ArgumentNullException(nameof(worldManager));
 		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
 		_tileRegister = tileRegister ?? throw new ArgumentNullException(nameof(tileRegister));
+		_gameEventListener = gameEventListener ?? throw new ArgumentNullException(nameof(gameEventListener));
 		_world = world ?? throw new ArgumentNullException(nameof(world));
 	}
 
@@ -92,13 +95,10 @@ public class GameServer
 	private void OnClientConnected(NetPeer client)
 	{
 		_packetBatchSender.AddPacket(client, new WelcomePacket {WelcomeMessage = "Welcome to this Spellbound Settlement server"});
-
+		
 		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
 		{
-			_packetBatchSender.AddPacket(client, new WizardUpdatedPacket
-			{
-				Wizard = wizard
-			});
+			_packetBatchSender.AddPacket(client, new WizardUpdatedPacket {Wizard = wizard});
 		}
 	}
 
@@ -115,27 +115,32 @@ public class GameServer
 			});
 		}
 	}
-	
+
 	private void GameLoop()
 	{
+		Stopwatch gameLoopTimer = new();
+		gameLoopTimer.Start();
+		
 		while (_runGameLoop)
 		{
-			DateTime startTime = DateTime.Now;
+			float deltaTimeSeconds = (float) gameLoopTimer.Elapsed.TotalSeconds;
+			gameLoopTimer.Restart();
 			
 			_networkServer.Update();
-			UpdateGame();
+			UpdateGame(deltaTimeSeconds);
 			UpdateClients();
 
-			TimeSpan elapsedTime = DateTime.Now - startTime;
-			float sleepTime = TickTimeMilliseconds - elapsedTime.Milliseconds;
+			float sleepTime = Math.Max(0, TickTimeMilliseconds - deltaTimeSeconds/1000);
 
+			_logger.Information("DeltaTime: {deltaTime}", deltaTimeSeconds);
+			
 			if (sleepTime > 0)
 			{
-				Thread.Sleep((int)sleepTime);
+				Thread.Sleep(TimeSpan.FromMilliseconds(sleepTime));
 			}
 			else
 			{
-				_logger.Warning("Game loop exceeded the allotted time of {allottedTime} ms. TickRate = {tickRate}", TickTimeMilliseconds, TickRate);
+				_logger.Warning("Game loop exceeded the allotted time of {allottedTime} ms. Time = {time}", TickTimeMilliseconds, deltaTimeSeconds);
 			}
 		}
 		
@@ -147,9 +152,9 @@ public class GameServer
 		_networkServer.ClientConnected -= OnClientConnected;
 	}
 
-	private void UpdateGame()
+	private void UpdateGame(float deltaTimeSeconds)
 	{
-		_worldManager.Tick();
+		_worldManager.Tick(deltaTimeSeconds);
 	}
 
 	private void UpdateClients()

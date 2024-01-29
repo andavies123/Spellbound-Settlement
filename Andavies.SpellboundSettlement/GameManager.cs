@@ -110,7 +110,7 @@ public class GameManager : Game
 		_frameCount++;
 		if ((_currentTime - _fpsUpdateTime).TotalSeconds >= 1.0)
 		{
-			_logger.Debug("FPS: {fps}", _frameCount);
+			//_logger.Debug("FPS: {fps}", _frameCount);
 			_frameCount = 0;
 			_fpsUpdateTime = _currentTime;
 		}

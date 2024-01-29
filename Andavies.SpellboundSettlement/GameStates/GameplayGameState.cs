@@ -6,6 +6,7 @@ using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
+using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
 using Andavies.SpellboundSettlement.Meshes;

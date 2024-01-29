@@ -97,6 +97,7 @@ public class NetworkClient : INetworkClient
 
 	public void RemoveSubscription<T>(Action<INetSerializable> onReceivedCallback) where T : INetSerializable, new()
 	{
+		_logger.Warning("Removing Subscription");
 		if (!_subscriptions.TryGetValue(typeof(T), out List<Action<INetSerializable>>? actions)) 
 			return;
 		

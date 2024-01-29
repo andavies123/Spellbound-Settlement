@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.Wizards;
 
 namespace Andavies.SpellboundSettlement.GameStates;
