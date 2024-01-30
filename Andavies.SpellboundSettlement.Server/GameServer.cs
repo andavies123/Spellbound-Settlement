@@ -132,7 +132,7 @@ public class GameServer
 
 			float sleepTime = Math.Max(0, TickTimeMilliseconds - deltaTimeSeconds/1000);
 
-			_logger.Information("DeltaTime: {deltaTime}", deltaTimeSeconds);
+			//_logger.Information("DeltaTime: {deltaTime}", deltaTimeSeconds);
 			
 			if (sleepTime > 0)
 			{

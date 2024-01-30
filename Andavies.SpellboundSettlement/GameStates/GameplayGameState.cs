@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Utilities;
+using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Andavies.SpellboundSettlement.GameWorld.Wizards;
@@ -112,7 +113,9 @@ public class GameplayGameState : GameState
 
 		foreach (Wizard wizard in _clientWorldManager.AllWizards.Values)
 		{
-			DrawWizard(wizard);
+			Vector2Int wizardChunkPosition = WorldHelper.WorldPositionToChunkPosition(wizard.Position);
+			if (_worldMesh.TryGetChunkMesh(wizardChunkPosition, out _))
+				DrawWizard(wizard);
 		}
 	}
 	

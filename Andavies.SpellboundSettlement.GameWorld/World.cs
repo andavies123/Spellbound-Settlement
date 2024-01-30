@@ -9,8 +9,6 @@ namespace Andavies.SpellboundSettlement.GameWorld;
 
 public class World
 {
-	private const int ChunkTileCount = 10;
-
 	private readonly ILogger _logger;
 	private readonly ITileRegistry _tileRegistry;
 	
@@ -49,18 +47,11 @@ public class World
 
 	public int GetHeightAtPosition(Vector3Int worldPosition)
 	{
-		(Vector2Int chunkPosition, Vector3Int tilePosition) = GetChunkPositionFromWorldPosition(worldPosition);
+		Vector2Int chunkPosition = WorldHelper.WorldPositionToChunkPosition(worldPosition);
+		Vector3Int tilePosition = WorldHelper.WorldPositionToTilePosition(worldPosition);
 
 		Chunk chunk = _chunks.GetOrAdd(chunkPosition, GenerateChunk);
 		return chunk.GetHeightAtPosition(new Vector2Int(tilePosition.X, tilePosition.Z));
-	}
-
-	private (Vector2Int chunkPosition, Vector3Int tilePosition) GetChunkPositionFromWorldPosition(Vector3Int worldPosition)
-	{
-		Vector2Int chunkPosition = new(worldPosition.X / 10, worldPosition.Z / 10);
-		Vector3Int tilePosition = new(worldPosition.X % 10, worldPosition.Y % 10, worldPosition.Z % 10);
-
-		return (chunkPosition, tilePosition);
 	}
 
 	private Chunk GenerateChunk(Vector2Int chunkPosition)
@@ -69,8 +60,8 @@ public class World
 		Chunk chunk = new()
 		{
 			ChunkPosition = chunkPosition,
-			TileCount = new Vector3Int(ChunkTileCount),
-			WorldTiles = new WorldTile[ChunkTileCount, ChunkTileCount, ChunkTileCount]
+			TileCount = WorldHelper.ChunkSize,
+			WorldTiles = new WorldTile[WorldHelper.ChunkSize.X, WorldHelper.ChunkSize.Y, WorldHelper.ChunkSize.Z]
 		};
 
 		for (int x = 0; x < chunk.TileCount.X; x++)
@@ -79,13 +70,13 @@ public class World
 			{
 				const int seed = 100;
 				float noise = RandomUtility.GetPerlinNoise(seed, .5f, (
-					chunkPosition.X + ((float)x / ChunkTileCount) + float.Epsilon,
-					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
-				int height = GetHeightFromNoise(noise, 0, ChunkTileCount);
+					chunkPosition.X + ((float)x / WorldHelper.ChunkSize.X) + float.Epsilon,
+					chunkPosition.Y + ((float)z / WorldHelper.ChunkSize.Z) + float.Epsilon));
+				int height = GetHeightFromNoise(noise, 0, WorldHelper.ChunkSize.Y);
 
 				float rockNoise = RandomUtility.GetPerlinNoise(seed, 1f, (
-					chunkPosition.X + ((float)x / ChunkTileCount) + float.Epsilon,
-					chunkPosition.Y + ((float)z / ChunkTileCount) + float.Epsilon));
+					chunkPosition.X + ((float)x / WorldHelper.ChunkSize.X) + float.Epsilon,
+					chunkPosition.Y + ((float)z / WorldHelper.ChunkSize.Z) + float.Epsilon));
 				bool addRock = (int) ((rockNoise + 1) * 1000) % 97 == 0; // 97 is an arbitrary prime number. Completely random
 				bool addGrass = GetThousandthsPlace(noise) < 2;
 				bool addBush = GetThousandthsPlace(noise) == 3;
