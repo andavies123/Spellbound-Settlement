@@ -32,6 +32,7 @@ public abstract class Wizard : INetSerializable
 
 	public Guid Id { get; private set; } = Guid.NewGuid();
 	public string Name { get; set; } = "Andrew Davies";
+	public World? World { get; set; }
 
 	/// <summary>
 	/// The current world position of this wizard.
@@ -83,6 +84,7 @@ public abstract class Wizard : INetSerializable
 
 	public void Loiter()
 	{
+		_loiterState.World = World;
 		_loiterState.CenterPosition = Position;
 		_loiterState.MinStandingLength = 3;
 		_loiterState.MaxStandingLength = 7;

@@ -52,7 +52,8 @@ public class WorldManager : IWorldManager
 		{
 			Name = "Andrew Davies",
 			Position = position,
-			Rotation = rotation
+			Rotation = rotation,
+			World = _world
 		};
 		
 		_wizardManager.AddOrUpdateWizard(wizard);
