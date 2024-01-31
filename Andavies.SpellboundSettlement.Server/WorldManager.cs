@@ -1,7 +1,6 @@
 ﻿using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Wizards;
-using Andavies.SpellboundSettlement.Wizards;
 using Microsoft.Xna.Framework;
 using Serilog;
 
@@ -47,12 +46,15 @@ public class WorldManager : IWorldManager
 		int yPos = _world.GetHeightAtPosition(new Vector3Int(xPos, 0, zPos)) + 1; // Increase by 1 to be on top of the terrain
 		Vector3Int position = new(xPos, yPos, zPos);
 		float rotation = Random.Shared.Next(4) * MathHelper.PiOver2;
-		
-		BasicWizard wizard = new()
+
+		EarthWizard wizard = new()
 		{
-			Name = "Andrew Davies",
-			Position = position,
-			Rotation = rotation,
+			WizardData =
+			{
+				Name = "Andrew Davies",
+				Position = position,
+				Rotation = rotation,	
+			},
 			World = _world
 		};
 		

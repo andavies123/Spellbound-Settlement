@@ -1,5 +1,6 @@
 ﻿using System;
 using Andavies.MonoGame.Utilities;
+using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Andavies.SpellboundSettlement.Wizards;
@@ -15,5 +16,5 @@ public abstract class WizardDrawDetails
 public class BasicWizardDrawDetails : WizardDrawDetails
 {
 	public override ModelDetails ModelDetails { get; } = new("Models/Wizard/wizard");
-	public override Type WizardType => typeof(BasicWizard);
+	public override Type WizardType => typeof(EarthWizardData);
 }

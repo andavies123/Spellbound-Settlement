@@ -1,30 +1,29 @@
 ﻿using System.ComponentModel;
 using Andavies.SpellboundSettlement.GameWorld.Wizards;
-using Andavies.SpellboundSettlement.Wizards;
 using LiteNetLib.Utils;
 
 namespace Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 
 public class WizardRemovedPacket : INetSerializable
 {
-	public Wizard? Wizard { get; set; }
+	public WizardData? WizardData { get; set; }
 
 	public void Serialize(NetDataWriter writer)
 	{
-		writer.Put(Wizard?.GetType().Name);
-		Wizard?.Serialize(writer);
+		writer.Put(WizardData?.GetType().Name);
+		WizardData?.Serialize(writer);
 	}
 
 	public void Deserialize(NetDataReader reader)
 	{
 		string type = reader.GetString();
 
-		Wizard = type switch
+		WizardData = type switch
 		{
-			nameof(BasicWizard) => new BasicWizard(),
+			nameof(EarthWizardData) => new EarthWizardData(),
 			_ => throw new InvalidEnumArgumentException($"{type} not implemented")
 		};
 		
-		Wizard.Deserialize(reader);
+		WizardData.Deserialize(reader);
 	}
 }

@@ -7,7 +7,6 @@ using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.Meshes;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
-using Andavies.SpellboundSettlement.Wizards;
 using LiteNetLib.Utils;
 using Serilog;
 
@@ -21,7 +20,7 @@ public class ClientWorldManager : IClientWorldManager
 	private readonly WorldMesh _worldMesh;
 	
 	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
-	private readonly ConcurrentDictionary<Guid, Wizard> _wizards = new();
+	private readonly ConcurrentDictionary<Guid, WizardData> _wizards = new();
 
 	public ClientWorldManager(
 		ILogger logger,
@@ -38,7 +37,7 @@ public class ClientWorldManager : IClientWorldManager
 	}
 	
 	public IReadOnlyDictionary<Vector2Int, Chunk> AllChunks => _chunks;
-	public IReadOnlyDictionary<Guid, Wizard> AllWizards => _wizards;
+	public IReadOnlyDictionary<Guid, WizardData> AllWizards => _wizards;
 	
 	private void SubscribeToServerMessages()
 	{
@@ -62,9 +61,9 @@ public class ClientWorldManager : IClientWorldManager
 
 	private void OnWizardUpdatedPacketReceived(INetSerializable packet)
 	{
-		if (packet is not WizardUpdatedPacket wizardUpdatedPacket || wizardUpdatedPacket.Wizard == null)
+		if (packet is not WizardUpdatedPacket wizardUpdatedPacket || wizardUpdatedPacket.WizardData == null)
 			return;
 
-		_wizards[wizardUpdatedPacket.Wizard.Id] = wizardUpdatedPacket.Wizard;
+		_wizards[wizardUpdatedPacket.WizardData.Id] = wizardUpdatedPacket.WizardData;
 	}
 }

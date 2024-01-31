@@ -10,5 +10,5 @@ namespace Andavies.SpellboundSettlement.GameStates;
 public interface IClientWorldManager
 {
 	IReadOnlyDictionary<Vector2Int, Chunk> AllChunks { get; }
-	IReadOnlyDictionary<Guid, Wizard> AllWizards { get; }
+	IReadOnlyDictionary<Guid, WizardData> AllWizards { get; }
 }

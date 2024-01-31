@@ -22,7 +22,7 @@ public class WizardManager : IWizardManager
 	
 	public void AddOrUpdateWizard(Wizard wizard)
 	{
-		_allWizards[wizard.Id] = wizard;
+		_allWizards[wizard.WizardData.Id] = wizard;
 		
 		wizard.Updated += OnWizardUpdated;
 		WizardUpdated?.Invoke(wizard);

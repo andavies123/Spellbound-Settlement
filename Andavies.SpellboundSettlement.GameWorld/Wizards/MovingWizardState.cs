@@ -18,7 +18,7 @@ public class MovingWizardState : WizardState
 
 	public override void Begin()
 	{
-		_path = World?.GeneratePath(Wizard.Position, MoveToPosition) ?? new List<(Vector3Int, float)>();
+		_path = World?.GeneratePath(Wizard.WizardData.Position, MoveToPosition) ?? new List<(Vector3Int, float)>();
 		_pathIndex = 0;
 	}
 
@@ -37,8 +37,8 @@ public class MovingWizardState : WizardState
 			return;
 		}
 
-		Wizard.Position = _path[_pathIndex].worldPosition;
-		Wizard.Rotation = _path[_pathIndex].rotation;
+		Wizard.WizardData.Position = _path[_pathIndex].worldPosition;
+		Wizard.WizardData.Rotation = _path[_pathIndex].rotation;
 		_pathIndex++;
 	}
 }

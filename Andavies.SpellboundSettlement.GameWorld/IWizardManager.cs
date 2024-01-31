@@ -1,5 +1,4 @@
 ﻿using Andavies.SpellboundSettlement.GameWorld.Wizards;
-using Andavies.SpellboundSettlement.Wizards;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
 

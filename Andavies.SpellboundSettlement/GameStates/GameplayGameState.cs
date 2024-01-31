@@ -114,7 +114,7 @@ public class GameplayGameState : GameState
 			_chunkDrawManager.DrawChunk(chunkMesh);
 		}
 
-		foreach (Wizard wizard in _clientWorldManager.AllWizards.Values)
+		foreach (WizardData wizard in _clientWorldManager.AllWizards.Values)
 		{
 			Vector2Int wizardChunkPosition = WorldHelper.WorldPositionToChunkPosition(wizard.Position);
 			if (_worldMesh.TryGetChunkMesh(wizardChunkPosition, out _))
@@ -150,7 +150,7 @@ public class GameplayGameState : GameState
 		}
 	}
 
-	private void DrawWizard(Wizard wizard)
+	private void DrawWizard(WizardData wizard)
 	{
 		if (!_wizardDrawDetails.TryGetValue(wizard.GetType(), out WizardDrawDetails wizardDrawDetails))
 		{
