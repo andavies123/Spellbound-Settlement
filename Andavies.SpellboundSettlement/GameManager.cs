@@ -16,6 +16,7 @@ namespace Andavies.SpellboundSettlement;
 public class GameManager : Game
 {
 	private readonly ILogger _logger;
+	private readonly IInputManager _inputManager;
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
 	private readonly IUIStyleRepository _uiStyleCollection;
@@ -34,6 +35,7 @@ public class GameManager : Game
 
 	public GameManager(
 		ILogger logger,
+		IInputManager inputManager,
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
 		IUIStyleRepository uiStyleCollection,
@@ -43,6 +45,7 @@ public class GameManager : Game
 		Global.GameManager = this;
 
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
 		_gameStateManager = gameStateManager ?? throw new ArgumentNullException(nameof(gameStateManager));
 		_cameraController = cameraController ?? throw new ArgumentNullException(nameof(cameraController));
 		_uiStyleCollection = uiStyleCollection ?? throw new ArgumentNullException(nameof(uiStyleCollection));
@@ -107,15 +110,18 @@ public class GameManager : Game
 		float deltaTimeSeconds = (float) _deltaTime.TotalSeconds;
 
 		// Frame count
-		_frameCount++;
-		if ((_currentTime - _fpsUpdateTime).TotalSeconds >= 1.0)
+		if (Program.LogFrameCount)
 		{
-			//_logger.Debug("FPS: {fps}", _frameCount);
-			_frameCount = 0;
-			_fpsUpdateTime = _currentTime;
+			_frameCount++;
+			if ((_currentTime - _fpsUpdateTime).TotalSeconds >= 1.0)
+			{
+				_logger.Debug("FPS: {fps}", _frameCount);
+				_frameCount = 0;
+				_fpsUpdateTime = _currentTime;
+			}
 		}
 
-		Input.Update();
+		_inputManager.Update();
 		
 		_gameStateManager.Update(deltaTimeSeconds);
 		_cameraController.UpdateCamera(deltaTimeSeconds);

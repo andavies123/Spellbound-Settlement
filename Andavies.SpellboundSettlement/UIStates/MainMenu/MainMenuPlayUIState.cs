@@ -1,4 +1,5 @@
 ﻿using System;
+using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
@@ -14,6 +15,7 @@ public class MainMenuPlayUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
+	private readonly IInputManager _inputManager;
 	private readonly IUIStyleRepository _uiStyleRepository;
 	private VerticalLayoutGroup _verticalLayoutGroup;
 	private Button _newGameButton;
@@ -21,9 +23,10 @@ public class MainMenuPlayUIState : IUIState
 	private Button _multiplayerButton;
 	private Button _backButton;
 
-	public MainMenuPlayUIState(IUIStyleRepository uiStyleRepository)
+	public MainMenuPlayUIState(IInputManager inputManager, IUIStyleRepository uiStyleRepository)
 	{
-		_uiStyleRepository = uiStyleRepository;
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
+		_uiStyleRepository = uiStyleRepository ?? throw new ArgumentNullException(nameof(uiStyleRepository));
 	}
 
 	public event Action NewGameActionRequested;
@@ -35,17 +38,17 @@ public class MainMenuPlayUIState : IUIState
 
 	public void LateInit()
 	{
-		_verticalLayoutGroup = new VerticalLayoutGroup(Point.Zero, GameManager.Viewport.Bounds.Size)
+		_verticalLayoutGroup = new VerticalLayoutGroup(_inputManager, Point.Zero, GameManager.Viewport.Bounds.Size)
 		{
 			Spacing = 100,
 			ChildAnchor = HorizontalAnchor.Center,
 			ForceExpandChildWidth = false
 		};
 
-		_newGameButton = new Button(ButtonSize, "New Game", _uiStyleRepository.DefaultButtonStyle);
-		_loadGameButton = new Button(ButtonSize, "Load Game", _uiStyleRepository.DefaultButtonStyle);
-		_multiplayerButton = new Button(ButtonSize, "Multiplayer", _uiStyleRepository.DefaultButtonStyle);
-		_backButton = new Button(ButtonSize, "Back", _uiStyleRepository.DefaultButtonStyle);
+		_newGameButton = new Button(_inputManager, ButtonSize, "New Game", _uiStyleRepository.DefaultButtonStyle);
+		_loadGameButton = new Button(_inputManager, ButtonSize, "Load Game", _uiStyleRepository.DefaultButtonStyle);
+		_multiplayerButton = new Button(_inputManager, ButtonSize, "Multiplayer", _uiStyleRepository.DefaultButtonStyle);
+		_backButton = new Button(_inputManager, ButtonSize, "Back", _uiStyleRepository.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			_newGameButton,

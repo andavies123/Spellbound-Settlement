@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.UI.Enums;
+﻿using Andavies.MonoGame.Inputs;
+using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Microsoft.Xna.Framework;
 
@@ -6,9 +7,9 @@ namespace Andavies.MonoGame.UI.LayoutGroups;
 
 public class HorizontalLayoutGroup : LayoutGroup
 {
-	public HorizontalLayoutGroup(Rectangle bounds) : base(bounds) { }
-	public HorizontalLayoutGroup(Point location, Point size) : base(location, size) { }
-	public HorizontalLayoutGroup(Point size) : base(size) { }
+	public HorizontalLayoutGroup(IInputManager inputManager, Rectangle bounds) : base(inputManager, bounds) { }
+	public HorizontalLayoutGroup(IInputManager inputManager, Point location, Point size) : base(inputManager, location, size) { }
+	public HorizontalLayoutGroup(IInputManager inputManager, Point size) : base(inputManager, size) { }
 	
 	public bool ForceExpandChildHeight { get; set; } = true;
 	public VerticalAnchor ChildAnchor { get; set; } = VerticalAnchor.Center;

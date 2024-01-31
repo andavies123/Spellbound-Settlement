@@ -7,21 +7,20 @@ using Andavies.MonoGame.Utilities.Extensions;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.Meshes;
 using Microsoft.Xna.Framework;
-using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 
 public class TileMouseHoverHandler : ITileHoverHandler
 {
-	private readonly ILogger _logger;
+	private readonly IInputManager _inputManager;
 	private readonly Camera _camera;
 	
 	private ChunkMesh _hoveredChunk = null;
 	private Vector3Int? _hoveredTile = null;
 
-	public TileMouseHoverHandler(ILogger logger, Camera camera)
+	public TileMouseHoverHandler(IInputManager inputManager, Camera camera)
 	{
-		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
 		_camera = camera ?? throw new ArgumentNullException(nameof(camera));
 	}
 
@@ -31,7 +30,7 @@ public class TileMouseHoverHandler : ITileHoverHandler
 		ClearHoveredTile();
 		
 		// Distance doesn't matter as we want it to go forever
-		Ray ray = _camera.GetRayFromCamera(GameManager.Viewport, Input.CurrentMousePosition.ToVector2(), 1);
+		Ray ray = _camera.GetRayFromCamera(GameManager.Viewport, _inputManager.CurrentMousePosition.ToVector2(), 1);
 		
 		// Find all chunks that intersect with ray cast
 		List<(ChunkMesh, float)> chunkMeshesByDistance = new();

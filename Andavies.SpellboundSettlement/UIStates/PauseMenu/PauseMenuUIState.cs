@@ -1,4 +1,5 @@
 using System;
+using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
@@ -14,6 +15,7 @@ public class PauseMenuUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(125, 75);
 
+	private readonly IInputManager _inputManager;
 	private readonly IUIStyleRepository _uiStyleCollection;
 	private VerticalLayoutGroup _verticalLayoutGroup;
 
@@ -21,9 +23,10 @@ public class PauseMenuUIState : IUIState
 	private Button _optionsButton;
 	private Button _mainMenuButton;
 
-	public PauseMenuUIState(IUIStyleRepository uiStyleCollection)
+	public PauseMenuUIState(IInputManager inputManager, IUIStyleRepository uiStyleCollection)
 	{
-		_uiStyleCollection = uiStyleCollection;
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
+		_uiStyleCollection = uiStyleCollection ?? throw new ArgumentNullException(nameof(uiStyleCollection));
 	}
 
 	public event Action ResumeButtonClicked;
@@ -34,7 +37,7 @@ public class PauseMenuUIState : IUIState
 
 	public void LateInit()
 	{
-		_verticalLayoutGroup = new VerticalLayoutGroup(
+		_verticalLayoutGroup = new VerticalLayoutGroup(_inputManager, 
 			new Rectangle(0, 0, GameManager.Viewport.Width, GameManager.Viewport.Height))
 		{
 			ChildAnchor = HorizontalAnchor.Center,
@@ -42,9 +45,9 @@ public class PauseMenuUIState : IUIState
 			Spacing = 200
 		};
 
-		_resumeButton = new Button(ButtonSize, "Resume", _uiStyleCollection.DefaultButtonStyle);
-		_optionsButton = new Button(ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
-		_mainMenuButton = new Button(ButtonSize, "Main Menu", _uiStyleCollection.DefaultButtonStyle);
+		_resumeButton = new Button(_inputManager, ButtonSize, "Resume", _uiStyleCollection.DefaultButtonStyle);
+		_optionsButton = new Button(_inputManager, ButtonSize, "Options", _uiStyleCollection.DefaultButtonStyle);
+		_mainMenuButton = new Button(_inputManager, ButtonSize, "Main Menu", _uiStyleCollection.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			_resumeButton, 

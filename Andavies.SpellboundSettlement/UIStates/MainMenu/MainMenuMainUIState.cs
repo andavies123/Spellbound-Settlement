@@ -1,4 +1,5 @@
 using System;
+using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
 using Andavies.MonoGame.UI.LayoutGroups;
@@ -14,6 +15,7 @@ public class MainMenuMainUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
+	private readonly IInputManager _inputManager;
 	private readonly IUIStyleRepository _uiStyleRepository;
 	private VerticalLayoutGroup _verticalLayoutGroup;
 	private Button _playButton;
@@ -22,9 +24,10 @@ public class MainMenuMainUIState : IUIState
 	private Button _optionsButton;
 	private Button _quitButton;
 	
-	public MainMenuMainUIState(IUIStyleRepository uiStyleRepository)
+	public MainMenuMainUIState(IInputManager inputManager, IUIStyleRepository uiStyleRepository)
 	{
-		_uiStyleRepository = uiStyleRepository;
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
+		_uiStyleRepository = uiStyleRepository ?? throw new ArgumentNullException(nameof(uiStyleRepository));
 	}
 
 	public event Action PlayButtonClicked;
@@ -37,18 +40,18 @@ public class MainMenuMainUIState : IUIState
 
 	public void LateInit()
 	{
-		_verticalLayoutGroup = new VerticalLayoutGroup(Point.Zero, GameManager.Viewport.Bounds.Size)
+		_verticalLayoutGroup = new VerticalLayoutGroup(_inputManager, Point.Zero, GameManager.Viewport.Bounds.Size)
 		{
 			Spacing = 100,
 			ChildAnchor = HorizontalAnchor.Center,
 			ForceExpandChildWidth = false
 		};
 
-		_playButton = new Button(ButtonSize, "Play", _uiStyleRepository.DefaultButtonStyle);
-		_joinServerButton = new Button(ButtonSize, "Join Server", _uiStyleRepository.DefaultButtonStyle);
-		_createServerButton = new Button(ButtonSize, "Create Server", _uiStyleRepository.DefaultButtonStyle);
-		_optionsButton = new Button(ButtonSize, "Options", _uiStyleRepository.DefaultButtonStyle);
-		_quitButton = new Button(ButtonSize, "Quit", _uiStyleRepository.DefaultButtonStyle);
+		_playButton = new Button(_inputManager, ButtonSize, "Play", _uiStyleRepository.DefaultButtonStyle);
+		_joinServerButton = new Button(_inputManager, ButtonSize, "Join Server", _uiStyleRepository.DefaultButtonStyle);
+		_createServerButton = new Button(_inputManager, ButtonSize, "Create Server", _uiStyleRepository.DefaultButtonStyle);
+		_optionsButton = new Button(_inputManager, ButtonSize, "Options", _uiStyleRepository.DefaultButtonStyle);
+		_quitButton = new Button(_inputManager, ButtonSize, "Quit", _uiStyleRepository.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			_playButton,

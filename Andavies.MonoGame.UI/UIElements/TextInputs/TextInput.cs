@@ -20,14 +20,14 @@ public class TextInput : UIElement
 	private bool _isWaitingForInitialPause = false;
 	private Cursor _cursor = new();
 
-	public TextInput(Point position, Point size, TextInputStyle style, IInputListener inputListener) : 
-		base(position, size)
+	public TextInput(IInputManager inputManager, Point position, Point size, TextInputStyle style, IInputListener inputListener) : 
+		base(inputManager, position, size)
 	{
 		Style = style;
 		InputListener = inputListener;
 	}
 
-	public TextInput(Point size, TextInputStyle style, IInputListener inputListener) : base(size)
+	public TextInput(IInputManager inputManager, Point size, TextInputStyle style, IInputListener inputListener) : base(inputManager, size)
 	{
 		Style = style;
 		InputListener = inputListener;
@@ -109,13 +109,13 @@ public class TextInput : UIElement
 
 	private void HandleBackspaceKey()
 	{
-		if (Input.WasKeyPressed(Keys.Back)) // Initial key press
+		if (InputManager.WasKeyPressed(Keys.Back)) // Initial key press
 		{
 			InputListener.RemoveLastCharacter();
 			_timeSinceLastBackspace = 0f;
 			_isWaitingForInitialPause = true;
 		}
-		else if (Input.IsKeyDown(Keys.Back))
+		else if (InputManager.IsKeyDown(Keys.Back))
 		{
 			if (_isWaitingForInitialPause && _timeSinceLastBackspace >= InitialTimeBetweenBackspaces)
 			{
@@ -133,7 +133,7 @@ public class TextInput : UIElement
 
 	private void HandleEnterKey()
 	{
-		if (Input.WasKeyPressed(Keys.Enter))
+		if (InputManager.WasKeyPressed(Keys.Enter))
 			InputListener.ResetListener();
 	}
 }

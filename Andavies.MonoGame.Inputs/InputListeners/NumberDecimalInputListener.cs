@@ -4,6 +4,8 @@ namespace Andavies.MonoGame.Inputs.InputListeners;
 
 public class NumberDecimalInputListener : InputListener
 {
+	public NumberDecimalInputListener(IInputManager inputManager) : base(inputManager) { }
+	
 	protected override Dictionary<Keys, char> KeyMap { get; } = new()
 	{
 		{Keys.D0, '0'},

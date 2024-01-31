@@ -23,6 +23,7 @@ namespace Andavies.SpellboundSettlement.GameStates;
 public class GameplayGameState : GameState
 {
 	private readonly ILogger _logger;
+	private readonly IInputManager _inputManager;
 	private readonly INetworkClient _networkClient;
 	private readonly ITileRegistry _tileRegistry;
 	private readonly IClientWorldManager _clientWorldManager;
@@ -37,6 +38,7 @@ public class GameplayGameState : GameState
 	
 	public GameplayGameState(
 		ILogger logger,
+		IInputManager inputManager,
 		INetworkClient networkClient,
 		ITileRegistry tileRegistry,
 		IClientWorldManager clientWorldManager,
@@ -48,6 +50,7 @@ public class GameplayGameState : GameState
 		GameplayInputState inputState)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
 		_networkClient = networkClient ?? throw new ArgumentNullException(nameof(networkClient));
 		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 		_clientWorldManager = clientWorldManager ?? throw new ArgumentNullException(nameof(clientWorldManager));
@@ -90,8 +93,8 @@ public class GameplayGameState : GameState
 		InputState.PauseGame.OnKeyUp += OnPauseGameKeyReleased;
 		
 		// These connections are made here so WorldInteractionManager doesn't have to worry about when to stop listening
-		Input.MouseMoved += _worldInteractionManager.UpdateTileHover;
-		Input.LeftMousePressed += _worldInteractionManager.UpdateTileInteract;
+		_inputManager.MouseMoved += _worldInteractionManager.UpdateTileHover;
+		_inputManager.LeftMouseButtonPressed += _worldInteractionManager.UpdateTileInteract;
 	}
 	
 	public override void Update(float deltaTimeSeconds)
@@ -126,8 +129,8 @@ public class GameplayGameState : GameState
 		_gameplayGameplayUIState.PauseButtonClicked -= OnPauseGameClicked;
 		InputState.PauseGame.OnKeyUp -= OnPauseGameKeyReleased;
 		
-		Input.MouseMoved -= _worldInteractionManager.UpdateTileHover;
-		Input.LeftMousePressed -= _worldInteractionManager.UpdateTileInteract;
+		_inputManager.MouseMoved -= _worldInteractionManager.UpdateTileHover;
+		_inputManager.LeftMouseButtonPressed -= _worldInteractionManager.UpdateTileInteract;
 		
 		UnloadTileModels();
 	}

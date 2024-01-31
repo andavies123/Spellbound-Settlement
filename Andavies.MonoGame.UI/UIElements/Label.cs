@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.UI.Core;
+﻿using Andavies.MonoGame.Inputs;
+using Andavies.MonoGame.UI.Core;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Styles;
 using Microsoft.Xna.Framework;
@@ -8,13 +9,13 @@ namespace Andavies.MonoGame.UI.UIElements;
 
 public class Label : UIElement
 {
-	public Label(Point position, Point size, string text, LabelStyle style) : base(position, size)
+	public Label(IInputManager inputManager, Point position, Point size, string text, LabelStyle style) : base(inputManager, position, size)
 	{
 		Text = text;
 		Style = style;
 	}
 
-	public Label(Point size, string text, LabelStyle style) : base(size)
+	public Label(IInputManager inputManager, Point size, string text, LabelStyle style) : base(inputManager, size)
 	{
 		Text = text;
 		Style = style;

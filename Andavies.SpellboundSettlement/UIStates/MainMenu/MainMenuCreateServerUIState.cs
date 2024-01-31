@@ -1,4 +1,5 @@
 ﻿using System;
+using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
@@ -17,6 +18,7 @@ public class MainMenuCreateServerUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
+	private readonly IInputManager _inputManager;
 	private readonly IInputListener _numbersOnlyInputListener;
 	private readonly IUIStyleRepository _uiStyleCollection;
 	private IUIElement _focusedUIElement;
@@ -30,11 +32,14 @@ public class MainMenuCreateServerUIState : IUIState
 	private Button _createServerButton;
 	private Button _backButton;
 
-	public MainMenuCreateServerUIState(IUIStyleRepository uiStyleCollection,
+	public MainMenuCreateServerUIState(
+		IInputManager inputManager,
+		IUIStyleRepository uiStyleCollection,
 		[KeyFilter(nameof(NumberDecimalInputListener))] IInputListener numbersOnlyInputListener)
 	{
-		_uiStyleCollection = uiStyleCollection;
-		_numbersOnlyInputListener = numbersOnlyInputListener;
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
+		_uiStyleCollection = uiStyleCollection ?? throw new ArgumentNullException(nameof(uiStyleCollection));
+		_numbersOnlyInputListener = numbersOnlyInputListener ?? throw new ArgumentNullException(nameof(numbersOnlyInputListener));
 	}
 
 	public event Action CreateServerButtonClicked;
@@ -44,33 +49,33 @@ public class MainMenuCreateServerUIState : IUIState
 
 	public void LateInit()
 	{
-		_verticalGroup = new VerticalLayoutGroup(Point.Zero, GameManager.Viewport.Bounds.Size)
+		_verticalGroup = new VerticalLayoutGroup(_inputManager, Point.Zero, GameManager.Viewport.Bounds.Size)
 		{
 			Spacing = 100,
 			ChildAnchor = HorizontalAnchor.Center,
 			ForceExpandChildWidth = false
 		};
 
-		_horizontalGroup = new HorizontalLayoutGroup(new Point(GameManager.Viewport.Width, 60))
+		_horizontalGroup = new HorizontalLayoutGroup(_inputManager, new Point(GameManager.Viewport.Width, 60))
 		{
 			Spacing = 200,
 			ChildAnchor = VerticalAnchor.Center,
 			ForceExpandChildHeight = false
 		};
 
-		_enterIpLabel = new Label(ButtonSize, "IP Address:", _uiStyleCollection.DefaultLabelStyle);
-		_ipAddressInput = new IpAddressTextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle)
+		_enterIpLabel = new Label(_inputManager, ButtonSize, "IP Address:", _uiStyleCollection.DefaultLabelStyle);
+		_ipAddressInput = new IpAddressTextInput(_inputManager, ButtonSize, _uiStyleCollection.DefaultTextInputStyle)
 		{
 			MaxLength = 15, // Max length of an IP address
 			HintText = "Ip Address"
 		};
-		_portInput = new TextInput(ButtonSize, _uiStyleCollection.DefaultTextInputStyle, _numbersOnlyInputListener)
+		_portInput = new TextInput(_inputManager, ButtonSize, _uiStyleCollection.DefaultTextInputStyle, _numbersOnlyInputListener)
 		{
 			MaxLength = 5, // Max port length
 			HintText = "Ip Port"
 		};
-		_createServerButton = new Button(ButtonSize, "Create", _uiStyleCollection.DefaultButtonStyle);
-		_backButton = new Button(ButtonSize, "Back", _uiStyleCollection.DefaultButtonStyle);
+		_createServerButton = new Button(_inputManager, ButtonSize, "Create", _uiStyleCollection.DefaultButtonStyle);
+		_backButton = new Button(_inputManager, ButtonSize, "Back", _uiStyleCollection.DefaultButtonStyle);
 		
 		_horizontalGroup.AddChildren(_enterIpLabel, _ipAddressInput, _portInput);
 		_verticalGroup.AddChildren(_horizontalGroup, _createServerButton, _backButton);

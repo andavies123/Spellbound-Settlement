@@ -1,4 +1,5 @@
-﻿using Andavies.MonoGame.Inputs.InputListeners;
+﻿using Andavies.MonoGame.Inputs;
+using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Network.Extensions;
 using Andavies.MonoGame.Network.Server;
@@ -25,6 +26,7 @@ namespace Andavies.SpellboundSettlement;
 public static class Program
 {
 	private static IContainer Container { get; set; }
+	public static bool LogFrameCount { get; set; } = false;
 	
 	public static void Main(string[] args)
 	{
@@ -63,7 +65,8 @@ public static class Program
 		builder.RegisterType<ModelDrawManager>().As<IModelDrawManager>().SingleInstance();
 		builder.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
 		builder.RegisterType<ClientWorldManager>().As<IClientWorldManager>().SingleInstance();
-		builder.RegisterType<WorldInteractionManager>().As<IWorldInteractionManager>();
+		builder.RegisterType<WorldInteractionManager>().As<IWorldInteractionManager>().SingleInstance();
+		builder.RegisterType<InputManager>().As<IInputManager>().SingleInstance();
 		
 		// Repositories
 		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();

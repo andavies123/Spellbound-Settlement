@@ -1,3 +1,4 @@
+using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Core;
 using Andavies.MonoGame.UI.Interfaces;
 using Microsoft.Xna.Framework;
@@ -9,9 +10,9 @@ public abstract class LayoutGroup : UIElement, ILayoutGroup
 {
 	protected readonly List<IUIElement> Children = new();
 
-	protected LayoutGroup(Rectangle bounds) : base(bounds) { }
-	protected LayoutGroup(Point location, Point size) : base(location, size) { }
-	protected LayoutGroup(Point size) : base(size) { }
+	protected LayoutGroup(IInputManager inputManager, Rectangle bounds) : base(inputManager, bounds) { }
+	protected LayoutGroup(IInputManager inputManager, Point location, Point size) : base(inputManager, location, size) { }
+	protected LayoutGroup(IInputManager inputManager, Point size) : base(inputManager, size) { }
 	
 	public int Spacing { get; set; }
 	

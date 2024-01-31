@@ -5,7 +5,13 @@ namespace Andavies.MonoGame.Inputs.InputListeners;
 
 public abstract class InputListener : IInputListener
 {
+	protected readonly IInputManager InputManager;
 	protected readonly StringBuilder StringBuilder = new();
+
+	protected InputListener(IInputManager inputManager)
+	{
+		InputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
+	}
 
 	public string Text => StringBuilder.ToString();
 	public int Length => StringBuilder.Length;
@@ -24,7 +30,7 @@ public abstract class InputListener : IInputListener
 
 	public virtual void Listen()
 	{
-		foreach (Keys pressedKey in Input.KeysPressedThisFrame)
+		foreach (Keys pressedKey in InputManager.KeysPressedThisFrame)
 		{
 			if (IsKeyValid(pressedKey, out char character))
 				StringBuilder.Append(character);

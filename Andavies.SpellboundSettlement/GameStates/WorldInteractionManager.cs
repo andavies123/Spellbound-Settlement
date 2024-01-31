@@ -14,13 +14,20 @@ namespace Andavies.SpellboundSettlement.GameStates;
 public class WorldInteractionManager : IWorldInteractionManager
 {
 	private readonly ILogger _logger;
+	private readonly IInputManager _inputManager;
 	private readonly ITileHoverHandler _tileHoverHandler;
 	private readonly WorldMesh _worldMesh;
 	private readonly Camera _camera;
     
-	public WorldInteractionManager(ILogger logger, ITileHoverHandler tileHoverHandler, WorldMesh worldMesh, Camera camera)
+	public WorldInteractionManager(
+		ILogger logger,
+		IInputManager inputManager,
+		ITileHoverHandler tileHoverHandler, 
+		WorldMesh worldMesh, 
+		Camera camera)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
 		_tileHoverHandler = tileHoverHandler ?? throw new ArgumentNullException(nameof(tileHoverHandler));
 		_worldMesh = worldMesh ?? throw new ArgumentNullException(nameof(worldMesh));
 		_camera = camera ?? throw new ArgumentNullException(nameof(camera));
@@ -45,7 +52,7 @@ public class WorldInteractionManager : IWorldInteractionManager
 		closestTilePosition = default;
         
 		// Distance doesn't matter as we want it to go forever
-		Ray ray = _camera.GetRayFromCamera(GameManager.Viewport, Input.CurrentMousePosition.ToVector2(), 1);
+		Ray ray = _camera.GetRayFromCamera(GameManager.Viewport, _inputManager.CurrentMousePosition.ToVector2(), 1);
 		
 		// Find all chunks that intersect with ray cast
 		List<(ChunkMesh, float)> chunkMeshesByDistance = new();

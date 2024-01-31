@@ -10,29 +10,34 @@ namespace Andavies.MonoGame.UI.Core;
 
 public abstract class UIElement : IUIElement
 {
+	protected readonly IInputManager InputManager;
 	private Rectangle _bounds = Rectangle.Empty;
 	private bool _hasFocus; // Backing variable for HasFocus
-	
+
 	/// <summary>Use this constructor when the bounds are already defined as a Rectangle</summary>
+	/// <param name="inputManager"></param>
 	/// <param name="bounds">The bounds of this UI Element</param>
-	protected UIElement(Rectangle bounds)
+	protected UIElement(IInputManager inputManager, Rectangle bounds)
 	{
+		InputManager = inputManager;
 		Bounds = bounds;
 	}
 
 	/// <summary>Use this constructor when a rectangle object has not already been created</summary>
+	/// <param name="inputManager"></param>
 	/// <param name="location">The location/position of the top left corner of the bounds</param>
 	/// <param name="size">The size (width/height) of the bounds</param>
-	protected UIElement(Point location, Point size) : 
-		this(new Rectangle(location, size)) { }
+	protected UIElement(IInputManager inputManager, Point location, Point size) : 
+		this(inputManager, new Rectangle(location, size)) { }
 
 	/// <summary>
 	/// Constructor that will set the bounds location to (0, 0)
 	/// Use this constructor when a parent layout group will have control over positions
 	/// </summary>
+	/// <param name="inputManager"></param>
 	/// <param name="size">The size (width/height) of the bounds</param>
-	protected UIElement(Point size) : 
-		this(new Rectangle(new Point(0, 0), size)) { }
+	protected UIElement(IInputManager inputManager, Point size) :
+		this(inputManager, new Rectangle(new Point(0, 0), size)) { }
 	
 	public event Action<IUIElement>? MouseEntered;
 	public event Action<IUIElement>? MouseExited;
@@ -107,13 +112,13 @@ public abstract class UIElement : IUIElement
 	private void CheckMousePosition()
 	{
 		// Mouse Enter
-		if (!IsElementHovered && Bounds.Contains(Input.CurrentMousePosition))
+		if (!IsElementHovered && Bounds.Contains(InputManager.CurrentMousePosition))
 		{
 			IsElementHovered = true;
 			MouseEntered?.Invoke(this);
 		}
 		// Mouse Exit
-		else if (IsElementHovered && !Bounds.Contains(Input.CurrentMousePosition))
+		else if (IsElementHovered && !Bounds.Contains(InputManager.CurrentMousePosition))
 		{
 			IsElementHovered = false;
 			MouseExited?.Invoke(this);
@@ -124,15 +129,15 @@ public abstract class UIElement : IUIElement
 	private void CheckMouseActions()
 	{
 		// Mouse Pressed
-		if (Input.WasMousePressed(MouseButton.Left) && Bounds.Contains(Input.CurrentMousePosition))
+		if (InputManager.WasMousePressed(MouseButton.Left) && Bounds.Contains(InputManager.CurrentMousePosition))
 		{
 			IsElementPressed = true;
 			MousePressed?.Invoke(this);
 		}
 		// Mouse Released
-		else if (Input.WasMouseReleased(MouseButton.Left))
+		else if (InputManager.WasMouseReleased(MouseButton.Left))
 		{
-			if (Bounds.Contains(Input.CurrentMousePosition))
+			if (Bounds.Contains(InputManager.CurrentMousePosition))
 			{
 				if (IsElementPressed)
 					MouseClicked?.Invoke(this);

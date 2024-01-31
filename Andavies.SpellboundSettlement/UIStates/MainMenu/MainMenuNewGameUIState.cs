@@ -1,4 +1,5 @@
 ﻿using System;
+using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.Inputs.InputListeners;
 using Andavies.MonoGame.UI.Enums;
 using Andavies.MonoGame.UI.Interfaces;
@@ -16,6 +17,7 @@ public class MainMenuNewGameUIState : IUIState
 {
 	private static readonly Point ButtonSize = new(175, 60);
 
+	private readonly IInputManager _inputManager;
 	private readonly IUIStyleRepository _uiStyleRepository;
 	private VerticalLayoutGroup _verticalLayoutGroup;
 	private Label _worldNameLabel;
@@ -23,9 +25,10 @@ public class MainMenuNewGameUIState : IUIState
 	private Button _createWorldButton;
 	private Button _backButton;
 
-	public MainMenuNewGameUIState(IUIStyleRepository uiStyleRepository)
+	public MainMenuNewGameUIState(IInputManager inputManager, IUIStyleRepository uiStyleRepository)
 	{
-		_uiStyleRepository = uiStyleRepository;
+		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
+		_uiStyleRepository = uiStyleRepository ?? throw new ArgumentNullException(nameof(uiStyleRepository));
 	}
 
 	public event Action CreateWorldActionRequested;
@@ -35,17 +38,17 @@ public class MainMenuNewGameUIState : IUIState
 
 	public void LateInit()
 	{
-		_verticalLayoutGroup = new VerticalLayoutGroup(Point.Zero, GameManager.Viewport.Bounds.Size)
+		_verticalLayoutGroup = new VerticalLayoutGroup(_inputManager, Point.Zero, GameManager.Viewport.Bounds.Size)
 		{
 			Spacing = 100,
 			ChildAnchor = HorizontalAnchor.Center,
 			ForceExpandChildWidth = false
 		};
 
-		_worldNameLabel = new Label(ButtonSize, "World Name:", _uiStyleRepository.DefaultLabelStyle);
-		_worldNameTextInput = new TextInput(ButtonSize, _uiStyleRepository.DefaultTextInputStyle, new NumberDecimalInputListener());
-		_createWorldButton = new Button(ButtonSize, "Create World", _uiStyleRepository.DefaultButtonStyle);
-		_backButton = new Button(ButtonSize, "Back", _uiStyleRepository.DefaultButtonStyle);
+		_worldNameLabel = new Label(_inputManager, ButtonSize, "World Name:", _uiStyleRepository.DefaultLabelStyle);
+		_worldNameTextInput = new TextInput(_inputManager, ButtonSize, _uiStyleRepository.DefaultTextInputStyle, new NumberDecimalInputListener(_inputManager));
+		_createWorldButton = new Button(_inputManager, ButtonSize, "Create World", _uiStyleRepository.DefaultButtonStyle);
+		_backButton = new Button(_inputManager, ButtonSize, "Back", _uiStyleRepository.DefaultButtonStyle);
 		
 		_verticalLayoutGroup.AddChildren(
 			_worldNameLabel,
