@@ -27,12 +27,12 @@ public class GameEventListener : IGameEventListener
 
 	private void OnWizardUpdated(Wizard wizard)
 	{
-		SendToAllClients(new WizardUpdatedPacket {WizardData = wizard.WizardData});
+		SendToAllClients(new WizardUpdatedPacket {WizardData = wizard.Data});
 	}
 
 	private void OnWizardRemoved(Wizard wizard)
 	{
-		SendToAllClients(new WizardRemovedPacket {WizardData = wizard.WizardData});
+		SendToAllClients(new WizardRemovedPacket {WizardData = wizard.Data});
 	}
 
 	private void SendToAllClients<T>(T packet) where T : INetSerializable

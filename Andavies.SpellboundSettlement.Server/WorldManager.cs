@@ -49,7 +49,7 @@ public class WorldManager : IWorldManager
 
 		EarthWizard wizard = new()
 		{
-			WizardData =
+			Data =
 			{
 				Name = "Andrew Davies",
 				Position = position,

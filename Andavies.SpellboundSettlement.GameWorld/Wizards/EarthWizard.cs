@@ -2,10 +2,16 @@
 
 public class EarthWizard : Wizard
 {
-	public override EarthWizardData WizardData { get; } = new();
+	public override EarthWizardData Data { get; } = new();
+	public override EarthWizardStats Stats { get; } = new();
 }
 
 public class EarthWizardData : WizardData
+{
+	
+}
+
+public class EarthWizardStats : WizardStats
 {
 	
 }

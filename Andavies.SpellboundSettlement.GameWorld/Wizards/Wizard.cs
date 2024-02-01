@@ -22,15 +22,17 @@ public abstract class Wizard
 	
 	public event Action<Wizard>? Updated;
 
-	public abstract WizardData WizardData { get; }
+	public abstract WizardData Data { get; }
+	public abstract WizardStats Stats { get; }
+	
 	public World? World { get; set; }
 
 	public void Update(float deltaTimeSeconds)
 	{
 		_stateMachine.UpdateCurrentState(deltaTimeSeconds);
-		if (WizardData.IsChanged)
+		if (Data.IsChanged)
 		{
-			WizardData.AcceptChanges();
+			Data.AcceptChanges();
 			Updated?.Invoke(this);
 		}
 	}
@@ -38,7 +40,7 @@ public abstract class Wizard
 	public void Loiter()
 	{
 		LoiterState.World = World;
-		LoiterState.CenterPosition = WizardData.Position;
+		LoiterState.CenterPosition = Data.Position;
 		LoiterState.MinStandingLength = 3;
 		LoiterState.MaxStandingLength = 7;
 		_stateMachine.SetCurrentState(LoiterState);
