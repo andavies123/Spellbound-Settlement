@@ -50,7 +50,6 @@ public class LoiterWizardState : WizardState
 	{
 		_movingState.World = World;
 		_movingState.MoveToPosition = new Vector3Int(CenterPosition.X + Random.Shared.Next(-5, 6), CenterPosition.Y, CenterPosition.Z + Random.Shared.Next(-5, 6));
-		_movingState.MovementSpeed = 0.25f;
 		
 		_stateMachine.SetCurrentState(_movingState);
 	}

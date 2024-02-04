@@ -2,5 +2,8 @@
 
 public abstract class WizardStats
 {
-	public float Speed { get; set; } = 1f;
+	/// <summary>
+	/// How many tiles the wizard can move in one second
+	/// </summary>
+	public float Speed { get; set; } = 10f;
 }

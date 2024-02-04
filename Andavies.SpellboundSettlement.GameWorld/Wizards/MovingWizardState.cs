@@ -14,7 +14,6 @@ public class MovingWizardState : WizardState
 
 	public World? World { get; set; }
 	public Vector3Int MoveToPosition { get; set; }
-	public float MovementSpeed { get; set; }
 
 	public override void Begin()
 	{
@@ -26,7 +25,7 @@ public class MovingWizardState : WizardState
 	{
 		_movementTime += deltaTime;
 
-		if (_movementTime < MovementSpeed)
+		if (_movementTime < 1/Wizard.Stats.Speed)
 			return;
 
 		_movementTime = 0;
