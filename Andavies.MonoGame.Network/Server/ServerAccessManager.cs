@@ -20,26 +20,26 @@ public class ServerAccessManager : IServerAccessManager
 
 	public void AddToWhiteList(string userName)
 	{
-		_whiteList.Add(userName);
 		_logger.Information("Adding {user} to server whitelist", userName);
+		_whiteList.Add(userName);
 	}
 	
 	public void AddToBlackList(string userName)
 	{
-		_blackList.Add(userName);
 		_logger.Information("Adding {user} to server blacklist", userName);
+		_blackList.Add(userName);
 	}
 
 	public void RemoveFromWhiteList(string userName)
 	{
-		_whiteList.Remove(userName);
 		_logger.Information("Removing {user} from server whitelist", userName);
+		_whiteList.Remove(userName);
 	}
 
 	public void RemoveFromBlackList(string userName)
 	{
-		_blackList.Remove(userName);
 		_logger.Information("Removing {user} from server blacklist", userName);
+		_blackList.Remove(userName);
 	}
 
 	public void ClearWhiteList()

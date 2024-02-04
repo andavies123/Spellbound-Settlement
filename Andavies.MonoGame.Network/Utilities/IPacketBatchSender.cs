@@ -5,6 +5,12 @@ namespace Andavies.MonoGame.Network.Utilities;
 
 public interface IPacketBatchSender
 {
+	/// <summary>
+	/// Points to the internal collection containing the packets yet to be sent
+	/// Property created for testing purposes
+	/// </summary>
+	IReadOnlyCollection<Action> PacketBatchCollection { get; }
+	
 	/// <summary>Adds a packet to the internal queue to be sent when SendBatch is called</summary>
 	/// <param name="client">The client to send the packet to</param>
 	/// <param name="packet">The packet that will be sent</param>
