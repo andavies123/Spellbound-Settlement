@@ -18,7 +18,16 @@ public readonly struct Vector3Int
 		Z = z;
 	}
 
+	public Vector3Int(float x, float y, float z)
+	{
+		X = (int) x;
+		Y = (int) y;
+		Z = (int) z;
+	}
+
 	public Vector3Int(int value) : this(value, value, value) { }
+
+	public Vector3Int(Vector3 vector3) : this(vector3.X, vector3.Y, vector3.Z) { }
 
 	public float Distance(Vector3Int other) => Distance(this, other);
 
@@ -37,14 +46,83 @@ public readonly struct Vector3Int
 		return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
 	}
 
+	public static Vector3 operator +(Vector3 a, Vector3Int b)
+	{
+		return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+	}
+
 	public static Vector3Int operator -(Vector3Int a, Vector3Int b)
 	{
 		return new Vector3Int(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
 	}
 
+	public static Vector3 operator -(Vector3Int a, Vector3 b)
+	{
+		return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+	}
+
+	public static Vector3 operator -(Vector3 a, Vector3Int b)
+	{
+		return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+	}
+
+	public static Vector3Int operator *(Vector3Int a, Vector3Int b)
+	{
+		return new Vector3Int(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+	}
+
+	public static Vector3 operator *(Vector3Int a, Vector3 b)
+	{
+		return new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+	}
+
+	public static Vector3 operator *(Vector3 a, Vector3Int b)
+	{
+		return new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+	}
+
 	public static Vector3Int operator *(Vector3Int a, int scale)
 	{
 		return new Vector3Int(a.X * scale, a.Y * scale, a.Z * scale);
+	}
+
+	public static Vector3 operator *(Vector3Int a, float scale)
+	{
+		return new Vector3(a.X * scale, a.Y * scale, a.Z * scale);
+	}
+
+	public static Vector3 operator /(Vector3Int a, Vector3 b)
+	{
+		if (b.X == 0 || b.Y == 0 || b.Z == 0)
+			throw new DivideByZeroException();
+		
+		return new Vector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);	
+	}
+
+	public static Vector3 operator /(Vector3 a, Vector3Int b)
+	{
+		if (b.X == 0 || b.Y == 0 || b.Z == 0)
+			throw new DivideByZeroException();
+		
+		return new Vector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);	
+	}
+
+	public static Vector3 operator /(Vector3Int a, Vector3Int b)
+	{
+		return a / (Vector3) b;
+	}
+	
+	public static Vector3 operator /(Vector3Int a, float scale)
+	{
+		if (scale == 0f)
+			throw new DivideByZeroException();
+		
+		return new Vector3(a.X / scale, a.Y / scale, a.Z / scale);
+	}
+
+	public static Vector3 operator /(Vector3Int a, int scale)
+	{
+		return a / (float) scale;
 	}
 
 	public static bool operator ==(Vector3Int left, Vector3Int right)
@@ -78,5 +156,10 @@ public readonly struct Vector3Int
 	public static explicit operator Vector3(Vector3Int vector)
 	{
 		return new Vector3(vector.X, vector.Y, vector.Z);
+	}
+
+	public static explicit operator Vector3Int(Vector3 vector)
+	{
+		return new Vector3Int(vector);
 	}
 }
