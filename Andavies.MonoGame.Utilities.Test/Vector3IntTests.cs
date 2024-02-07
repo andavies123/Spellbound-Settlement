@@ -984,7 +984,7 @@ public class Vector3IntTests
 		string vector3IntString = vector3Int.ToString();
 		
 		// Assert
-		vector3IntString.Should().ContainAll(new List<string> {vector3Int.X.ToString(), vector3Int.Y.ToString(), vector3Int.Z.ToString()});
+		vector3IntString.Should().ContainAll(new List<string> {"5", "7", "9"});
 	}
 
 	#endregion
