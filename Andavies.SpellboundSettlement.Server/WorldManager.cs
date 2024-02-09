@@ -19,6 +19,15 @@ public class WorldManager : IWorldManager
 		_world = world ?? throw new ArgumentNullException(nameof(world));
 	}
 
+	public void Tick(float deltaTimeSeconds)
+	{
+		// Add Update logic here
+		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
+		{
+			wizard.Update(deltaTimeSeconds);
+		}
+	}
+
 	public void CreateWorld()
 	{
 		_logger.Debug("Creating the world...");
@@ -30,13 +39,13 @@ public class WorldManager : IWorldManager
 		}
 	}
 
-	public void Tick(float deltaTimeSeconds)
+	public void UpdateTile(Vector3Int tileWorldPosition, string newTileId)
 	{
-		// Add Update logic here
-		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
-		{
-			wizard.Update(deltaTimeSeconds);
-		}
+		Vector2Int chunkPosition = WorldHelper.WorldPositionToChunkPosition(tileWorldPosition);
+		Vector3Int tilePosition = WorldHelper.WorldPositionToTilePosition(tileWorldPosition);
+
+		Chunk chunk = _world.GetChunk(chunkPosition);
+		chunk.UpdateWorldTile(tilePosition, newTileId);
 	}
 
 	private void SpawnWizard()
@@ -65,6 +74,7 @@ public class WorldManager : IWorldManager
 
 public interface IWorldManager
 {
-	void CreateWorld();
 	void Tick(float deltaTimeSeconds);
+	void CreateWorld();
+	void UpdateTile(Vector3Int tileWorldPosition, string newTileId);
 }

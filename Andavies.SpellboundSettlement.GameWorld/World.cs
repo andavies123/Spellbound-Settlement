@@ -13,14 +13,16 @@ public class World
 	private readonly ITileRegistry _tileRegistry;
 	
 	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
-
-	public IReadOnlyDictionary<Vector2Int, Chunk> Chunks => _chunks;
-
+	
 	public World(ILogger logger, ITileRegistry tileRegistry)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 	}
+
+	public event Action<Chunk>? ChunkUpdated;
+	
+	public IReadOnlyDictionary<Vector2Int, Chunk> Chunks => _chunks;
 
 	public void CreateNewWorld(Vector2Int centerChunkPosition, int initialGenerationRadius)
 	{
@@ -194,6 +196,9 @@ public class World
 				}
 			}
 		}
+
+		// Todo: Might need to find a better place for this
+		chunk.Updated += updatedChunk => ChunkUpdated?.Invoke(updatedChunk);
 		
 		return chunk;
 	}

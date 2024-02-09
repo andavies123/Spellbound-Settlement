@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Andavies.MonoGame.Inputs;
+using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Utilities;
 using Andavies.MonoGame.Utilities.Extensions;
 using Andavies.SpellboundSettlement.CameraObjects;
+using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Andavies.SpellboundSettlement.Meshes;
+using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using Microsoft.Xna.Framework;
 using Serilog;
 
@@ -14,6 +18,7 @@ namespace Andavies.SpellboundSettlement.GameStates;
 public class WorldInteractionManager : IWorldInteractionManager
 {
 	private readonly ILogger _logger;
+	private readonly INetworkClient _networkClient;
 	private readonly IInputManager _inputManager;
 	private readonly ITileHoverHandler _tileHoverHandler;
 	private readonly WorldMesh _worldMesh;
@@ -21,12 +26,14 @@ public class WorldInteractionManager : IWorldInteractionManager
     
 	public WorldInteractionManager(
 		ILogger logger,
+		INetworkClient networkClient,
 		IInputManager inputManager,
-		ITileHoverHandler tileHoverHandler, 
+		ITileHoverHandler tileHoverHandler,
 		WorldMesh worldMesh, 
 		Camera camera)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_networkClient = networkClient ?? throw new ArgumentNullException(nameof(networkClient));
 		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
 		_tileHoverHandler = tileHoverHandler ?? throw new ArgumentNullException(nameof(tileHoverHandler));
 		_worldMesh = worldMesh ?? throw new ArgumentNullException(nameof(worldMesh));
@@ -40,8 +47,14 @@ public class WorldInteractionManager : IWorldInteractionManager
 
 	public void UpdateTileInteract()
 	{
-		if (!TryGetWorldTileUnderMouse(out ChunkMesh closestChunkMesh, out Vector3Int? closestTilePosition))
+		if (!TryGetWorldTileUnderMouse(out ChunkMesh closestChunkMesh, out Vector3Int? closestTilePosition) || closestTilePosition == null)
 			return;
+		
+		_networkClient.SendMessage(new UpdateTileRequestPacket
+		{
+			TileId = nameof(AirTile),
+			WorldTilePosition = WorldHelper.ChunkAndTilePositionToWorldPosition(closestChunkMesh.Chunk.ChunkPosition, closestTilePosition.Value)
+		});
 		
 		_logger.Debug("Clicked on tile: {chunkPos} - {tilePos}", closestChunkMesh.Chunk.ChunkPosition, closestTilePosition);
 	}

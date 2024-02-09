@@ -2,22 +2,18 @@ using System.Diagnostics;
 using System.Net;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.Network.Utilities;
-using Andavies.MonoGame.Utilities;
 using Andavies.MonoGame.Utilities.GameEvents;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.General;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib;
-using LiteNetLib.Utils;
 using Serilog;
 
 namespace Andavies.SpellboundSettlement.Server;
 
 public class GameServer
 {
-	private const int TickRate = 50;
-    
 	private readonly ILogger _logger;
 	private readonly INetworkServer _networkServer;
 	private readonly IPacketBatchSender _packetBatchSender;
@@ -27,7 +23,7 @@ public class GameServer
 	private readonly IWizardManager _wizardManager;
 	private readonly ITileRegister _tileRegister;
 	private readonly IGameEventListener _gameEventListener;
-	private readonly World _world;
+	private readonly INetworkEventListener _networkEventListener;
 	
 	private bool _runGameLoop = false;
 	private int _tickRate = 50;
@@ -40,8 +36,8 @@ public class GameServer
 		IWorldManager worldManager,
 		IWizardManager wizardManager,
 		ITileRegister tileRegister,
-		IGameEventListener gameEventListener, // Only added here so it gets started
-		World world)
+		IGameEventListener gameEventListener,
+		INetworkEventListener networkEventListener)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_networkServer = networkServer ?? throw new ArgumentNullException(nameof(networkServer));
@@ -52,7 +48,7 @@ public class GameServer
 		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
 		_tileRegister = tileRegister ?? throw new ArgumentNullException(nameof(tileRegister));
 		_gameEventListener = gameEventListener ?? throw new ArgumentNullException(nameof(gameEventListener));
-		_world = world ?? throw new ArgumentNullException(nameof(world));
+		_networkEventListener = networkEventListener ?? throw new ArgumentNullException(nameof(networkEventListener));
 	}
 
 	private float TickTimeMilliseconds => 1000f / _tickRate;
@@ -71,7 +67,8 @@ public class GameServer
 		
 		_gameEventSystem.Publish(new WorldCreatedGameEvent());
 		
-		_networkServer.AddSubscription<WorldChunkRequestPacket>(OnWorldChunkRequestPacketReceived);
+		_networkEventListener.SubscribeToPackets();
+		_gameEventListener.SubscribeToEvents();
 		
 		_networkServer.ServerStarted += OnServerStarted;
 		_networkServer.ClientConnected += OnClientConnected;
@@ -99,20 +96,6 @@ public class GameServer
 		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
 		{
 			_packetBatchSender.AddPacket(client, new WizardUpdatedPacket {WizardData = wizard.Data});
-		}
-	}
-
-	private void OnWorldChunkRequestPacketReceived(INetSerializable packet, NetPeer client)
-	{
-		if (packet is not WorldChunkRequestPacket requestPacket)
-			return;
-		
-		foreach (Vector2Int chunkPosition in requestPacket.ChunkPositions)
-		{
-			_packetBatchSender.AddPacket(client, new WorldChunkResponsePacket
-			{
-				Chunk = _world.GetChunk(chunkPosition)
-			});
 		}
 	}
 
@@ -146,7 +129,8 @@ public class GameServer
 		
 		_networkServer.Stop();
 		
-		_networkServer.RemoveSubscription<WorldChunkRequestPacket>(OnWorldChunkRequestPacketReceived);
+		_networkEventListener.UnsubscribeFromPackets();
+		_gameEventListener.UnsubscribeFromEvents();
 		
 		_networkServer.ServerStarted -= OnServerStarted;
 		_networkServer.ClientConnected -= OnClientConnected;

@@ -33,4 +33,18 @@ public static class WorldHelper
 			worldPosition.Y < 0 ? ChunkSize.Y + worldPosition.Y % ChunkSize.Y : worldPosition.Y % ChunkSize.Y,
 			worldPosition.Z < 0 ? ChunkSize.Z + worldPosition.Z % ChunkSize.Z : worldPosition.Z % ChunkSize.Z);
 	}
+
+	/// <summary>
+	/// Calculates and returns the world position from a given chunk position and tile position
+	/// </summary>
+	/// <param name="chunkPosition">The chunk position used to get the world position</param>
+	/// <param name="tilePosition">The tile position inside of a chunk used to get the world position</param>
+	/// <returns>The world position that corresponds with the given chunk and tile position</returns>
+	public static Vector3Int ChunkAndTilePositionToWorldPosition(Vector2Int chunkPosition, Vector3Int tilePosition)
+	{
+		return new Vector3Int(
+			chunkPosition.X * ChunkSize.X + tilePosition.X,
+			tilePosition.Y,
+			chunkPosition.Y * ChunkSize.Z + tilePosition.Z);
+	}
 }

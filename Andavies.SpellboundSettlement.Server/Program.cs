@@ -68,6 +68,7 @@ public static class Program
 		container.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
 		container.RegisterType<WizardManager>().As<IWizardManager>().SingleInstance();
 		container.RegisterType<GameEventListener>().As<IGameEventListener>().SingleInstance();
+		container.RegisterType<NetworkEventListener>().As<INetworkEventListener>().SingleInstance();
 	}
 
 	private static void OverrideServerSettingsWithCommandLineArgs(CommandLineParser parser, ServerSettings serverSettings)

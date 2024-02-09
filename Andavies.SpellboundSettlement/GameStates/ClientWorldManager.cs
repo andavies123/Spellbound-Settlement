@@ -14,7 +14,6 @@ namespace Andavies.SpellboundSettlement.GameStates;
 
 public class ClientWorldManager : IClientWorldManager
 {
-	private readonly ILogger _logger;
 	private readonly INetworkClient _networkClient;
 	private readonly IChunkMeshBuilder _chunkMeshBuilder;
 	private readonly WorldMesh _worldMesh;
@@ -23,12 +22,10 @@ public class ClientWorldManager : IClientWorldManager
 	private readonly ConcurrentDictionary<Guid, WizardData> _wizards = new();
 
 	public ClientWorldManager(
-		ILogger logger,
 		INetworkClient networkClient,
 		IChunkMeshBuilder chunkMeshBuilder,
 		WorldMesh worldMesh)
 	{
-		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_networkClient = networkClient ?? throw new ArgumentNullException(nameof(networkClient));
 		_chunkMeshBuilder = chunkMeshBuilder ?? throw new ArgumentNullException(nameof(chunkMeshBuilder));
 		_worldMesh = worldMesh ?? throw new ArgumentNullException(nameof(worldMesh));

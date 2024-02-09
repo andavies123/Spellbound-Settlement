@@ -5,7 +5,6 @@ using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using Serilog;
 
 namespace Andavies.SpellboundSettlement.Server;
 
@@ -14,15 +13,35 @@ public class GameEventListener : IGameEventListener
 	private readonly INetworkServer _networkServer;
 	private readonly IPacketBatchSender _packetBatchSender;
 	private readonly IWizardManager _wizardManager;
+	private readonly World _world;
 	
-	public GameEventListener(INetworkServer networkServer, IPacketBatchSender packetBatchSender, IWizardManager wizardManager)
+	public GameEventListener(INetworkServer networkServer, IPacketBatchSender packetBatchSender, IWizardManager wizardManager, World world)
 	{
 		_networkServer = networkServer ?? throw new ArgumentNullException(nameof(networkServer));
 		_packetBatchSender = packetBatchSender ?? throw new ArgumentNullException(nameof(packetBatchSender));
 		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
+		_world = world ?? throw new ArgumentNullException(nameof(world));
+	}
 
+	public void SubscribeToEvents()
+	{
+		_world.ChunkUpdated += OnChunkUpdated;
+		
 		_wizardManager.WizardUpdated += OnWizardUpdated;
 		_wizardManager.WizardRemoved += OnWizardRemoved;
+	}
+
+	public void UnsubscribeFromEvents()
+	{
+		_world.ChunkUpdated -= OnChunkUpdated;
+		
+		_wizardManager.WizardUpdated -= OnWizardUpdated;
+		_wizardManager.WizardRemoved -= OnWizardRemoved;
+	}
+
+	private void OnChunkUpdated(Chunk chunk)
+	{
+		SendToAllClients(new WorldChunkResponsePacket {Chunk = chunk});
 	}
 
 	private void OnWizardUpdated(Wizard wizard)
@@ -46,5 +65,6 @@ public class GameEventListener : IGameEventListener
 
 public interface IGameEventListener
 {
-	
+	void SubscribeToEvents();
+	void UnsubscribeFromEvents();
 }

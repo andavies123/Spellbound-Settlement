@@ -10,10 +10,27 @@ public class Chunk : INetSerializable
 	private const int XDimension = 0;
 	private const int YDimension = 1;
 	private const int ZDimension = 2;
+
+	public event Action<Chunk>? Updated;
 	
 	public Vector2Int ChunkPosition { get; set; }
 	public Vector3Int TileCount { get; set; }
 	public WorldTile[,,] WorldTiles { get; set; } = new WorldTile[0, 0, 0];
+
+	public WorldTile GetWorldTile(Vector3Int tilePosition)
+	{
+		return WorldTiles[tilePosition.X, tilePosition.Y, tilePosition.Z];
+	}
+
+	public void UpdateWorldTile(Vector3Int tilePosition, string newTileId)
+	{
+		WorldTile worldTile = GetWorldTile(tilePosition);
+		if (worldTile.TileId != newTileId)
+		{
+			worldTile.TileId = newTileId;
+			Updated?.Invoke(this);
+		}
+	}
 
 	/// <summary>
 	/// Returns the world height at a given (x, z) position
