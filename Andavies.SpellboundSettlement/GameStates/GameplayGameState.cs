@@ -94,7 +94,8 @@ public class GameplayGameState : GameState
 		
 		// These connections are made here so WorldInteractionManager doesn't have to worry about when to stop listening
 		_inputManager.MouseMoved += _worldInteractionManager.UpdateTileHover;
-		_inputManager.LeftMouseButtonPressed += _worldInteractionManager.UpdateTileInteract;
+		_inputManager.LeftMouseButtonPressed += _worldInteractionManager.CheckPrimaryInteraction;
+		_inputManager.RightMouseButtonPressed += _worldInteractionManager.CheckSecondaryInteraction;
 	}
 	
 	public override void Update(float deltaTimeSeconds)
@@ -130,7 +131,7 @@ public class GameplayGameState : GameState
 		InputState.PauseGame.OnKeyUp -= OnPauseGameKeyReleased;
 		
 		_inputManager.MouseMoved -= _worldInteractionManager.UpdateTileHover;
-		_inputManager.LeftMouseButtonPressed -= _worldInteractionManager.UpdateTileInteract;
+		_inputManager.LeftMouseButtonPressed -= _worldInteractionManager.CheckPrimaryInteraction;
 		
 		UnloadTileModels();
 	}

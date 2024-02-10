@@ -1,4 +1,5 @@
 ﻿using Andavies.MonoGame.Utilities;
+using Microsoft.Xna.Framework;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
 
@@ -29,6 +30,19 @@ public static class WorldHelper
 	public static Vector3Int WorldPositionToTilePosition(Vector3Int worldPosition)
 	{
 		return new Vector3Int(
+			worldPosition.X < 0 ? ChunkSize.X + worldPosition.X % ChunkSize.X : worldPosition.X % ChunkSize.X,
+			worldPosition.Y < 0 ? ChunkSize.Y + worldPosition.Y % ChunkSize.Y : worldPosition.Y % ChunkSize.Y,
+			worldPosition.Z < 0 ? ChunkSize.Z + worldPosition.Z % ChunkSize.Z : worldPosition.Z % ChunkSize.Z);
+	}
+
+	/// <summary>
+	/// Calculates and returns the position of a tile inside of a chunk
+	/// </summary>
+	/// <param name="worldPosition">The world position used to get the tile position</param>
+	/// <returns>The tile position inside of a chunk that corresponds with the given world position</returns>
+	public static Vector3 WorldPositionToTilePosition(Vector3 worldPosition)
+	{
+		return new Vector3(
 			worldPosition.X < 0 ? ChunkSize.X + worldPosition.X % ChunkSize.X : worldPosition.X % ChunkSize.X,
 			worldPosition.Y < 0 ? ChunkSize.Y + worldPosition.Y % ChunkSize.Y : worldPosition.Y % ChunkSize.Y,
 			worldPosition.Z < 0 ? ChunkSize.Z + worldPosition.Z % ChunkSize.Z : worldPosition.Z % ChunkSize.Z);

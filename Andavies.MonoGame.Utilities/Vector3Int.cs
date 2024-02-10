@@ -6,6 +6,12 @@ public readonly struct Vector3Int
 {
 	public static readonly Vector3Int Zero = new(0);
 	public static readonly Vector3Int One = new(1);
+	public static readonly Vector3Int East = new(1, 0, 0);
+	public static readonly Vector3Int West = new(-1, 0, 0);
+	public static readonly Vector3Int Up = new(0, 1, 0);
+	public static readonly Vector3Int Down = new(0, -1, 0);
+	public static readonly Vector3Int South = new(0, 0, 1);
+	public static readonly Vector3Int North = new(0, 0, -1);
 	
 	public readonly int X;
 	public readonly int Y;
