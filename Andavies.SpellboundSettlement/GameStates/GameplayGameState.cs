@@ -16,6 +16,7 @@ using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using Andavies.SpellboundSettlement.Wizards;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameStates;
@@ -94,8 +95,8 @@ public class GameplayGameState : GameState
 		
 		// These connections are made here so WorldInteractionManager doesn't have to worry about when to stop listening
 		_inputManager.MouseMoved += _worldInteractionManager.UpdateTileHover;
-		_inputManager.LeftMouseButtonPressed += _worldInteractionManager.CheckPrimaryInteraction;
-		_inputManager.RightMouseButtonPressed += _worldInteractionManager.CheckSecondaryInteraction;
+		_inputManager.LeftMouseButtonPressed += OnLeftMousePressed;
+		_inputManager.RightMouseButtonPressed += OnRightMousePressed;
 	}
 	
 	public override void Update(float deltaTimeSeconds)
@@ -138,6 +139,18 @@ public class GameplayGameState : GameState
 	
 	private void OnPauseGameKeyReleased() => PauseGameRequested?.Invoke();
 	private void OnPauseGameClicked() => PauseGameRequested?.Invoke();
+
+	private void OnLeftMousePressed()
+	{
+		if (_inputManager.IsKeyDown(Keys.LeftShift))
+			_worldInteractionManager.CheckPrimaryInteraction();
+	}
+
+	private void OnRightMousePressed()
+	{
+		if (_inputManager.IsKeyDown(Keys.LeftShift))
+			_worldInteractionManager.CheckSecondaryInteraction();
+	}
 
 	private void RegisterWizardDrawDetails()
 	{
