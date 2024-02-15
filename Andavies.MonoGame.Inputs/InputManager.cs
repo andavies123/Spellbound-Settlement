@@ -10,6 +10,9 @@ namespace Andavies.MonoGame.Inputs;
 /// </summary>
 public class InputManager : IInputManager
 {
+	private bool _enabled = true;
+	private int _updateOrder = 5;
+	
 	public InputManager()
 	{
 		SetInputStates();
@@ -19,6 +22,35 @@ public class InputManager : IInputManager
 	public event Action? LeftMouseButtonPressed;
 	public event Action? RightMouseButtonPressed;
 	
+	public event EventHandler<EventArgs>? EnabledChanged;
+	public event EventHandler<EventArgs>? UpdateOrderChanged;
+
+	public bool Enabled
+	{
+		get => _enabled;
+		set
+		{
+			if (_enabled != value)
+			{
+				_enabled = value;
+				EnabledChanged?.Invoke(this, EventArgs.Empty);
+			}
+		}
+	}
+	
+	public int UpdateOrder
+	{
+		get => _updateOrder;
+		set
+		{
+			if (_updateOrder != value)
+			{
+				_updateOrder = value;
+				UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
+			}
+		}
+	}
+	
 	public Point CurrentMousePosition => CurrentMouseState.Position;
 	public IReadOnlyList<Keys> KeysPressedThisFrame => CurrentKeyboardState.GetPressedKeys().Except(PreviousKeyboardState?.GetPressedKeys() ?? Array.Empty<Keys>()).ToList();
 	
@@ -26,8 +58,8 @@ public class InputManager : IInputManager
 	private static KeyboardState CurrentKeyboardState { get; set; }
 	private static MouseState? PreviousMouseState { get; set; }
 	private static MouseState CurrentMouseState { get; set; }
-
-	public void Update()
+	
+	public void Update(GameTime gameTime)
 	{
 		SetInputStates();
 		
@@ -41,7 +73,7 @@ public class InputManager : IInputManager
 		if (WasMousePressed(MouseButton.Right))
 			RightMouseButtonPressed?.Invoke();
 	}
-	
+
 	public bool WasKeyPressed(Keys key)
 	{
 		return (PreviousKeyboardState?.IsKeyUp(key) ?? false) && CurrentKeyboardState.IsKeyDown(key);

@@ -66,7 +66,11 @@ public static class Program
 		builder.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
 		builder.RegisterType<ClientWorldManager>().As<IClientWorldManager>().SingleInstance();
 		builder.RegisterType<WorldInteractionManager>().As<IWorldInteractionManager>().SingleInstance();
-		builder.RegisterType<InputManager>().As<IInputManager>().SingleInstance();
+		
+		// IUpdateables
+		builder.RegisterType<InputManager>().AsImplementedInterfaces().SingleInstance();
+		builder.RegisterType<GameStateManager>().AsImplementedInterfaces().SingleInstance();
+		builder.RegisterType<WorldViewCameraController>().AsImplementedInterfaces().SingleInstance();
 		
 		// Repositories
 		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
@@ -80,7 +84,6 @@ public static class Program
 		builder.RegisterType<UIStyleRepository>().As<IUIStyleRepository>().SingleInstance();
 
 		// Game States
-		builder.RegisterType<GameStateManager>().As<IGameStateManager>().SingleInstance();
 		builder.RegisterType<MainMenuGameState>().As<IGameState>().AsSelf().SingleInstance();
 		builder.RegisterType<LoadGameState>().As<IGameState>().AsSelf().SingleInstance();
 		builder.RegisterType<GameplayGameState>().As<IGameState>().AsSelf().SingleInstance();
@@ -106,8 +109,5 @@ public static class Program
 		builder.RegisterType<MainMenuOptionsUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<GameplayUIState>().As<IUIState>().AsSelf().SingleInstance();
 		builder.RegisterType<PauseMenuUIState>().As<IUIState>().AsSelf().SingleInstance();
-		
-		// Camera Controllers
-		builder.RegisterType<WorldViewCameraController>().As<ICameraController>().AsSelf().SingleInstance();
 	}
 }

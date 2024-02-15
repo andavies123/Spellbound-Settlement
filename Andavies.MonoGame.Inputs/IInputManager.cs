@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Andavies.MonoGame.Inputs;
 
-public interface IInputManager
+public interface IInputManager : IUpdateable
 {
 	/// <summary>
 	/// Raised when the mouse moved during this last frame
@@ -30,11 +30,6 @@ public interface IInputManager
 	/// A list of keys that were pressed this frame. This will not return all keys currently pressed, only new ones
 	/// </summary>
 	IReadOnlyList<Keys> KeysPressedThisFrame { get; }
-
-	/// <summary>
-	/// Call this at the beginning of each frame to update the input states
-	/// </summary>
-	void Update();
 
 	/// <summary>Checks a given key to see if it was pressed during this last frame</summary>
 	/// <param name="key">The key to check against</param>

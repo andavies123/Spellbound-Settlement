@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Andavies.MonoGame.Drawing;
-using Andavies.MonoGame.Inputs;
 using Andavies.MonoGame.UI.Styles;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
@@ -16,17 +17,12 @@ namespace Andavies.SpellboundSettlement;
 public class GameManager : Game
 {
 	private readonly ILogger _logger;
-	private readonly IInputManager _inputManager;
 	private readonly IGameStateManager _gameStateManager;
 	private readonly ICameraController _cameraController;
 	private readonly IUIStyleRepository _uiStyleCollection;
 	private readonly IFontRepository _fontRepository;
 	private readonly ITileRegister _tileRegister;
-	
-	// Update Times
-	private DateTime _currentTime;
-	private DateTime _previousTime;
-	private TimeSpan _deltaTime;
+	private readonly IEnumerable<IUpdateable> _updateables;
 	
 	// Drawing
 	public static Texture2D Texture;
@@ -35,23 +31,25 @@ public class GameManager : Game
 
 	public GameManager(
 		ILogger logger,
-		IInputManager inputManager,
 		IGameStateManager gameStateManager,
 		ICameraController cameraController,
 		IUIStyleRepository uiStyleCollection,
 		IFontRepository fontRepository,
-		ITileRegister tileRegister)
+		ITileRegister tileRegister,
+		IEnumerable<IUpdateable> updateables)
 	{
 		Global.GameManager = this;
-
+		
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		_inputManager = inputManager ?? throw new ArgumentNullException(nameof(inputManager));
 		_gameStateManager = gameStateManager ?? throw new ArgumentNullException(nameof(gameStateManager));
 		_cameraController = cameraController ?? throw new ArgumentNullException(nameof(cameraController));
 		_uiStyleCollection = uiStyleCollection ?? throw new ArgumentNullException(nameof(uiStyleCollection));
 		_fontRepository = fontRepository ?? throw new ArgumentNullException(nameof(fontRepository));
 		_tileRegister = tileRegister ?? throw new ArgumentNullException(nameof(tileRegister));
-		
+		_updateables = updateables ?? throw new ArgumentNullException(nameof(updateables));
+
+		_updateables = _updateables.OrderBy(updateable => updateable.UpdateOrder).ToList();
+
 		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
 		Content.RootDirectory = "Content";
 		IsMouseVisible = true;
@@ -71,7 +69,6 @@ public class GameManager : Game
 	protected override void Initialize()
 	{
 		_logger.Debug("Initializing Game...");
-		_previousTime = DateTime.Now;
 
 		_cameraController.ResetCamera();
 		
@@ -82,7 +79,7 @@ public class GameManager : Game
 		
 		_gameStateManager.Init();
 
-		base.Initialize(); // Calls LoadContent
+		base.Initialize(); // Calls LoadContent and updates all GameComponents
 		
 		Global.SpriteBatch = new SpriteBatch(GraphicsDevice);
 		InitializeUIStyleCollection();
@@ -99,35 +96,33 @@ public class GameManager : Game
 		InitializeFontRepository();
 	}
 
-	private DateTime _fpsUpdateTime = DateTime.Now;
 	private int _frameCount = 0;
+	private float _fpsUpdateTimer = 0f;
 
 	protected override void Update(GameTime gameTime)
 	{
-		_currentTime = DateTime.Now;
-		_deltaTime = _currentTime - _previousTime;
-
-		float deltaTimeSeconds = (float) _deltaTime.TotalSeconds;
+		float deltaTimeSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 		// Frame count
 		if (Program.LogFrameCount)
 		{
 			_frameCount++;
-			if ((_currentTime - _fpsUpdateTime).TotalSeconds >= 1.0)
+			_fpsUpdateTimer += deltaTimeSeconds;
+			if (_fpsUpdateTimer >= 1.0)
 			{
 				_logger.Debug("FPS: {fps}", _frameCount);
 				_frameCount = 0;
-				_fpsUpdateTime = _currentTime;
+				_fpsUpdateTimer -= 1f;
 			}
 		}
-
-		_inputManager.Update();
 		
-		_gameStateManager.Update(deltaTimeSeconds);
-		_cameraController.UpdateCamera(deltaTimeSeconds);
+		foreach (IUpdateable updateable in _updateables)
+		{
+			if (updateable.Enabled)
+				updateable.Update(gameTime);
+		}
 
 		base.Update(gameTime);
-		_previousTime = _currentTime;
 	}
     
 	protected override void Draw(GameTime gameTime)

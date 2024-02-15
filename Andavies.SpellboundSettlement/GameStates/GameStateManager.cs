@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Andavies.SpellboundSettlement.Globals;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 
@@ -7,6 +9,9 @@ namespace Andavies.SpellboundSettlement.GameStates;
 
 public class GameStateManager : IGameStateManager
 {
+	private bool _enabled = true;
+	private int _updateOrder = 6;
+	
 	private readonly List<IGameState> _gameStates;
 
 	private readonly ILogger _logger;
@@ -36,6 +41,44 @@ public class GameStateManager : IGameStateManager
 			_pauseMenuGameState
 		};
 	}
+
+	#region IUpdateable Implementation
+	
+	public event EventHandler<EventArgs> EnabledChanged;
+	public event EventHandler<EventArgs> UpdateOrderChanged;
+
+	public bool Enabled
+	{
+		get => _enabled;
+		set
+		{
+			if (_enabled != value)
+			{
+				_enabled = value;
+				EnabledChanged?.Invoke(this, EventArgs.Empty);
+			}
+		}
+	}
+	
+	public int UpdateOrder
+	{
+		get => _updateOrder;
+		set
+		{
+			if (_updateOrder != value)
+			{
+				_updateOrder = value;
+				UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
+			}
+		}
+	}
+	
+	public void Update(GameTime gameTime)
+	{
+		CurrentGameState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+	}
+
+	#endregion
 	
 	public IGameState CurrentGameState { get; private set; }
 	
@@ -54,7 +97,6 @@ public class GameStateManager : IGameStateManager
 		SetState(_mainMenuGameState);
 	}
 
-	public void Update(float deltaTimeSeconds) => CurrentGameState.Update(deltaTimeSeconds);
 	public void Draw3D(GraphicsDevice graphicsDevice) => CurrentGameState.Draw3D(graphicsDevice);
 	public void DrawUI(SpriteBatch spriteBatch) => CurrentGameState.DrawUI(spriteBatch);
 

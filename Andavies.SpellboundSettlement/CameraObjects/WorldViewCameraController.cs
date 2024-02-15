@@ -14,6 +14,10 @@ public class WorldViewCameraController : ICameraController
 	
 	private readonly Camera _camera;
 	private readonly GameplayInputState _input;
+
+	// IUpdateable property backing fields
+	private bool _enabled = true;
+	private int _updateOrder = 10;
 	
 	private bool _moveCamera = true;
 	private int _currentZoomLevel = DefaultZoomLevel;
@@ -28,6 +32,35 @@ public class WorldViewCameraController : ICameraController
 		_input.RotateCamera90CW.OnKeyDown += OnRotateCameraInput;
 		_input.ZoomIn += OnZoomInInput;
 		_input.ZoomOut += OnZoomOutInput;
+	}
+
+	public event EventHandler<EventArgs> EnabledChanged;
+	public event EventHandler<EventArgs> UpdateOrderChanged;
+
+	public bool Enabled
+	{
+		get => _enabled;
+		set
+		{
+			if (_enabled != value)
+			{
+				_enabled = value;
+				EnabledChanged?.Invoke(this, EventArgs.Empty);
+			}
+		}
+	}
+
+	public int UpdateOrder
+	{
+		get => _updateOrder;
+		set
+		{
+			if (_updateOrder != value)
+			{
+				_updateOrder = value;
+				UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
+			}
+		}
 	}
 
 	public float MovementSpeed { get; set; } = 20;
@@ -55,7 +88,7 @@ public class WorldViewCameraController : ICameraController
 		_camera.RecalculateProjectionMatrix();
 	}
 
-	public void UpdateCamera(float deltaTime)
+	public void Update(GameTime gameTime)
 	{
 		if (!_moveCamera)
 			return;
@@ -72,7 +105,7 @@ public class WorldViewCameraController : ICameraController
 			movementVector.Normalize();
 
 		// Apply delta time and movement speed after normalization or else it would always have length of 1
-		_camera.Position += movementVector * deltaTime * MovementSpeed;
+		_camera.Position += movementVector * (float)gameTime.ElapsedGameTime.TotalSeconds * MovementSpeed;
 		
 		Vector3 forward = new(
 			(float) (Math.Sin(_camera.Yaw) * Math.Cos(_camera.Pitch)),

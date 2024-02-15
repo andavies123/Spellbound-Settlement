@@ -1,6 +1,8 @@
-﻿namespace Andavies.SpellboundSettlement.CameraObjects;
+﻿using Microsoft.Xna.Framework;
 
-public interface ICameraController
+namespace Andavies.SpellboundSettlement.CameraObjects;
+
+public interface ICameraController : IUpdateable
 {
 	/// <summary>
 	/// How fast the camera moves
@@ -11,10 +13,4 @@ public interface ICameraController
 	/// Resets all the necessary camera properties to defaults
 	/// </summary>
 	void ResetCamera();
-	
-	/// <summary>
-	/// Call this every frame to update the camera's values
-	/// </summary>
-	/// <param name="deltaTime">The time in seconds that has passed since the last frame</param>
-	void UpdateCamera(float deltaTime);
 }
