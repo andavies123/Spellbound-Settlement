@@ -4,6 +4,7 @@ using Andavies.MonoGame.Network.Client;
 using Andavies.MonoGame.Network.Extensions;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.UI.StateMachines;
+using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.GameWorld;
@@ -27,12 +28,13 @@ namespace Andavies.SpellboundSettlement;
 public static class Program
 {
 	// Update Orders
+	private const string UpdateOrderParameterName = "updateOrder";
+	private const int FpsCounterUpdateOrder = -1;
 	private const int InputManagerUpdateOrder = 1;
 	private const int GameStateManagerUpdateOrder = 2;
 	private const int CameraControllerUpdateOrder = 3;
 	
 	private static IContainer Container { get; set; }
-	public static bool LogFrameCount { get; set; } = false;
 	
 	public static void Main(string[] args)
 	{
@@ -74,9 +76,10 @@ public static class Program
 		builder.RegisterType<WorldInteractionManager>().As<IWorldInteractionManager>().SingleInstance();
 		
 		// IUpdateables
-		builder.RegisterType<InputManager>().As<IInputManager>().As<IUpdateable>().SingleInstance().WithParameter("updateOrder", InputManagerUpdateOrder);
-		builder.RegisterType<GameStateManager>().As<IGameStateManager>().As<IUpdateable>().SingleInstance().WithParameter("updateOrder", GameStateManagerUpdateOrder);
-		builder.RegisterType<WorldViewCameraController>().As<ICameraController>().As<IUpdateable>().SingleInstance().WithParameter("updateOrder", CameraControllerUpdateOrder);
+		builder.RegisterType<InputManager>().As<IInputManager>().As<IUpdateable>().SingleInstance().WithParameter(UpdateOrderParameterName, InputManagerUpdateOrder);
+		builder.RegisterType<GameStateManager>().As<IGameStateManager>().As<IUpdateable>().SingleInstance().WithParameter(UpdateOrderParameterName, GameStateManagerUpdateOrder);
+		builder.RegisterType<WorldViewCameraController>().As<ICameraController>().As<IUpdateable>().SingleInstance().WithParameter(UpdateOrderParameterName, CameraControllerUpdateOrder);
+		builder.RegisterType<FpsCounter>().As<IUpdateable>().SingleInstance().WithParameter(UpdateOrderParameterName, FpsCounterUpdateOrder);
 		
 		// Repositories
 		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();

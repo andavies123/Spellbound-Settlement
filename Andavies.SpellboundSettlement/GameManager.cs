@@ -96,27 +96,9 @@ public class GameManager : Game
 
 		InitializeFontRepository();
 	}
-
-	private int _frameCount = 0;
-	private float _fpsUpdateTimer = 0f;
-
+	
 	protected override void Update(GameTime gameTime)
 	{
-		float deltaTimeSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-		// Frame count
-		if (Program.LogFrameCount)
-		{
-			_frameCount++;
-			_fpsUpdateTimer += deltaTimeSeconds;
-			if (_fpsUpdateTimer >= 1.0)
-			{
-				_logger.Debug("FPS: {fps}", _frameCount);
-				_frameCount = 0;
-				_fpsUpdateTimer -= 1f;
-			}
-		}
-		
 		foreach (IUpdateable updateable in _updateables)
 		{
 			if (updateable.Enabled)
