@@ -1,17 +1,14 @@
-using System;
 using System.Collections.Generic;
 using Andavies.SpellboundSettlement.Globals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
+using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 
-public class GameStateManager : IGameStateManager
+public class GameStateManager : IGameStateManager, IUpdateable
 {
-	private bool _enabled = true;
-	private int _updateOrder = 6;
-	
 	private readonly List<IGameState> _gameStates;
 
 	private readonly ILogger _logger;
@@ -25,13 +22,15 @@ public class GameStateManager : IGameStateManager
 		MainMenuGameState mainMenuGameState,
 		LoadGameState loadGameState,
 		GameplayGameState gameplayGameState,
-		PauseMenuGameState pauseMenuGameState)
+		PauseMenuGameState pauseMenuGameState,
+		int updateOrder)
 	{
 		_logger = logger;
 		_mainMenuGameState = mainMenuGameState;
 		_loadGameState = loadGameState;
 		_gameplayGameState = gameplayGameState;
 		_pauseMenuGameState = pauseMenuGameState;
+		UpdateOrder = updateOrder;
 
 		_gameStates = new List<IGameState>
 		{
@@ -42,43 +41,14 @@ public class GameStateManager : IGameStateManager
 		};
 	}
 
-	#region IUpdateable Implementation
+	public bool Enabled { get; set; } = true;
 	
-	public event EventHandler<EventArgs> EnabledChanged;
-	public event EventHandler<EventArgs> UpdateOrderChanged;
-
-	public bool Enabled
-	{
-		get => _enabled;
-		set
-		{
-			if (_enabled != value)
-			{
-				_enabled = value;
-				EnabledChanged?.Invoke(this, EventArgs.Empty);
-			}
-		}
-	}
-	
-	public int UpdateOrder
-	{
-		get => _updateOrder;
-		set
-		{
-			if (_updateOrder != value)
-			{
-				_updateOrder = value;
-				UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
-			}
-		}
-	}
+	public int UpdateOrder { get; }
 	
 	public void Update(GameTime gameTime)
 	{
 		CurrentGameState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 	}
-
-	#endregion
 	
 	public IGameState CurrentGameState { get; private set; }
 	

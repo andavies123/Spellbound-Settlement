@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 
-public interface IGameStateManager : IUpdateable
+public interface IGameStateManager
 {
 	IGameState CurrentGameState { get; }
 

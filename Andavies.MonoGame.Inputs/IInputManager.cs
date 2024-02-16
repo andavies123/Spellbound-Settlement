@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Andavies.MonoGame.Inputs;
 
-public interface IInputManager : IUpdateable
+public interface IInputManager
 {
 	/// <summary>
 	/// Raised when the mouse moved during this last frame

@@ -11,6 +11,7 @@ using Andavies.SpellboundSettlement.Repositories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
+using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
 
 namespace Andavies.SpellboundSettlement;
 

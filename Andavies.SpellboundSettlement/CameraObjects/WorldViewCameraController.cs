@@ -2,10 +2,11 @@
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
 using Microsoft.Xna.Framework;
+using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
 
 namespace Andavies.SpellboundSettlement.CameraObjects;
 
-public class WorldViewCameraController : ICameraController
+public class WorldViewCameraController : ICameraController, IUpdateable
 {
 	private const int MaxZoomLevels = 9;
 	private const int DefaultZoomLevel = 5;
@@ -14,18 +15,15 @@ public class WorldViewCameraController : ICameraController
 	
 	private readonly Camera _camera;
 	private readonly GameplayInputState _input;
-
-	// IUpdateable property backing fields
-	private bool _enabled = true;
-	private int _updateOrder = 10;
 	
 	private bool _moveCamera = true;
 	private int _currentZoomLevel = DefaultZoomLevel;
 	
-	public WorldViewCameraController(Camera camera, GameplayInputState input)
+	public WorldViewCameraController(Camera camera, GameplayInputState input, int updateOrder)
 	{
 		_camera = camera;
 		_input = input;
+		UpdateOrder = updateOrder;
 
 		_input.MoveCameraStarted += OnMoveCameraStarted;
 		_input.MoveCameraStopped += OnMoveCameraStopped;
@@ -34,34 +32,8 @@ public class WorldViewCameraController : ICameraController
 		_input.ZoomOut += OnZoomOutInput;
 	}
 
-	public event EventHandler<EventArgs> EnabledChanged;
-	public event EventHandler<EventArgs> UpdateOrderChanged;
-
-	public bool Enabled
-	{
-		get => _enabled;
-		set
-		{
-			if (_enabled != value)
-			{
-				_enabled = value;
-				EnabledChanged?.Invoke(this, EventArgs.Empty);
-			}
-		}
-	}
-
-	public int UpdateOrder
-	{
-		get => _updateOrder;
-		set
-		{
-			if (_updateOrder != value)
-			{
-				_updateOrder = value;
-				UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
-			}
-		}
-	}
+	public bool Enabled { get; set; } = true;
+	public int UpdateOrder { get; }
 
 	public float MovementSpeed { get; set; } = 20;
 
@@ -93,6 +65,7 @@ public class WorldViewCameraController : ICameraController
 		if (!_moveCamera)
 			return;
 
+		// Todo: Should this be more of an event listener rather than an every frame update?
 		Vector2 moveCameraInput = _input.MoveCameraInput;
 		
 		Vector3 cameraForward = _camera.CameraRotationNoPitch.Backward * moveCameraInput.Y;

@@ -1,8 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿namespace Andavies.SpellboundSettlement.CameraObjects;
 
-namespace Andavies.SpellboundSettlement.CameraObjects;
-
-public interface ICameraController : IUpdateable
+public interface ICameraController
 {
 	/// <summary>
 	/// How fast the camera moves

@@ -1,6 +1,8 @@
 ﻿using Andavies.MonoGame.Inputs.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
+
 
 namespace Andavies.MonoGame.Inputs;
 
@@ -8,48 +10,21 @@ namespace Andavies.MonoGame.Inputs;
 /// Static class that handles the main functions of listening for inputs.
 /// <see cref="Update"/> must be called at the beginning of each frame in order to set the Previous/Current Input States
 /// </summary>
-public class InputManager : IInputManager
+public class InputManager : IInputManager, IUpdateable
 {
-	private bool _enabled = true;
-	private int _updateOrder = 5;
-	
-	public InputManager()
+	public InputManager(int updateOrder)
 	{
+		UpdateOrder = updateOrder;
+		
 		SetInputStates();
 	}
 	
 	public event Action? MouseMoved;
 	public event Action? LeftMouseButtonPressed;
 	public event Action? RightMouseButtonPressed;
-	
-	public event EventHandler<EventArgs>? EnabledChanged;
-	public event EventHandler<EventArgs>? UpdateOrderChanged;
 
-	public bool Enabled
-	{
-		get => _enabled;
-		set
-		{
-			if (_enabled != value)
-			{
-				_enabled = value;
-				EnabledChanged?.Invoke(this, EventArgs.Empty);
-			}
-		}
-	}
-	
-	public int UpdateOrder
-	{
-		get => _updateOrder;
-		set
-		{
-			if (_updateOrder != value)
-			{
-				_updateOrder = value;
-				UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
-			}
-		}
-	}
+	public bool Enabled { get; set; } = true;
+	public int UpdateOrder { get; }
 	
 	public Point CurrentMousePosition => CurrentMouseState.Position;
 	public IReadOnlyList<Keys> KeysPressedThisFrame => CurrentKeyboardState.GetPressedKeys().Except(PreviousKeyboardState?.GetPressedKeys() ?? Array.Empty<Keys>()).ToList();

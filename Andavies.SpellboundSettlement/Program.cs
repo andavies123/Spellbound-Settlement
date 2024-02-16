@@ -20,11 +20,17 @@ using AutofacSerilogIntegration;
 using Microsoft.Xna.Framework;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
 
 namespace Andavies.SpellboundSettlement;
 
 public static class Program
 {
+	// Update Orders
+	private const int InputManagerUpdateOrder = 1;
+	private const int GameStateManagerUpdateOrder = 2;
+	private const int CameraControllerUpdateOrder = 3;
+	
 	private static IContainer Container { get; set; }
 	public static bool LogFrameCount { get; set; } = false;
 	
@@ -68,9 +74,9 @@ public static class Program
 		builder.RegisterType<WorldInteractionManager>().As<IWorldInteractionManager>().SingleInstance();
 		
 		// IUpdateables
-		builder.RegisterType<InputManager>().AsImplementedInterfaces().SingleInstance();
-		builder.RegisterType<GameStateManager>().AsImplementedInterfaces().SingleInstance();
-		builder.RegisterType<WorldViewCameraController>().AsImplementedInterfaces().SingleInstance();
+		builder.RegisterType<InputManager>().As<IInputManager>().As<IUpdateable>().SingleInstance().WithParameter("updateOrder", InputManagerUpdateOrder);
+		builder.RegisterType<GameStateManager>().As<IGameStateManager>().As<IUpdateable>().SingleInstance().WithParameter("updateOrder", GameStateManagerUpdateOrder);
+		builder.RegisterType<WorldViewCameraController>().As<ICameraController>().As<IUpdateable>().SingleInstance().WithParameter("updateOrder", CameraControllerUpdateOrder);
 		
 		// Repositories
 		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
