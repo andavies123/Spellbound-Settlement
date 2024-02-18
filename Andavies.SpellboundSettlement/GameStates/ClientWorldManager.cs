@@ -8,7 +8,6 @@ using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.Meshes;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib.Utils;
-using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 

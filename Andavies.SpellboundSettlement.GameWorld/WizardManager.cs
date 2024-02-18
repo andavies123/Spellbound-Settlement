@@ -16,7 +16,7 @@ public class WizardManager : IWizardManager
 	{
 		_allWizards[wizard.Data.Id] = wizard;
 		
-		wizard.Updated += WizardUpdated;
+		wizard.Updated += OnWizardUpdated;
 		WizardUpdated?.Invoke(wizard);
 	}
 
@@ -24,8 +24,13 @@ public class WizardManager : IWizardManager
 	{
 		if (_allWizards.TryRemove(wizardId, out Wizard? wizard))
 		{
-			wizard.Updated -= WizardUpdated;
+			wizard.Updated -= OnWizardUpdated;
 			WizardRemoved?.Invoke(wizard);
 		}
+	}
+
+	public void OnWizardUpdated(Wizard wizard)
+	{
+		WizardUpdated?.Invoke(wizard);
 	}
 }

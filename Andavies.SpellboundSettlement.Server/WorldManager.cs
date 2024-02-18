@@ -33,7 +33,7 @@ public class WorldManager : IWorldManager
 		_logger.Debug("Creating the world...");
 		_world.CreateNewWorld(Vector2Int.Zero, 5);
 
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < 1; i++)
 		{
 			SpawnWizard();
 		}
