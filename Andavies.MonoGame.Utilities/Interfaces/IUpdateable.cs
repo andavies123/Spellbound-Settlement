@@ -8,7 +8,7 @@ public interface IUpdateable
 	/// True if this instance should be updated
 	/// False if this instance should not be updated
 	/// </summary>
-	bool Enabled { get; set; }
+	bool UpdateEnabled { get; set; }
 	
 	/// <summary>
 	/// The order at which this instance should be updated

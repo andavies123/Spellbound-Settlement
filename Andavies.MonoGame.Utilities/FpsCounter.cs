@@ -17,7 +17,7 @@ public class FpsCounter : IUpdateable
 		UpdateOrder = updateOrder;
 	}
 	
-	public bool Enabled { get; set; } = false;
+	public bool UpdateEnabled { get; set; } = false;
 
 	public int UpdateOrder { get; }
 

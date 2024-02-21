@@ -5,6 +5,7 @@ using Andavies.MonoGame.Network.Extensions;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.Utilities;
+using Andavies.MonoGame.Utilities.Interfaces;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.GameWorld;
@@ -27,8 +28,19 @@ namespace Andavies.SpellboundSettlement;
 
 public static class Program
 {
-	// Update Orders
+	// Parameter Names
+	private const string InitOrderParameterName = "initOrder";
+	private const string LateInitOrderParameterName = "lateInitOrder";
 	private const string UpdateOrderParameterName = "updateOrder";
+	
+	// Init Orders
+	private const int GameStateManagerInitOrder = 1;
+	private const int CameraControllerInitOrder = 5;
+	
+	// Late Init Order
+	private const int GameStateManagerLateInitOrder = 1;
+	
+	// Update Orders
 	private const int FpsCounterUpdateOrder = -1;
 	private const int InputManagerUpdateOrder = 1;
 	private const int GameStateManagerUpdateOrder = 2;
@@ -75,11 +87,34 @@ public static class Program
 		builder.RegisterType<ClientWorldManager>().As<IClientWorldManager>().SingleInstance();
 		builder.RegisterType<WorldInteractionManager>().As<IWorldInteractionManager>().SingleInstance();
 		
-		// IUpdateables
-		builder.RegisterType<InputManager>().As<IInputManager>().As<IUpdateable>().SingleInstance().WithParameter(UpdateOrderParameterName, InputManagerUpdateOrder);
-		builder.RegisterType<GameStateManager>().As<IGameStateManager>().As<IUpdateable>().SingleInstance().WithParameter(UpdateOrderParameterName, GameStateManagerUpdateOrder);
-		builder.RegisterType<WorldViewCameraController>().As<ICameraController>().As<IUpdateable>().SingleInstance().WithParameter(UpdateOrderParameterName, CameraControllerUpdateOrder);
-		builder.RegisterType<FpsCounter>().As<IUpdateable>().SingleInstance().WithParameter(UpdateOrderParameterName, FpsCounterUpdateOrder);
+		builder.RegisterType<GameStateManager>()
+			.As<IGameStateManager>()
+			.As<IInitializable>()
+			.As<ILateInitializable>()
+			.As<IUpdateable>()
+			.SingleInstance()
+			.WithParameter(InitOrderParameterName, GameStateManagerInitOrder)
+			.WithParameter(LateInitOrderParameterName, GameStateManagerLateInitOrder)
+			.WithParameter(UpdateOrderParameterName, GameStateManagerUpdateOrder);
+		
+		builder.RegisterType<WorldViewCameraController>()
+			.As<ICameraController>()
+			.As<IInitializable>()
+			.As<IUpdateable>()
+			.SingleInstance()
+			.WithParameter(InitOrderParameterName, CameraControllerInitOrder)
+			.WithParameter(UpdateOrderParameterName, CameraControllerUpdateOrder);
+		
+		builder.RegisterType<InputManager>()
+			.As<IInputManager>()
+			.As<IUpdateable>()
+			.SingleInstance()
+			.WithParameter(UpdateOrderParameterName, InputManagerUpdateOrder);
+		
+		builder.RegisterType<FpsCounter>()
+			.As<IUpdateable>()
+			.SingleInstance()
+			.WithParameter(UpdateOrderParameterName, FpsCounterUpdateOrder);
 		
 		// Repositories
 		builder.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();

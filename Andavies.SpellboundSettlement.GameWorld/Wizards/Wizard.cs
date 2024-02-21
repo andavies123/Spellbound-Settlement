@@ -16,7 +16,7 @@ public abstract class Wizard
 
 	protected Wizard()
 	{
-		// Initialize common states
+		// Init common states
 		LoiterState = new LoiterWizardState(this);
 	}
 	

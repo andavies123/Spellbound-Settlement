@@ -23,7 +23,7 @@ public class InputManager : IInputManager, IUpdateable
 	public event Action? LeftMouseButtonPressed;
 	public event Action? RightMouseButtonPressed;
 
-	public bool Enabled { get; set; } = true;
+	public bool UpdateEnabled { get; set; } = true;
 	public int UpdateOrder { get; }
 	
 	public Point CurrentMousePosition => CurrentMouseState.Position;

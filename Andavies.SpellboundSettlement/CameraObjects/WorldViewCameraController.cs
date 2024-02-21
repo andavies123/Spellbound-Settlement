@@ -1,4 +1,5 @@
 ﻿using System;
+using Andavies.MonoGame.Utilities.Interfaces;
 using Andavies.SpellboundSettlement.Globals;
 using Andavies.SpellboundSettlement.Inputs;
 using Microsoft.Xna.Framework;
@@ -6,7 +7,7 @@ using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
 
 namespace Andavies.SpellboundSettlement.CameraObjects;
 
-public class WorldViewCameraController : ICameraController, IUpdateable
+public class WorldViewCameraController : ICameraController, IInitializable, IUpdateable
 {
 	private const int MaxZoomLevels = 9;
 	private const int DefaultZoomLevel = 5;
@@ -19,10 +20,15 @@ public class WorldViewCameraController : ICameraController, IUpdateable
 	private bool _moveCamera = true;
 	private int _currentZoomLevel = DefaultZoomLevel;
 	
-	public WorldViewCameraController(Camera camera, GameplayInputState input, int updateOrder)
+	public WorldViewCameraController(
+		Camera camera,
+		GameplayInputState input,
+		int initOrder,
+		int updateOrder)
 	{
 		_camera = camera;
 		_input = input;
+		InitOrder = initOrder;
 		UpdateOrder = updateOrder;
 
 		_input.MoveCameraStarted += OnMoveCameraStarted;
@@ -32,10 +38,16 @@ public class WorldViewCameraController : ICameraController, IUpdateable
 		_input.ZoomOut += OnZoomOutInput;
 	}
 
-	public bool Enabled { get; set; } = true;
+	public bool UpdateEnabled { get; set; } = true;
+	public int InitOrder { get; }
 	public int UpdateOrder { get; }
 
 	public float MovementSpeed { get; set; } = 20;
+
+	public void Init()
+	{
+		ResetCamera();
+	}
 
 	public void ResetCamera()
 	{

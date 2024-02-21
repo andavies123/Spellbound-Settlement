@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Andavies.MonoGame.Drawing;
 using Andavies.MonoGame.UI.Styles;
-using Andavies.SpellboundSettlement.CameraObjects;
+using Andavies.MonoGame.Utilities.Interfaces;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.GameWorld;
 using Andavies.SpellboundSettlement.Globals;
@@ -19,10 +19,11 @@ public class GameManager : Game
 {
 	private readonly ILogger _logger;
 	private readonly IGameStateManager _gameStateManager;
-	private readonly ICameraController _cameraController;
 	private readonly IUIStyleRepository _uiStyleCollection;
 	private readonly IFontRepository _fontRepository;
 	private readonly ITileRegister _tileRegister;
+	private readonly IEnumerable<IInitializable> _initializables;
+	private readonly IEnumerable<ILateInitializable> _lateInitializables;
 	private readonly IEnumerable<IUpdateable> _updateables;
 	
 	// Drawing
@@ -33,22 +34,26 @@ public class GameManager : Game
 	public GameManager(
 		ILogger logger,
 		IGameStateManager gameStateManager,
-		ICameraController cameraController,
 		IUIStyleRepository uiStyleCollection,
 		IFontRepository fontRepository,
 		ITileRegister tileRegister,
+		IEnumerable<IInitializable> initializables,
+		IEnumerable<ILateInitializable> lateInitializables,
 		IEnumerable<IUpdateable> updateables)
 	{
 		Global.GameManager = this;
 		
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_gameStateManager = gameStateManager ?? throw new ArgumentNullException(nameof(gameStateManager));
-		_cameraController = cameraController ?? throw new ArgumentNullException(nameof(cameraController));
 		_uiStyleCollection = uiStyleCollection ?? throw new ArgumentNullException(nameof(uiStyleCollection));
 		_fontRepository = fontRepository ?? throw new ArgumentNullException(nameof(fontRepository));
 		_tileRegister = tileRegister ?? throw new ArgumentNullException(nameof(tileRegister));
+		_initializables = initializables ?? throw new ArgumentNullException(nameof(initializables));
+		_lateInitializables = lateInitializables ?? throw new ArgumentNullException(nameof(lateInitializables));
 		_updateables = updateables ?? throw new ArgumentNullException(nameof(updateables));
 
+		_initializables = _initializables.OrderBy(initializable => initializable.InitOrder).ToList();
+		_lateInitializables = _lateInitializables.OrderBy(lateInitializable => lateInitializable.LateInitOrder).ToList();
 		_updateables = _updateables.OrderBy(updateable => updateable.UpdateOrder).ToList();
 
 		Global.GraphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -70,23 +75,27 @@ public class GameManager : Game
 	protected override void Initialize()
 	{
 		_logger.Debug("Initializing Game...");
-
-		_cameraController.ResetCamera();
 		
 		// Set default texture
 		Texture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
 		Texture.SetData(new[]{ Color.White });
-		SpriteBatchExtensions.InitializePixelTexture(Texture); // Initialize SpriteBatchExtensions to allow drawing
-		
-		_gameStateManager.Init();
+		SpriteBatchExtensions.InitializePixelTexture(Texture); // Init SpriteBatchExtensions to allow drawing
+
+		foreach (IInitializable initializable in _initializables)
+		{
+			initializable.Init();
+		}
 
 		base.Initialize(); // Calls LoadContent and updates all GameComponents
 		
 		Global.SpriteBatch = new SpriteBatch(GraphicsDevice);
 		InitializeUIStyleCollection();
 		_tileRegister.RegisterTiles();
-		
-		_gameStateManager.LateInit();
+
+		foreach (ILateInitializable lateInitializable in _lateInitializables)
+		{
+			lateInitializable.LateInit();
+		}
 	}
 
 	protected override void LoadContent()
@@ -101,7 +110,7 @@ public class GameManager : Game
 	{
 		foreach (IUpdateable updateable in _updateables)
 		{
-			if (updateable.Enabled)
+			if (updateable.UpdateEnabled)
 				updateable.Update(gameTime);
 		}
 

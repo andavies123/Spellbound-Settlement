@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Andavies.MonoGame.Utilities.Interfaces;
 using Andavies.SpellboundSettlement.Globals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +8,7 @@ using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 
-public class GameStateManager : IGameStateManager, IUpdateable
+public class GameStateManager : IGameStateManager, IInitializable, ILateInitializable, IUpdateable
 {
 	private readonly List<IGameState> _gameStates;
 
@@ -23,6 +24,8 @@ public class GameStateManager : IGameStateManager, IUpdateable
 		LoadGameState loadGameState,
 		GameplayGameState gameplayGameState,
 		PauseMenuGameState pauseMenuGameState,
+		int initOrder,
+		int lateInitOrder,
 		int updateOrder)
 	{
 		_logger = logger;
@@ -30,6 +33,8 @@ public class GameStateManager : IGameStateManager, IUpdateable
 		_loadGameState = loadGameState;
 		_gameplayGameState = gameplayGameState;
 		_pauseMenuGameState = pauseMenuGameState;
+		InitOrder = initOrder;
+		LateInitOrder = lateInitOrder;
 		UpdateOrder = updateOrder;
 
 		_gameStates = new List<IGameState>
@@ -40,18 +45,20 @@ public class GameStateManager : IGameStateManager, IUpdateable
 			_pauseMenuGameState
 		};
 	}
-
-	public bool Enabled { get; set; } = true;
 	
+	public IGameState CurrentGameState { get; private set; }
+
+	public bool UpdateEnabled { get; set; } = true;
+	
+	public int InitOrder { get; }
+	public int LateInitOrder { get; }
 	public int UpdateOrder { get; }
 	
 	public void Update(GameTime gameTime)
 	{
 		CurrentGameState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 	}
-	
-	public IGameState CurrentGameState { get; private set; }
-	
+
 	public void Init()
 	{
 		_gameStates.ForEach(gameState => gameState.Init());

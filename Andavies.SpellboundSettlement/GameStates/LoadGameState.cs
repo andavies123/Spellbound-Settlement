@@ -28,7 +28,7 @@ public class LoadGameState : GameState
 	{
 		base.Start();
 		
-		// Initialize server
+		// Init server
 		BuildSingleplayerServer();
 		_serverStarter.StartServer(_argsBuilder.BuildArgs(), "Andavies.SpellboundSettlement.Server");
 
