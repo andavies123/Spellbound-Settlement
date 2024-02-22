@@ -21,7 +21,6 @@ public class WorldManager : IWorldManager
 
 	public void Tick(float deltaTimeSeconds)
 	{
-		// Add Update logic here
 		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
 		{
 			wizard.Update(deltaTimeSeconds);
