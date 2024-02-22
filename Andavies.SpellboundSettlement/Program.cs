@@ -5,7 +5,6 @@ using Andavies.MonoGame.Network.Extensions;
 using Andavies.MonoGame.Network.Server;
 using Andavies.MonoGame.UI.StateMachines;
 using Andavies.MonoGame.Utilities;
-using Andavies.MonoGame.Utilities.Interfaces;
 using Andavies.SpellboundSettlement.CameraObjects;
 using Andavies.SpellboundSettlement.GameStates;
 using Andavies.SpellboundSettlement.GameWorld;
@@ -18,10 +17,12 @@ using Andavies.SpellboundSettlement.UIStates.Gameplay;
 using Andavies.SpellboundSettlement.UIStates.MainMenu;
 using Andavies.SpellboundSettlement.UIStates.PauseMenu;
 using Autofac;
+using Autofac.Core;
 using AutofacSerilogIntegration;
 using Microsoft.Xna.Framework;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using IDrawable = Andavies.MonoGame.Utilities.Interfaces.IDrawable;
 using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
 
 namespace Andavies.SpellboundSettlement;
@@ -30,21 +31,22 @@ public static class Program
 {
 	// Parameter Names
 	private const string InitOrderParameterName = "initOrder";
-	private const string LateInitOrderParameterName = "lateInitOrder";
 	private const string UpdateOrderParameterName = "updateOrder";
+	private const string DrawOrderParameterName = "drawOrder";
 	
 	// Init Orders
 	private const int GameStateManagerInitOrder = 1;
+	private const int InputManagerInitOrder = 2;
 	private const int CameraControllerInitOrder = 5;
-	
-	// Late Init Order
-	private const int GameStateManagerLateInitOrder = 1;
 	
 	// Update Orders
 	private const int FpsCounterUpdateOrder = -1;
 	private const int InputManagerUpdateOrder = 1;
 	private const int GameStateManagerUpdateOrder = 2;
 	private const int CameraControllerUpdateOrder = 3;
+	
+	// Draw Orders
+	private const int GameStateManagerDrawOrder = 1;
 	
 	private static IContainer Container { get; set; }
 	
@@ -86,30 +88,41 @@ public static class Program
 		builder.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
 		builder.RegisterType<ClientWorldManager>().As<IClientWorldManager>().SingleInstance();
 		builder.RegisterType<WorldInteractionManager>().As<IWorldInteractionManager>().SingleInstance();
-		
+
 		builder.RegisterType<GameStateManager>()
 			.As<IGameStateManager>()
-			.As<IInitializable>()
-			.As<ILateInitializable>()
+			.As<IGameObject>()
 			.As<IUpdateable>()
+			.As<IDrawable>()
 			.SingleInstance()
-			.WithParameter(InitOrderParameterName, GameStateManagerInitOrder)
-			.WithParameter(LateInitOrderParameterName, GameStateManagerLateInitOrder)
-			.WithParameter(UpdateOrderParameterName, GameStateManagerUpdateOrder);
+			.WithParameters(new Parameter[]
+			{
+				new NamedParameter(InitOrderParameterName, GameStateManagerInitOrder),
+				new NamedParameter(UpdateOrderParameterName, GameStateManagerUpdateOrder),
+				new NamedParameter(DrawOrderParameterName, GameStateManagerDrawOrder)
+			});
 		
 		builder.RegisterType<WorldViewCameraController>()
 			.As<ICameraController>()
-			.As<IInitializable>()
+			.As<IGameObject>()
 			.As<IUpdateable>()
 			.SingleInstance()
-			.WithParameter(InitOrderParameterName, CameraControllerInitOrder)
-			.WithParameter(UpdateOrderParameterName, CameraControllerUpdateOrder);
+			.WithParameters(new Parameter[]
+			{
+				new NamedParameter(InitOrderParameterName, CameraControllerInitOrder),
+				new NamedParameter(UpdateOrderParameterName, CameraControllerUpdateOrder)
+			});
 		
 		builder.RegisterType<InputManager>()
 			.As<IInputManager>()
+			.As<IGameObject>()
 			.As<IUpdateable>()
 			.SingleInstance()
-			.WithParameter(UpdateOrderParameterName, InputManagerUpdateOrder);
+			.WithParameters(new Parameter[]
+			{
+				new NamedParameter(InitOrderParameterName, InputManagerInitOrder),
+				new NamedParameter(UpdateOrderParameterName, InputManagerUpdateOrder)
+			});
 		
 		builder.RegisterType<FpsCounter>()
 			.As<IUpdateable>()

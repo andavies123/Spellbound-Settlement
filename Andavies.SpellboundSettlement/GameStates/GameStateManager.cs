@@ -7,7 +7,7 @@ using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameStates;
 
-public class GameStateManager : GameObject, IGameStateManager
+public class GameStateManager : DrawableGameObject, IGameStateManager
 {
 	private readonly List<IGameState> _gameStates;
 
@@ -23,8 +23,8 @@ public class GameStateManager : GameObject, IGameStateManager
 		LoadGameState loadGameState,
 		GameplayGameState gameplayGameState,
 		PauseMenuGameState pauseMenuGameState,
-		int initOrder, int updateOrder) : 
-		base(initOrder, updateOrder)
+		int initOrder, int updateOrder, int drawOrder) : 
+		base(initOrder, updateOrder, drawOrder)
 	{
 		_logger = logger;
 		_mainMenuGameState = mainMenuGameState;
@@ -63,8 +63,8 @@ public class GameStateManager : GameObject, IGameStateManager
 		CurrentGameState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 	}
 
-	public void Draw3D(GraphicsDevice graphicsDevice) => CurrentGameState.Draw3D(graphicsDevice);
-	public void DrawUI(SpriteBatch spriteBatch) => CurrentGameState.DrawUI(spriteBatch);
+	public override void Draw3D(GraphicsDevice graphicsDevice) => CurrentGameState.Draw3D(graphicsDevice);
+	public override void DrawUI(SpriteBatch spriteBatch) => CurrentGameState.DrawUI(spriteBatch);
 
 	public void SetState(IGameState nextState)
 	{

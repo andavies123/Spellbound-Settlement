@@ -8,8 +8,8 @@ public class FpsCounter : IUpdateable
 {
 	private readonly ILogger _logger;
 
-	private int _frameCount = 0;
-	private double _fpsUpdateTimer = 0f;
+	private int _frameCount;
+	private double _fpsUpdateTimer;
 	
 	public FpsCounter(ILogger logger, int updateOrder)
 	{
@@ -17,7 +17,7 @@ public class FpsCounter : IUpdateable
 		UpdateOrder = updateOrder;
 	}
 	
-	public bool UpdateEnabled { get; set; } = false;
+	public bool Enabled { get; set; } = false;
 
 	public int UpdateOrder { get; }
 

@@ -1,7 +1,7 @@
 ﻿using Andavies.MonoGame.Inputs.Enums;
+using Andavies.MonoGame.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using IUpdateable = Andavies.MonoGame.Utilities.Interfaces.IUpdateable;
 
 
 namespace Andavies.MonoGame.Inputs;
@@ -10,21 +10,14 @@ namespace Andavies.MonoGame.Inputs;
 /// Static class that handles the main functions of listening for inputs.
 /// <see cref="Update"/> must be called at the beginning of each frame in order to set the Previous/Current Input States
 /// </summary>
-public class InputManager : IInputManager, IUpdateable
+public class InputManager : GameObject, IInputManager
 {
-	public InputManager(int updateOrder)
-	{
-		UpdateOrder = updateOrder;
-		
-		SetInputStates();
-	}
+	public InputManager(int initOrder, int updateOrder)
+		: base(initOrder, updateOrder) { }
 	
 	public event Action? MouseMoved;
 	public event Action? LeftMouseButtonPressed;
 	public event Action? RightMouseButtonPressed;
-
-	public bool UpdateEnabled { get; set; } = true;
-	public int UpdateOrder { get; }
 	
 	public Point CurrentMousePosition => CurrentMouseState.Position;
 	public IReadOnlyList<Keys> KeysPressedThisFrame => CurrentKeyboardState.GetPressedKeys().Except(PreviousKeyboardState?.GetPressedKeys() ?? Array.Empty<Keys>()).ToList();
@@ -33,9 +26,15 @@ public class InputManager : IInputManager, IUpdateable
 	private static KeyboardState CurrentKeyboardState { get; set; }
 	private static MouseState? PreviousMouseState { get; set; }
 	private static MouseState CurrentMouseState { get; set; }
-	
-	public void Update(GameTime gameTime)
+
+	public override void Init()
 	{
+		SetInputStates();
+	}
+	
+	public override void Update(GameTime gameTime)
+	{
+		Console.WriteLine("INPUT MANAGER UPDATED");
 		SetInputStates();
 		
 		// Check for mouse movement
