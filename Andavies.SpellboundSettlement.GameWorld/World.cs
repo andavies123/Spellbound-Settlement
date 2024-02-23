@@ -24,6 +24,14 @@ public class World
 	
 	public IReadOnlyDictionary<Vector2Int, Chunk> Chunks => _chunks;
 
+	public void Update()
+	{
+		foreach ((Vector2Int chunkPosition, Chunk? chunk) in Chunks)
+		{
+			chunk.Update();
+		}
+	}
+
 	public void CreateNewWorld(Vector2Int centerChunkPosition, int initialGenerationRadius)
 	{
 		int radius = initialGenerationRadius - 1;
@@ -32,7 +40,7 @@ public class World
 			for (int z = centerChunkPosition.Y - radius; z <= centerChunkPosition.Y + radius; z++)
 			{
 				Chunk chunk = GenerateChunk(new Vector2Int(x, z));
-				_chunks[chunk.ChunkPosition] = chunk;
+				_chunks[chunk.ChunkData.ChunkPosition] = chunk;
 			}
 		}
 	}
@@ -101,14 +109,17 @@ public class World
 		_logger.Debug("Generating chunk {position}", chunkPosition);
 		Chunk chunk = new()
 		{
-			ChunkPosition = chunkPosition,
-			TileCount = WorldHelper.ChunkSize,
-			WorldTiles = new WorldTile[WorldHelper.ChunkSize.X, WorldHelper.ChunkSize.Y, WorldHelper.ChunkSize.Z]
+			ChunkData =
+			{
+				ChunkPosition = chunkPosition,
+				TileCount = WorldHelper.ChunkSize,
+				WorldTiles = new WorldTile[WorldHelper.ChunkSize.X, WorldHelper.ChunkSize.Y, WorldHelper.ChunkSize.Z]
+			}
 		};
 
-		for (int x = 0; x < chunk.TileCount.X; x++)
+		for (int x = 0; x < chunk.ChunkData.TileCount.X; x++)
 		{
-			for (int z = 0; z < chunk.TileCount.Z; z++)
+			for (int z = 0; z < chunk.ChunkData.TileCount.Z; z++)
 			{
 				const int seed = 100;
 				float noise = RandomUtility.GetPerlinNoise(seed, .5f, (
@@ -123,75 +134,75 @@ public class World
 				bool addGrass = GetThousandthsPlace(noise) < 2;
 				bool addBush = GetThousandthsPlace(noise) == 3;
 				
-				for (int y = 0; y < chunk.TileCount.X; y++)
+				for (int y = 0; y < chunk.ChunkData.TileCount.X; y++)
 				{
 					// Todo: Find way to not use hardcoded tileIds here
-					Vector3Int tilePosition = new(x, y, z);
+					Vector3Int tileChunkPosition = new(x, y, z);
 					if (y <= height)
 					{
 						if (!_tileRegistry.TryGetTile(nameof(GroundTile), out Tile? tile) || tile == null)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile
+						chunk.ChunkData.SetWorldTile(tileChunkPosition, new WorldTile
 						{
 							TileId = tile.TileId,
 							ParentChunkPosition = chunkPosition,
-							TilePosition = tilePosition
-						};
+							TilePosition = tileChunkPosition
+						});
 					}
 					else if (y == height + 1 && addRock)
 					{
 						if (!_tileRegistry.TryGetTile(nameof(SmallRockTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile
+						chunk.ChunkData.SetWorldTile(tileChunkPosition, new WorldTile
 						{
 							TileId = tile.TileId,
 							ParentChunkPosition = chunkPosition,
-							TilePosition = tilePosition,
+							TilePosition = tileChunkPosition,
 							Rotation = GetRotationFromNoise(rockNoise),
 							Scale = GetScaleFromNoise(rockNoise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
-						};
+						});
 					}
 					else if (y == height + 1 && addGrass)
 					{
 						if (!_tileRegistry.TryGetTile(nameof(GrassTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
                         
-						chunk.WorldTiles[x, y, z] = new WorldTile
+						chunk.ChunkData.SetWorldTile(tileChunkPosition, new WorldTile
 						{
 							TileId = tile.TileId,
 							ParentChunkPosition = chunkPosition,
-							TilePosition = tilePosition,
+							TilePosition = tileChunkPosition,
 							Rotation = GetRotationFromNoise(noise),
 							Scale = GetScaleFromNoise(noise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
-						};
+						});
 					}
 					else if (y == height + 1 && addBush)
 					{
 						if (!_tileRegistry.TryGetTile(nameof(BushTile), out Tile? tile) || tile is not ModelTile modelTile)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile
+						chunk.ChunkData.SetWorldTile(tileChunkPosition, new WorldTile
 						{
 							TileId = tile.TileId,
 							ParentChunkPosition = chunkPosition,
-							TilePosition = tilePosition,
+							TilePosition = tileChunkPosition,
 							Rotation = GetRotationFromNoise(noise),
 							Scale = GetScaleFromNoise(noise, modelTile.MinGenerationScale, modelTile.MaxGenerationScale)
-						};
+						});
 					}
 					else
 					{
 						if (!_tileRegistry.TryGetTile(nameof(AirTile), out Tile? tile) || tile == null)
 							continue;
 						
-						chunk.WorldTiles[x, y, z] = new WorldTile
+						chunk.ChunkData.SetWorldTile(tileChunkPosition, new WorldTile
 						{
 							TileId = tile.TileId,
 							ParentChunkPosition = chunkPosition,
-							TilePosition = tilePosition,
-						};
+							TilePosition = tileChunkPosition,
+						});
 					}
 				}
 			}

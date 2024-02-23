@@ -49,7 +49,7 @@ public class WorldInteractionManager : IWorldInteractionManager
 		_networkClient.SendMessage(new UpdateTileRequestPacket
 		{
 			TileId = nameof(AirTile),
-			WorldTilePosition = WorldHelper.ChunkAndTilePositionToWorldPosition(closestChunkMesh.Chunk.ChunkPosition, closestTilePosition.Value)
+			WorldTilePosition = WorldHelper.ChunkAndTilePositionToWorldPosition(closestChunkMesh.ChunkData.ChunkPosition, closestTilePosition.Value)
 		});
 	}
 
@@ -61,7 +61,7 @@ public class WorldInteractionManager : IWorldInteractionManager
 		_networkClient.SendMessage(new UpdateTileRequestPacket
 		{
 			TileId = nameof(GroundTile),
-			WorldTilePosition = WorldHelper.ChunkAndTilePositionToWorldPosition(closestChunkMesh.Chunk.ChunkPosition, closestTilePosition.Value)
+			WorldTilePosition = WorldHelper.ChunkAndTilePositionToWorldPosition(closestChunkMesh.ChunkData.ChunkPosition, closestTilePosition.Value)
 		});
 	}
 

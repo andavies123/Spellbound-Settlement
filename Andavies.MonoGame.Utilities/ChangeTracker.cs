@@ -4,14 +4,14 @@ namespace Andavies.MonoGame.Utilities;
 
 public abstract class ChangeTracker : IChangeTracking
 {
-	public bool IsChanged { get; private set; }
+	public bool IsChanged { get; protected set; }
 
 	public void AcceptChanges()
 	{
 		IsChanged = false;
 	}
 
-	protected void SetAndFlagChanged<T>(T newValue, ref T oldValue)
+	protected void SetAndFlagChange<T>(T newValue, ref T oldValue)
 	{
 		if (!Equals(newValue, oldValue))
 		{
@@ -20,7 +20,7 @@ public abstract class ChangeTracker : IChangeTracking
 		}
 	}
 	
-	protected void SetAndFlagChanged<T>(T newValue, T[,,] array, Vector3Int arrayIndex)
+	protected void SetAndFlagChange<T>(T newValue, T[,,] array, Vector3Int arrayIndex)
 	{
 		if (arrayIndex.IsValidArrayIndex(array))
 		{

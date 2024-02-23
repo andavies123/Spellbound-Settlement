@@ -6,33 +6,28 @@ namespace Andavies.SpellboundSettlement.GameWorld.Wizards;
 
 public abstract class WizardData : ChangeTracker, INetSerializable
 {
-	private Guid _id = Guid.NewGuid();
 	private string _name = "Andrew Davies";
 	private float _rotation;
 	private Vector3Int _position;
-	
-	public Guid Id
-	{
-		get => _id;
-		set => SetAndFlagChanged(value, ref _id);
-	}
+
+	public Guid Id { get; private set; } = Guid.NewGuid();
 	
 	public string Name
 	{
 		get => _name;
-		set => SetAndFlagChanged(value, ref _name);
+		set => SetAndFlagChange(value, ref _name);
 	}
 
 	public float Rotation
 	{
 		get => _rotation;
-		set => SetAndFlagChanged(value, ref _rotation);
+		set => SetAndFlagChange(value, ref _rotation);
 	}
 
 	public Vector3Int Position
 	{
 		get => _position;
-		set => SetAndFlagChanged(value, ref _position);
+		set => SetAndFlagChange(value, ref _position);
 	}
 	
 	// INetSerializable Implementation

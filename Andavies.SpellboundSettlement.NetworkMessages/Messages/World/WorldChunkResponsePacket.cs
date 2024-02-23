@@ -9,18 +9,18 @@ namespace Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 public class WorldChunkResponsePacket : INetSerializable
 {
 	/// <summary>
-	/// Chunk data at the requested position
+	/// ChunkData data at the requested position
 	/// </summary>
-	public Chunk? Chunk { get; set; }
+	public ChunkData? ChunkData { get; set; }
 	
 	public void Serialize(NetDataWriter writer)
 	{
-		Chunk?.Serialize(writer);
+		ChunkData?.Serialize(writer);
 	}
 
 	public void Deserialize(NetDataReader reader)
 	{
-		Chunk = new Chunk();
-		Chunk.Deserialize(reader);
+		ChunkData = new ChunkData();
+		ChunkData.Deserialize(reader);
 	}
 }

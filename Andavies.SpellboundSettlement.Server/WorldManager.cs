@@ -19,12 +19,14 @@ public class WorldManager : IWorldManager
 		_world = world ?? throw new ArgumentNullException(nameof(world));
 	}
 
-	public void Tick(float deltaTimeSeconds)
+	public void Update(float deltaTimeSeconds)
 	{
 		foreach (Wizard wizard in _wizardManager.AllWizards.Values)
 		{
 			wizard.Update(deltaTimeSeconds);
 		}
+
+		_world.Update();
 	}
 
 	public void CreateWorld()
@@ -73,7 +75,7 @@ public class WorldManager : IWorldManager
 
 public interface IWorldManager
 {
-	void Tick(float deltaTimeSeconds);
+	void Update(float deltaTimeSeconds);
 	void CreateWorld();
 	void UpdateTile(Vector3Int tileWorldPosition, string newTileId);
 }

@@ -48,7 +48,7 @@ public class NetworkEventListener : INetworkEventListener
 		{
 			_packetBatchSender.AddPacket(client, new WorldChunkResponsePacket
 			{
-				Chunk = _world.GetChunk(chunkPosition)
+				ChunkData = _world.GetChunk(chunkPosition).ChunkData
 			});
 		}
 	}

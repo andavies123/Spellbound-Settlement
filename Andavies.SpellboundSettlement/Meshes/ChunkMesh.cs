@@ -10,14 +10,16 @@ public class ChunkMesh
 {
 	private readonly ConcurrentDictionary<Vector3Int, (ModelTile, WorldTile)> _tileModels = new ();
 
-	public ChunkMesh(Chunk chunk)
+	public ChunkMesh(ChunkData chunkData)
 	{
-		Chunk = chunk;
-		TerrainMesh = new TerrainMesh(chunk.TileCount);
-		ChunkMeshCollider = new ChunkMeshCollider(new Vector3Int(chunk.ChunkPosition.X * 10, 0, chunk.ChunkPosition.Y * 10), chunk.TileCount);
+		ChunkData = chunkData;
+		TerrainMesh = new TerrainMesh(chunkData.TileCount);
+		ChunkMeshCollider = new ChunkMeshCollider(
+			new Vector3Int(chunkData.ChunkPosition.X * 10, 0, chunkData.ChunkPosition.Y * 10), 
+			chunkData.TileCount);
 	}
 
-	public Chunk Chunk { get; }
+	public ChunkData ChunkData { get; }
 	public TerrainMesh TerrainMesh { get; }
 	public ChunkMeshCollider ChunkMeshCollider { get; }
 	

@@ -19,17 +19,17 @@ public class ChunkMeshBuilder : IChunkMeshBuilder
 		_tileRegistry = tileRegistry ?? throw new ArgumentNullException(nameof(tileRegistry));
 	}
 
-	public ChunkMesh BuildChunkMesh(Chunk chunk)
+	public ChunkMesh BuildChunkMesh(ChunkData chunkData)
 	{
-		ChunkMesh chunkMesh = new(chunk);
+		ChunkMesh chunkMesh = new(chunkData);
 
-		for (int x = 0; x < chunk.TileCount.X; x++)
+		for (int x = 0; x < chunkData.TileCount.X; x++)
 		{
-			for (int y = 0; y < chunk.TileCount.Y; y++)
+			for (int y = 0; y < chunkData.TileCount.Y; y++)
 			{
-				for (int z = 0; z < chunk.TileCount.Z; z++)
+				for (int z = 0; z < chunkData.TileCount.Z; z++)
 				{
-					AddWorldTileToChunkMesh(chunk.WorldTiles[x, y, z], chunkMesh);
+					AddWorldTileToChunkMesh(chunkData.WorldTiles[x, y, z], chunkMesh);
 				}
 			}
 		}

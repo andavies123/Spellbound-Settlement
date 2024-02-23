@@ -1,35 +1,33 @@
-﻿using Andavies.MonoGame.Network.Extensions;
-using Andavies.MonoGame.Utilities;
+﻿using Andavies.MonoGame.Utilities;
 using Andavies.SpellboundSettlement.GameWorld.Tiles;
-using LiteNetLib.Utils;
 
 namespace Andavies.SpellboundSettlement.GameWorld;
 
-public class Chunk : INetSerializable
+public class Chunk
 {
 	private const int XDimension = 0;
 	private const int YDimension = 1;
 	private const int ZDimension = 2;
 
 	public event Action<Chunk>? Updated;
-	
-	public Vector2Int ChunkPosition { get; set; }
-	public Vector3Int TileCount { get; set; }
-	public WorldTile[,,] WorldTiles { get; set; } = new WorldTile[0, 0, 0];
 
-	public WorldTile GetWorldTile(Vector3Int tilePosition)
+	public WorldTile this[int x, int y, int z] => ChunkData.WorldTiles[x, y, z];
+	public WorldTile this[Vector3Int index] => ChunkData.WorldTiles[index.X, index.Y, index.Z];
+
+	public ChunkData ChunkData { get; } = new();
+
+	public void Update()
 	{
-		return WorldTiles[tilePosition.X, tilePosition.Y, tilePosition.Z];
+		if (!ChunkData.IsChanged) 
+			return;
+		
+		ChunkData.AcceptChanges();
+		Updated?.Invoke(this);
 	}
 
 	public void UpdateWorldTile(Vector3Int tilePosition, string newTileId)
 	{
-		WorldTile worldTile = GetWorldTile(tilePosition);
-		if (worldTile.TileId != newTileId)
-		{
-			worldTile.TileId = newTileId;
-			Updated?.Invoke(this);
-		}
+		ChunkData.UpdateWorldTileId(tilePosition, newTileId);
 	}
 
 	/// <summary>
@@ -39,54 +37,17 @@ public class Chunk : INetSerializable
 	/// <returns>The highest terrain at that column</returns>
 	public int GetHeightAtPosition(Vector2Int position)
 	{
-		if (position.X < 0 || position.X >= WorldTiles.GetLength(XDimension) || position.Y < 0 || position.Y >= WorldTiles.GetLength(ZDimension))
+		if (position.X < 0 || position.X >= ChunkData.WorldTiles.GetLength(XDimension) || position.Y < 0 || position.Y >= ChunkData.WorldTiles.GetLength(ZDimension))
 			throw new ArgumentOutOfRangeException($"Unable to get height at position. {position}");
 		
-		for (int y = WorldTiles.GetLength(YDimension) - 1; y >= 0; y--)
+		for (int y = ChunkData.WorldTiles.GetLength(YDimension) - 1; y >= 0; y--)
 		{
-			if (WorldTiles[position.X, y, position.Y].TileId == nameof(GroundTile))
+			if (ChunkData.WorldTiles[position.X, y, position.Y].TileId == nameof(GroundTile))
 			{
 				return y;
 			}
 		}
 
 		return 0;
-	}
-
-	public void Serialize(NetDataWriter writer)
-	{
-		writer.Put(ChunkPosition);
-		writer.Put(TileCount);
-
-		for (int x = 0; x < WorldTiles.GetLength(0); x++)
-		{
-			for (int y = 0; y < WorldTiles.GetLength(1); y++)
-			{
-				for (int z = 0; z < WorldTiles.GetLength(2); z++)
-				{
-					WorldTiles[x, y, z].Serialize(writer);
-				}
-			}
-		}
-	}
-
-	public void Deserialize(NetDataReader reader)
-	{
-		ChunkPosition = reader.GetVector2Int();
-		TileCount = reader.GetVector3Int();
-
-		WorldTiles = new WorldTile[TileCount.X, TileCount.Y, TileCount.Z];
-		
-		for (int x = 0; x < WorldTiles.GetLength(0); x++)
-		{
-			for (int y = 0; y < WorldTiles.GetLength(1); y++)
-			{
-				for (int z = 0; z < WorldTiles.GetLength(2); z++)
-				{
-					WorldTiles[x, y, z] = new WorldTile();
-					WorldTiles[x, y, z].Deserialize(reader);
-				}
-			}
-		}
 	}
 }

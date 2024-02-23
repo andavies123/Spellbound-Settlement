@@ -4,5 +4,5 @@ namespace Andavies.SpellboundSettlement.Meshes;
 
 public interface IChunkMeshBuilder
 {
-	ChunkMesh BuildChunkMesh(Chunk chunk);
+	ChunkMesh BuildChunkMesh(ChunkData chunkData);
 }

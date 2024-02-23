@@ -17,7 +17,7 @@ public class ClientWorldManager : IClientWorldManager
 	private readonly IChunkMeshBuilder _chunkMeshBuilder;
 	private readonly WorldMesh _worldMesh;
 	
-	private readonly ConcurrentDictionary<Vector2Int, Chunk> _chunks = new();
+	private readonly ConcurrentDictionary<Vector2Int, ChunkData> _chunks = new();
 	private readonly ConcurrentDictionary<Guid, WizardData> _wizards = new();
 
 	public ClientWorldManager(
@@ -32,7 +32,7 @@ public class ClientWorldManager : IClientWorldManager
 		SubscribeToServerMessages();
 	}
 	
-	public IReadOnlyDictionary<Vector2Int, Chunk> AllChunks => _chunks;
+	public IReadOnlyDictionary<Vector2Int, ChunkData> AllChunks => _chunks;
 	public IReadOnlyDictionary<Guid, WizardData> AllWizards => _wizards;
 	
 	private void SubscribeToServerMessages()
@@ -46,13 +46,13 @@ public class ClientWorldManager : IClientWorldManager
 		if (packet is not WorldChunkResponsePacket worldChunkResponsePacket)
 			return;
 
-		if (worldChunkResponsePacket.Chunk == null)
+		if (worldChunkResponsePacket.ChunkData == null)
 			return;
 
-		_chunks[worldChunkResponsePacket.Chunk.ChunkPosition] = worldChunkResponsePacket.Chunk;
+		_chunks[worldChunkResponsePacket.ChunkData.ChunkPosition] = worldChunkResponsePacket.ChunkData;
 		
-		ChunkMesh chunkMesh = _chunkMeshBuilder.BuildChunkMesh(worldChunkResponsePacket.Chunk);
-		_worldMesh.SetChunkMesh(chunkMesh, worldChunkResponsePacket.Chunk.ChunkPosition);
+		ChunkMesh chunkMesh = _chunkMeshBuilder.BuildChunkMesh(worldChunkResponsePacket.ChunkData);
+		_worldMesh.SetChunkMesh(chunkMesh, worldChunkResponsePacket.ChunkData.ChunkPosition);
 	}
 
 	private void OnWizardUpdatedPacketReceived(INetSerializable packet)

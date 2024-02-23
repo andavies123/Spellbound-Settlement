@@ -138,7 +138,7 @@ public class GameServer
 
 	private void UpdateGame(float deltaTimeSeconds)
 	{
-		_worldManager.Tick(deltaTimeSeconds);
+		_worldManager.Update(deltaTimeSeconds);
 	}
 
 	private void UpdateClients()

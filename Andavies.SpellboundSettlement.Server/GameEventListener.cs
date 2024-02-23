@@ -41,7 +41,7 @@ public class GameEventListener : IGameEventListener
 
 	private void OnChunkUpdated(Chunk chunk)
 	{
-		SendToAllClients(new WorldChunkResponsePacket {Chunk = chunk});
+		SendToAllClients(new WorldChunkResponsePacket {ChunkData = chunk.ChunkData});
 	}
 
 	private void OnWizardUpdated(Wizard wizard)
