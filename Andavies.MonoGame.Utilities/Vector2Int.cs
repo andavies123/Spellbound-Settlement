@@ -30,6 +30,25 @@ public readonly struct Vector2Int
 	{
 		return new Vector3Int(X, y, Y);
 	}
+
+	public bool TryGetFromArray<T>(T[,] array, out T? value)
+	{
+		value = default;
+		
+		if (IsValidArrayIndex(array))
+		{
+			value = array[X, Y];
+			return true;
+		}
+
+		return false;
+	}
+
+	public bool IsValidArrayIndex<T>(T[,] array)
+	{
+		return X >= 0 && X < array.GetLength(0) &&
+		       Y >= 0 && Y < array.GetLength(1);
+	}
 	
 	public float Distance(Vector2Int other) => Distance(this, other);
 

@@ -46,7 +46,7 @@ public class WorldManager : IWorldManager
 		Vector3Int tilePosition = WorldHelper.WorldPositionToTilePosition(tileWorldPosition);
 
 		Chunk chunk = _world.GetChunk(chunkPosition);
-		chunk.UpdateWorldTile(tilePosition, newTileId);
+		chunk.ChunkData.UpdateWorldTileId(tilePosition, newTileId);
 	}
 
 	private void SpawnWizard()

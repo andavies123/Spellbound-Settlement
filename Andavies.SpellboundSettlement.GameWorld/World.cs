@@ -21,12 +21,15 @@ public class World
 	}
 
 	public event Action<Chunk>? ChunkUpdated;
+
+	public Chunk this[int chunkPositionX, int chunkPositionZ] => this[new Vector2Int(chunkPositionX, chunkPositionZ)];
+	public Chunk this[Vector2Int chunkPosition] => _chunks.GetOrAdd(chunkPosition, GenerateChunk);
 	
 	public IReadOnlyDictionary<Vector2Int, Chunk> Chunks => _chunks;
 
 	public void Update()
 	{
-		foreach ((Vector2Int chunkPosition, Chunk? chunk) in Chunks)
+		foreach (Chunk? chunk in Chunks.Values)
 		{
 			chunk.Update();
 		}
