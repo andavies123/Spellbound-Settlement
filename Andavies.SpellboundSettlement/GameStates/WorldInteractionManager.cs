@@ -26,7 +26,7 @@ public class WorldInteractionManager : IWorldInteractionManager
 		INetworkClient networkClient,
 		IInputManager inputManager,
 		ITileHoverHandler tileHoverHandler,
-		WorldMesh worldMesh, 
+		WorldMesh worldMesh,
 		Camera camera)
 	{
 		_networkClient = networkClient ?? throw new ArgumentNullException(nameof(networkClient));

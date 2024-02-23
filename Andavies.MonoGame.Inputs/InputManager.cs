@@ -34,7 +34,6 @@ public class InputManager : GameObject, IInputManager
 	
 	public override void Update(GameTime gameTime)
 	{
-		Console.WriteLine("INPUT MANAGER UPDATED");
 		SetInputStates();
 		
 		// Check for mouse movement
