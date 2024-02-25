@@ -8,7 +8,7 @@ public static class IntExtensions
 	/// <param name="arrayIndex">The extended int used as the array index</param>
 	/// <param name="array">The array that would be indexed</param>
 	/// <returns>True if this int is a valid index. False otherwise</returns>
-	public static bool IsValidArrayIndex(this int arrayIndex, Array array)
+	public static bool IsValidArrayIndex<T>(this int arrayIndex,  T[] array)
 	{
 		return arrayIndex >= 0 && arrayIndex < array.Length;
 	}

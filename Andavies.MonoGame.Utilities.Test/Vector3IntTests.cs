@@ -103,6 +103,104 @@ public class Vector3IntTests
 
 	#endregion
 
+	#region IsValidArrayIndex Tests
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsTrue_WhenAllValuesAreWithinArrayRange()
+	{
+		// Arrange
+		Vector3Int vector3Int = new(1, 1, 1);
+		int[,,] array = {{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}};
+		
+		// Act
+		bool isValidArrayIndex = vector3Int.IsValidArrayIndex(array);
+		
+		// Assert
+		isValidArrayIndex.Should().BeTrue();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenXValueIsLessThanZero_AndOtherValuesAreValid()
+	{
+		// Arrange
+		Vector3Int vector3Int = new(-1, 1, 1);
+		int[,,] array = {{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}};
+		
+		// Act
+		bool isValidArrayIndex = vector3Int.IsValidArrayIndex(array);
+		
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenYValueIsLessThanZero_AndOtherValuesAreValid()
+	{
+		Vector3Int vector3Int = new(1, -1, 1);
+		int[,,] array = {{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}};
+		
+		// Act
+		bool isValidArrayIndex = vector3Int.IsValidArrayIndex(array);
+		
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenZValueIsLessThanZero_AndOtherValuesAreValid()
+	{
+		Vector3Int vector3Int = new(1, 1, -1);
+		int[,,] array = {{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}};
+		
+		// Act
+		bool isValidArrayIndex = vector3Int.IsValidArrayIndex(array);
+		
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenXValueIsArrayLength_AndOtherValuesAreValid()
+	{
+		// Arrange
+		Vector3Int vector3Int = new(3, 1, 1);
+		int[,,] array = {{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}};
+		
+		// Act
+		bool isValidArrayIndex = vector3Int.IsValidArrayIndex(array);
+		
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenYValueIsArrayLength_AndOtherValuesAreValid()
+	{
+		Vector3Int vector3Int = new(1, 3, 1);
+		int[,,] array = {{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}};
+		
+		// Act
+		bool isValidArrayIndex = vector3Int.IsValidArrayIndex(array);
+		
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenZValueIsArrayLength_AndOtherValuesAreValid()
+	{
+		Vector3Int vector3Int = new(1, 1, 3);
+		int[,,] array = {{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}, {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}}};
+		
+		// Act
+		bool isValidArrayIndex = vector3Int.IsValidArrayIndex(array);
+		
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	#endregion
+
 	#region Distance Tests
 
 	[TestMethod]

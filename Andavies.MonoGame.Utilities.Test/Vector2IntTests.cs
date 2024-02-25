@@ -111,6 +111,108 @@ public class Vector2IntTests
 	}
 
 	#endregion
+
+	#region IsValidArrayIndex Tests
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsTrue_WhenValuesAreWithinArrayRange()
+	{
+		// Arrange
+		Vector2Int vector2Int = new(0, 1);
+		int[,] array = {{1, 2, 3}, {1, 2, 3}};
+		
+		// Act
+		bool isValidArrayIndex = vector2Int.IsValidArrayIndex(array);
+
+		// Assert
+		isValidArrayIndex.Should().BeTrue();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenBothValuesAreNegative()
+	{
+		// Arrange
+		Vector2Int vector2Int = new(-1, -1);
+		int[,] array = {{1, 2, 3}, {1, 2, 3}};
+		
+		// Act
+		bool isValidArrayIndex = vector2Int.IsValidArrayIndex(array);
+
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenXValueIsNegative_AndYValueIsValid()
+	{
+		// Arrange
+		Vector2Int vector2Int = new(-1, 1);
+		int[,] array = {{1, 2, 3}, {1, 2, 3}};
+		
+		// Act
+		bool isValidArrayIndex = vector2Int.IsValidArrayIndex(array);
+
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenYValueIsNegative_AndXValueIsValid()
+	{
+		// Arrange
+		Vector2Int vector2Int = new(1, -1);
+		int[,] array = {{1, 2, 3}, {1, 2, 3}};
+		
+		// Act
+		bool isValidArrayIndex = vector2Int.IsValidArrayIndex(array);
+
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenXValueIsArrayLength_AndYValueIsValid()
+	{
+		// Arrange
+		Vector2Int vector2Int = new(3, 1);
+		int[,] array = {{1, 2, 3}, {1, 2, 3}};
+		
+		// Act
+		bool isValidArrayIndex = vector2Int.IsValidArrayIndex(array);
+
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenYValueIsArrayLength_AndXValueIsValid()
+	{
+		// Arrange
+		Vector2Int vector2Int = new(1, 3);
+		int[,] array = {{1, 2, 3}, {1, 2, 3}};
+		
+		// Act
+		bool isValidArrayIndex = vector2Int.IsValidArrayIndex(array);
+
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	[TestMethod]
+	public void IsValidArrayIndex_ReturnsFalse_WhenBothValuesAreInvalid()
+	{
+		// Arrange
+		Vector2Int vector2Int = new(4, 4);
+		int[,] array = {{1, 2, 3}, {1, 2, 3}};
+		
+		// Act
+		bool isValidArrayIndex = vector2Int.IsValidArrayIndex(array);
+
+		// Assert
+		isValidArrayIndex.Should().BeFalse();
+	}
+
+	#endregion
 	
 	#region Distance Tests
 

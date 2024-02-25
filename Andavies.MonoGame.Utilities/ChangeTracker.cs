@@ -26,7 +26,7 @@ public abstract class ChangeTracker : IChangeTracking
 		if (!arrayIndex.IsValidArrayIndex(array))
 			return;
 
-		if (Equals(array[arrayIndex]))
+		if (Equals(newValue, array[arrayIndex]))
 			return;
 		
 		array[arrayIndex] = newValue;
@@ -38,7 +38,7 @@ public abstract class ChangeTracker : IChangeTracking
 		if (!arrayIndex.IsValidArrayIndex(array))
 			return;
 
-		if (Equals(array[arrayIndex.X, arrayIndex.Y]))
+		if (Equals(newValue, array[arrayIndex.X, arrayIndex.Y]))
 			return;
 		
 		array[arrayIndex.X, arrayIndex.Y] = newValue;
@@ -50,7 +50,7 @@ public abstract class ChangeTracker : IChangeTracking
 		if (!arrayIndex.IsValidArrayIndex(array))
 			return;
 
-		if (Equals(array[arrayIndex.X, arrayIndex.Y, arrayIndex.Z]))
+		if (Equals(newValue, array[arrayIndex.X, arrayIndex.Y, arrayIndex.Z]))
 			return;
 		
 		array[arrayIndex.X, arrayIndex.Y, arrayIndex.Z] = newValue;
