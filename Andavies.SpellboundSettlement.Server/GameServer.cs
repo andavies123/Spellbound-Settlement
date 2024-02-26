@@ -63,7 +63,7 @@ public class GameServer
 		InitializeServerAccessManager(serverSettings);
 		_tileRegister.RegisterTiles();
 		
-		_worldManager.CreateWorld();
+		_worldManager.CreateNewWorld();
 		
 		_gameEventSystem.Publish(new WorldCreatedGameEvent());
 		

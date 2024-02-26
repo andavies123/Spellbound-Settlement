@@ -8,16 +8,21 @@ namespace Andavies.SpellboundSettlement.Server;
 
 public class WorldManager : IWorldManager
 {
+	private const int InitialWorldGenerationRadius = 7;
+	private const int InitialWizardSpawns = 5;
+	
 	private readonly ILogger _logger;
 	private readonly IWizardManager _wizardManager;
-	private readonly World _world;
+	private readonly IWorldBuilder _worldBuilder;
 
-	public WorldManager(ILogger logger, IWizardManager wizardManager, World world)
+	public WorldManager(ILogger logger, IWizardManager wizardManager, IWorldBuilder worldBuilder)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
-		_world = world ?? throw new ArgumentNullException(nameof(world));
+		_worldBuilder = worldBuilder ?? throw new ArgumentNullException(nameof(worldBuilder));
 	}
+
+	public World? World { get; private set; }
 
 	public void Update(float deltaTimeSeconds)
 	{
@@ -26,15 +31,15 @@ public class WorldManager : IWorldManager
 			wizard.Update(deltaTimeSeconds);
 		}
 
-		_world.Update();
+		World?.Update();
 	}
 
-	public void CreateWorld()
+	public void CreateNewWorld()
 	{
-		_logger.Debug("Creating the world...");
-		_world.CreateNewWorld(Vector2Int.Zero, 5);
+		_logger.Debug("Creating new world...");
+		World = _worldBuilder.BuildNewWorld(Vector2Int.Zero, InitialWorldGenerationRadius);
 
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < InitialWizardSpawns; i++)
 		{
 			SpawnWizard();
 		}
@@ -42,18 +47,33 @@ public class WorldManager : IWorldManager
 
 	public void UpdateTile(Vector3Int tileWorldPosition, string newTileId)
 	{
+		if (World is null)
+			return;
+		
 		Vector2Int chunkPosition = WorldHelper.WorldPositionToChunkPosition(tileWorldPosition);
 		Vector3Int tilePosition = WorldHelper.WorldPositionToTilePosition(tileWorldPosition);
 
-		Chunk chunk = _world.GetChunk(chunkPosition);
-		chunk.ChunkData.UpdateWorldTileId(tilePosition, newTileId);
+		if (!World.TryGetChunk(chunkPosition, out Chunk? chunk))
+			return;
+
+		chunk?.ChunkData.UpdateWorldTileId(tilePosition, newTileId);
 	}
 
 	private void SpawnWizard()
 	{
+		if (World is null)
+		{
+			_logger.Warning("Unable to spawn wizards. World does not exist");
+			return;
+		}
+        
 		int xPos = Random.Shared.Next(50);
 		int zPos = Random.Shared.Next(50);
-		int yPos = _world.GetHeightAtPosition(new Vector3Int(xPos, 0, zPos)) + 1; // Increase by 1 to be on top of the terrain
+
+		if (!World.TryGetHeightAtPosition(new Vector3Int(xPos, 0, zPos), out int? terrainHeight) || terrainHeight == null)
+			terrainHeight = 10;
+			
+		int yPos = terrainHeight.Value + 1; // Increase by 1 to be on top of the terrain
 		Vector3Int position = new(xPos, yPos, zPos);
 		float rotation = Random.Shared.Next(4) * MathHelper.PiOver2;
 
@@ -65,7 +85,7 @@ public class WorldManager : IWorldManager
 				Position = position,
 				Rotation = rotation,	
 			},
-			World = _world
+			World = World
 		};
 		
 		_wizardManager.AddOrUpdateWizard(wizard);
@@ -75,7 +95,9 @@ public class WorldManager : IWorldManager
 
 public interface IWorldManager
 {
+	World? World { get; }
+    
 	void Update(float deltaTimeSeconds);
-	void CreateWorld();
+	void CreateNewWorld();
 	void UpdateTile(Vector3Int tileWorldPosition, string newTileId);
 }

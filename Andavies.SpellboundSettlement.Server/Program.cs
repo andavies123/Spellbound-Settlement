@@ -62,8 +62,8 @@ public static class Program
 		container.RegisterType<ServerAccessManager>().As<IServerAccessManager>().SingleInstance();
 		container.RegisterType<GameEventSystem>().As<IGameEventSystem>().SingleInstance();
 
+		container.RegisterType<WorldBuilder>().As<IWorldBuilder>().SingleInstance();
 		container.RegisterType<WorldManager>().As<IWorldManager>().SingleInstance();
-		container.RegisterType<World>().SingleInstance();
 		container.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
 		container.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
 		container.RegisterType<WizardManager>().As<IWizardManager>().SingleInstance();

@@ -5,27 +5,33 @@ using Andavies.SpellboundSettlement.GameWorld.Wizards;
 using Andavies.SpellboundSettlement.NetworkMessages.Messages.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Serilog;
 
 namespace Andavies.SpellboundSettlement.Server;
 
 public class GameEventListener : IGameEventListener
 {
+	private readonly ILogger _logger;
 	private readonly INetworkServer _networkServer;
 	private readonly IPacketBatchSender _packetBatchSender;
+	private readonly IWorldManager _worldManager;
 	private readonly IWizardManager _wizardManager;
-	private readonly World _world;
 	
-	public GameEventListener(INetworkServer networkServer, IPacketBatchSender packetBatchSender, IWizardManager wizardManager, World world)
+	public GameEventListener(ILogger logger, INetworkServer networkServer, IPacketBatchSender packetBatchSender, IWorldManager worldManager, IWizardManager wizardManager)
 	{
+		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_networkServer = networkServer ?? throw new ArgumentNullException(nameof(networkServer));
 		_packetBatchSender = packetBatchSender ?? throw new ArgumentNullException(nameof(packetBatchSender));
 		_wizardManager = wizardManager ?? throw new ArgumentNullException(nameof(wizardManager));
-		_world = world ?? throw new ArgumentNullException(nameof(world));
+		_worldManager = worldManager ?? throw new ArgumentNullException(nameof(worldManager));
 	}
 
 	public void SubscribeToEvents()
 	{
-		_world.ChunkUpdated += OnChunkUpdated;
+		if (_worldManager.World is not null)
+			_worldManager.World.ChunkUpdated += OnChunkUpdated;
+		else
+			_logger.Warning("Unable to subscribe to chunk updates. World does not exist.");
 		
 		_wizardManager.WizardUpdated += OnWizardUpdated;
 		_wizardManager.WizardRemoved += OnWizardRemoved;
@@ -33,7 +39,10 @@ public class GameEventListener : IGameEventListener
 
 	public void UnsubscribeFromEvents()
 	{
-		_world.ChunkUpdated -= OnChunkUpdated;
+		if (_worldManager.World is not null)
+			_worldManager.World.ChunkUpdated -= OnChunkUpdated;
+		else
+			_logger.Warning("Unable to unsubscribe to chunk updates. World does not exist.");
 		
 		_wizardManager.WizardUpdated -= OnWizardUpdated;
 		_wizardManager.WizardRemoved -= OnWizardRemoved;

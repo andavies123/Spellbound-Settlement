@@ -26,6 +26,12 @@ public readonly struct Vector2Int
 
 	public Vector2Int(Vector2 vector) : this(vector.X, vector.Y) { }
 
+	public void Deconstruct(out int x, out int y)
+	{
+		x = X;
+		y = Y;
+	}
+
 	public Vector3Int ToVector3IntNoY(int y = 0)
 	{
 		return new Vector3Int(X, y, Y);

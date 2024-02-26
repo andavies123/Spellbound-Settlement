@@ -35,6 +35,13 @@ public readonly struct Vector3Int
 
 	public Vector3Int(Vector3 vector3) : this(vector3.X, vector3.Y, vector3.Z) { }
 
+	public void Deconstruct(out int x, out int y, out int z)
+	{
+		x = X;
+		y = Y;
+		z = Z;
+	}
+
 	public bool IsValidArrayIndex<T>(T[,,] array)
 	{
 		return X >= 0 && X < array.GetLength(0) &&
