@@ -92,6 +92,24 @@ public class Vector2IntTests
 	}
 
 	#endregion
+	
+	#region Decontsruct Tests
+
+	[TestMethod]
+	public void Deconstruct_ReturnsInternalXYZ()
+	{
+		// Arrange
+		Vector2Int vector2Int = new(1, 2);
+		
+		// Act
+		(int x, int y) = vector2Int;
+		
+		// Assert
+		x.Should().Be(vector2Int.X);
+		y.Should().Be(vector2Int.Y);
+	}
+
+	#endregion
 
 	#region ToVector3IntNoY Tests
 

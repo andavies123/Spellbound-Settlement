@@ -103,6 +103,25 @@ public class Vector3IntTests
 
 	#endregion
 
+	#region Decontsruct Tests
+
+	[TestMethod]
+	public void Deconstruct_ReturnsInternalXYZ()
+	{
+		// Arrange
+		Vector3Int vector3Int = new(1, 2, 3);
+		
+		// Act
+		(int x, int y, int z) = vector3Int;
+		
+		// Assert
+		x.Should().Be(vector3Int.X);
+		y.Should().Be(vector3Int.Y);
+		z.Should().Be(vector3Int.Z);
+	}
+
+	#endregion
+	
 	#region IsValidArrayIndex Tests
 
 	[TestMethod]
