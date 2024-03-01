@@ -77,7 +77,10 @@ public class BushTile : ModelTile
 	public override string Description => "A bush";
 	public override bool IsBreakable => true;
 
-	public override ModelDetails ModelDetails => new("Models/Bushes/bush");
+	public override ModelDetails ModelDetails => new("Models/Bushes/bush1")
+	{
+		ModelScale = 1/256f
+	};
 
 	public override float MinGenerationScale => .25f;
 	public override float MaxGenerationScale => 1f;
