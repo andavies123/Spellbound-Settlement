@@ -79,12 +79,12 @@ public class GameplayGameState : GameState
 		UIStateMachine.ChangeUIState(_gameplayGameplayUIState);
 
 		List<Vector2Int> chunkPositions = new();
-		const int chunkRadius = 5;
-		for (int x = 0; x < chunkRadius; x++)
+		const int chunkRadius = 4;
+		for (int x = -chunkRadius; x < chunkRadius; x++)
 		{
-			for (int y = 0; y < chunkRadius; y++)
+			for (int z = -chunkRadius; z < chunkRadius; z++)
 			{
-				chunkPositions.Add(new Vector2Int(x, y));
+				chunkPositions.Add(new Vector2Int(x, z));
 			}
 		}
 

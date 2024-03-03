@@ -6,14 +6,14 @@ using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameWorld.ChunkSubGenerators;
 
-public class GrassGenerator : ChunkSubGenerator
+public class BushGenerator : ChunkSubGenerator
 {
-	public GrassGenerator(
+	public BushGenerator(
 		ILogger logger,
 		ITileRegistry tileRegistry,
 		IChunkNoiseGenerator chunkNoiseGenerator)
 		: base(logger, tileRegistry, chunkNoiseGenerator) { }
-    
+
 	public override void Generate(Chunk chunk, int seed)
 	{
 		for (int tileX = 0; tileX < chunk.ChunkData.TileCount.X; tileX++)
@@ -29,11 +29,12 @@ public class GrassGenerator : ChunkSubGenerator
 
 				float noise = ChunkNoiseGenerator.GenerateNoise(chunk.ChunkData, tilePositionNoHeight, seed, .5f);
 
-				bool addGrass = noise.GetThousandthsPlace() < 2;
+				//Warning: Since I am currently using the GetThousandthsPlace method, the scale does not matter of the noise,
+				bool addBush = noise.GetHundredthsPlace() == 3 && noise.GetThousandthsPlace() == 3;
 
-				if (addGrass)
+				if (addBush)
 				{
-					if (TileRegistry.TryGetTile(nameof(GrassTile), out Tile? tile) && tile is ModelTile modelTile)
+					if (TileRegistry.TryGetTile(nameof(BushTile), out Tile? tile) && tile is ModelTile modelTile)
 						SetModelTile(chunk, tilePosition, modelTile, noise);
 				}
 			}

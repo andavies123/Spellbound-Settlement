@@ -45,7 +45,7 @@ public class WorldInteractionManager : IWorldInteractionManager
 	{
 		if (!TryGetWorldTileUnderMouse(out ChunkMesh closestChunkMesh, out Vector3Int? closestTilePosition) || closestTilePosition == null)
 			return;
-		
+
 		_networkClient.SendMessage(new UpdateTileRequestPacket
 		{
 			TileId = nameof(AirTile),

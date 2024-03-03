@@ -16,6 +16,7 @@
       <ProjectReference Include="..\Andavies.MonoGame.Meshes\Andavies.MonoGame.Meshes.csproj" />
       <ProjectReference Include="..\Andavies.MonoGame.Network\Andavies.MonoGame.Network.csproj" />
       <ProjectReference Include="..\Andavies.MonoGame.Utilities\Andavies.MonoGame.Utilities.csproj" />
+
     </ItemGroup>
 
 

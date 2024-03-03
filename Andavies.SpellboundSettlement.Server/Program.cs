@@ -4,6 +4,7 @@ using Andavies.MonoGame.Network.Utilities;
 using Andavies.MonoGame.Utilities;
 using Andavies.MonoGame.Utilities.GameEvents;
 using Andavies.SpellboundSettlement.GameWorld;
+using Andavies.SpellboundSettlement.GameWorld.ChunkSubGenerators;
 using Andavies.SpellboundSettlement.GameWorld.Repositories;
 using Autofac;
 using AutofacSerilogIntegration;
@@ -66,6 +67,7 @@ public static class Program
 		container.RegisterType<WorldManager>().As<IWorldManager>().SingleInstance();
 		container.RegisterType<TileRegistry>().As<ITileRegistry>().SingleInstance();
 		container.RegisterType<TileRegister>().As<ITileRegister>().SingleInstance();
+		container.RegisterType<ChunkNoiseGenerator>().As<IChunkNoiseGenerator>().SingleInstance();
 		container.RegisterType<WizardManager>().As<IWizardManager>().SingleInstance();
 		container.RegisterType<GameEventListener>().As<IGameEventListener>().SingleInstance();
 		container.RegisterType<NetworkEventListener>().As<INetworkEventListener>().SingleInstance();

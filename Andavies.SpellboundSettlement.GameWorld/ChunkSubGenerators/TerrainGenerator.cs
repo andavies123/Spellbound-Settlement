@@ -1,40 +1,45 @@
 ﻿using Andavies.MonoGame.Utilities;
+using Andavies.SpellboundSettlement.GameWorld.Repositories;
+using Andavies.SpellboundSettlement.GameWorld.Tiles;
 using Serilog;
 
 namespace Andavies.SpellboundSettlement.GameWorld.ChunkSubGenerators;
 
 public class TerrainGenerator : ChunkSubGenerator
 {
-	private readonly IChunkNoiseGenerator _chunkNoiseGenerator;
+	public TerrainGenerator(
+		ILogger logger,
+		ITileRegistry tileRegistry,
+		IChunkNoiseGenerator chunkNoiseGenerator)
+		: base(logger, tileRegistry, chunkNoiseGenerator) { }
 	
-	public TerrainGenerator(ILogger logger, IChunkNoiseGenerator chunkNoiseGenerator)
-	{
-		_chunkNoiseGenerator = chunkNoiseGenerator ?? throw new ArgumentNullException(nameof(chunkNoiseGenerator));
-	}
-	
-	public void Generate(Chunk chunk, int seed)
+	public override void Generate(Chunk chunk, int seed)
 	{
 		for (int tileX = 0; tileX < chunk.ChunkData.TileCount.X; tileX++)
 		{
 			for (int tileZ = 0; tileZ < chunk.ChunkData.TileCount.Z; tileZ++)
 			{
-				float noise = _chunkNoiseGenerator.GenerateNoise(
-					chunk.ChunkData.ChunkPosition, 
-					new Vector2Int(tileX, tileZ), 
-					seed, 
-					.5f);
+				Vector2Int tileChunkPositionNoHeight = new(tileX, tileZ);
 				
-				int height = GetHeightFromNoise(noise, 0, WorldHelper.ChunkSize.Y);
+				float noise = ChunkNoiseGenerator.GenerateNoise(chunk.ChunkData, tileChunkPositionNoHeight, seed, .5f);
+				int height = GetHeightFromNoise(noise, 0, chunk.ChunkData.TileCount.Y);
 
 				for (int tileY = 0; tileY < chunk.ChunkData.TileCount.Y; tileY++)
 				{
+					Vector3Int tileChunkPosition = new(tileX, tileY, tileZ);
 					if (tileY <= height)
 					{
-						// Add ground
+						if (TileRegistry.TryGetTile(nameof(GroundTile), out Tile? tile))
+							SetTile(chunk, tileChunkPosition, tile);
+						else
+							Logger.Warning("Unable to add tile. {tileName} does not exist.", nameof(GroundTile));
 					}
 					else
 					{
-						// Add Air
+						if (TileRegistry.TryGetTile(nameof(AirTile), out Tile? tile))
+							SetTile(chunk, tileChunkPosition, tile);
+						else
+							Logger.Warning("Unable to add tile. {tileName} does not exist.", nameof(AirTile));
 					}
 				}
 			}
